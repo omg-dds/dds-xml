@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<types xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.omg.org/spec/DDS-XML"
+       xsi:schemaLocation="http://www.omg.org/spec/DDS-XML http://www.omg.org/spec/DDS-XML/20180501/dds-xml_type_definitions.xsd">
+
+    <!-- Aliases -->
+    <typedef name="MYBOOL" type="boolean" />
+
+    <!-- Enumerators -->
+    <enum name="MyEnum">
+        <enumerator name="ACE" value="1" />
+        <enumerator name="KING" value="13" />
+        <enumerator name="QUEEN" value="12" />
+    </enum>
+
+    <!-- Constants -->
+    <const name="MAX_COLOR_LEN" type="int32" value="255" />
+
+    <!-- Unions -->
+    <union name="MyUnion">
+        <discriminator type="int32" />
+        <case>
+            <caseDiscriminator value="42" />
+            <member type="boolean" name="unionValue1"/>
+        </case>
+        <case>
+            <caseDiscriminator value="34" />
+            <member type="float64" name="unionValue2"/>
+        </case>
+    </union>
+
+    <!-- Structures -->
+    <struct name="PrimitiveTypesStruct">
+        <member name="aString" type="string" stringMaxLength="MAX_COLOR_LEN" />
+        <member name="aShort" type="int16" />
+        <member name="aLong" type="int32" />
+        <member name="aUnsignedShort" type="uint16" />
+        <member name="aUnsignedLong" type="uint32" />
+        <member name="aFloat" type="float32" />
+        <member name="aDouble" type="float64" />
+        <member name="aBoolean" type="boolean" />
+        <member name="aChar" type="char8" />
+        <member name="aWchar" type="char16" />
+        <member name="aLongLong" type="int64" />
+        <member name="aUnsignedLongLong" type="uint64" />
+        <member name="anEnum" type="nonBasic" nonBasicTypeName="MyEnum" />
+        <member sequenceMaxLength="3" name="anEnumSeq" type="nonBasic"
+            nonBasicTypeName="MyEnum" />
+        <member arrayDimensions="3" name="anEnumArr" type="nonBasic"
+            nonBasicTypeName="MyEnum" />
+    </struct>
+
+    <!-- Complex Structures -->
+    <struct name="ComplexStruct">
+        <member name="aBoolean" type="boolean" />
+        <member name="aShort" type="int16" />
+        <member name="aLong" type="int32" />
+        <member name="aLongLong" type="int64" />
+        <member name="aUnsignedShort" type="uint16" />
+        <member name="aUnsignedLong" type="uint32" />
+        <member name="aUnsignedLongLong" type="uint64" />
+        <member name="aFloat" type="float32" />
+        <member name="aDouble" type="float64" />
+        <member name="aChar" type="char8" />
+        <member name="aWchar" type="char16" />
+        <member name="aString" type="string" stringMaxLength="MAX_COLOR_LEN" />
+        <member name="anOctet" type="byte" />
+        <member name="anAlias" type="nonBasic" nonBasicTypeName="MYBOOL" />
+        <member name="aComplexType" type="nonBasic"
+                nonBasicTypeName="PrimitiveTypesStruct" />
+        <member name="anEnum" type="nonBasic" nonBasicTypeName="MyEnum" />
+        <member sequenceMaxLength="3" name="anEnumSeq" type="nonBasic"
+                nonBasicTypeName="MyEnum" />
+        <member arrayDimensions="3" name="anEnumArr" type="nonBasic"
+                nonBasicTypeName="MyEnum" />
+    </struct>
+
+</types>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<domain_library xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns="http://www.omg.org/spec/DDS-XML"
+                xsi:schemaLocation="http://www.omg.org/spec/DDS-XML http://www.omg.org/spec/DDS-XML/20180501/dds-xml_domain_definitions.xsd"
+                name="MyDomainLibrary">
+
+    <domain name="ShapesDomain" domain_id="32">
+        <register_type name="ShapeType" type_ref="ShapeType" />
+        <topic name="Pentagon" register_type_ref="ShapeType" />
+        <topic name="Hexagon" register_type_ref="ShapeType" />
+        <topic name="Heptagon" register_type_ref="ShapeType" />
+        <topic name="Octagon" register_type_ref="ShapeType" />
+        <topic name="Nonagon" register_type_ref="ShapeType" />
+        <topic name="Decagon" register_type_ref="ShapeType" />
+        <topic name="Hendecagon" register_type_ref="ShapeType" />
+        <topic name="Dodecagon" register_type_ref="ShapeType" />
+    </domain>
+
+    <domain name="AnotherShapesDomain" domain_id="101">
+        <register_type name="ShapeType" type_ref="ShapeType" />
+        <topic name="Square" register_type_ref="ShapeType" />
+        <topic name="Circle" register_type_ref="ShapeType" />
+        <topic name="Triangle" register_type_ref="ShapeType" />
+    </domain>
+
+</domain_library>
