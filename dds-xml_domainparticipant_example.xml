@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<domain_participant_library xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                            xmlns="http://www.omg.org/spec/DDS-XML"
+                            xsi:schemaLocation="http://www.omg.org/spec/DDS-XML ./dds-xml_domainparticipant_definitions.xsd"
+                            name="MyDomainLibrary">
+
+    <domain_participant name="HelloParticipant"  domain_id="32">
+        <register_type name="HelloWorld" type_ref="HelloWorld" />
+        <topic name="HelloMessage" register_type_ref="HelloWorld" >
+            <topic_name>TopicName</topic_name>
+            <topic_qos></topic_qos>
+            <datareader_qos></datareader_qos>
+            <datawriter_qos></datawriter_qos>
+        </topic>
+
+        <register_type name="MoveCommandResponse" type_ref="MoveCommandResponse" />
+        <register_type name="RobotControl" type_ref="RobotControl" />
+        <register_type name="MoveCommand" type_ref="MoveCommand" />
+        <rpc_service name="FoodDispenserControl"  register_interface_ref="RobotControl">
+            <service_name>FoodDispenserControlSvc</service_name>
+            <request_topic_name>FoodDispenserControlSvcCall</request_topic_name>
+            <reply_topic_name>FoodDispenserControlSvcReturn</reply_topic_name>
+            <client>
+                <request_datawriter_qos></request_datawriter_qos>
+                <reply_datareader_qos></reply_datareader_qos>
+            </client>
+            <server>
+                <reply_datawriter_qos></reply_datawriter_qos>
+                <request_datareader_qos></request_datareader_qos>
+            </server>
+        </rpc_service>
+    
+        <request_reply_service name="FoodDispenser"  register_request_type_ref="MoveCommand" register_reply_type_ref="MoveCommandResponse">
+            <service_name>FoodDispenserSvc</service_name>
+            <request_topic_name>FoodDispenserControlSvcRequest</request_topic_name>
+            <reply_topic_name>FoodDispenserControlSvcReply</reply_topic_name>
+            <requester>
+                <request_datawriter_qos></request_datawriter_qos>
+                <reply_datareader_qos></reply_datareader_qos>                
+            </requester>
+            <replier>
+                <reply_datawriter_qos></reply_datawriter_qos>
+                <request_datareader_qos></request_datareader_qos>                
+            </replier>
+        </request_reply_service>
+
+        <publisher name="HelloPublisher">
+            <data_writer topic_ref="HelloMessage" name="HelloWriter"  >
+                <datawriter_qos>
+                </datawriter_qos>
+            </data_writer>
+        </publisher>
+
+        <subscriber name="HelloSubscriber">
+            <data_reader name="HelloMessage" topic_ref="HelloReader">
+                <datareader_qos></datareader_qos>
+                <query_condition name="MyQueryCondition" kind="builtin.sql"></query_condition>
+                <content_filter name="MyCFT" kind="builtin.sql">
+                    <expression>X &gt; 5</expression>
+                </content_filter>
+                <status_condition>
+                    <status>DATA_AVAILABLE</status>
+                </status_condition>
+                <read_condition name="MyReadCondition">
+                    <instance_state>ALIVE</instance_state>
+                </read_condition>
+            </data_reader>
+        </subscriber>
+
+        <requester name="MoveRequester" request_reply_service_ref="FoodDispenserService"
+            publisher_ref="HelloPublisher" subscriber_ref="HelloSubscriber" >
+            <request_datawriter_qos></request_datawriter_qos>
+            <reply_datareader_qos></reply_datareader_qos>
+        </requester>
+        
+        <replier name="MoveReplier" request_reply_service_ref="FoodDispenserService"
+            publisher_ref="HelloPublisher" subscriber_ref="HelloSubscriber" >
+            <request_datareader_qos></request_datareader_qos>
+            <reply_datawriter_qos></reply_datawriter_qos>
+        </replier>
+
+        <publisher name="HelloPublisher2" />
+        <subscriber name="HelloSubscriber2"/>
+
+
+        <domain_participant_qos>
+            <entity_factory>
+                <autoenable_created_entities>true</autoenable_created_entities>
+            </entity_factory>
+            <!-- Proposed Syntax -->
+            <properties>
+                <property name="Hello">World</property>
+                <property name="Good" propagate="true">Day</property>
+            </properties>
+            <!-- More compact syntax. Does not work well with long or complex-syntax values
+            <properties>
+                <property name="Hello" value="World" />
+                <property name="Good" value="Day" propagate="true" />
+            </properties>             
+            -->
+
+            <!-- Alternative (existing) Syntax -->
+            <property>
+                <value>
+                    <element>
+                        <name>Hello</name>
+                        <value>World</value>
+                    </element>
+                    <element>
+                        <name>Good</name>
+                        <value>Day</value>
+                        <propagate>true</propagate>
+                    </element>
+                </value>
+            </property>
+            <binary_properties>
+                <binary_property name="Hello" propagate="true">
+                    <value>
+                    f672de8762734099
+                    e3 5a 76 33
+                    </value>
+                </binary_property> 
+            </binary_properties>
+            <partition>
+                <name>
+                    <element>Partition1</element>
+                    <element>Partition2</element>
+                </name>
+            </partition>
+        </domain_participant_qos>
+    </domain_participant>
+
+    <domain_participant name="ShapesParticipant"
+                        domain_ref="ADomainLibrary::ShapeDomain"
+                        domain_id="3">
+        <publisher name="MyPublisher">
+            <data_writer name="MySquareWriter" topic_ref="Square" />
+            <data_writer name="MyCircleWriter" topic_ref="Circle" />
+            <data_writer name="MyTriangleWriter" topic_ref="Triangle">
+                <datawriter_qos>
+                    <!-- Alternative 
+                    <partitions>
+                        <partition name="Partition1"/>
+                        <partition name="Partition2"/>
+                    </partitions>
+                    -->
+                    <partition>
+                        <name>
+                            <element>Partition1</element>
+                            <element>Partition2</element>
+                        </name>
+                    </partition>                    
+                </datawriter_qos>
+            </data_writer>
+            <publisher_qos>
+                <partition>
+                    <name>
+                        <element>Partition1</element>
+                        <element>Partition2</element>
+                    </name>
+                </partition>
+                <entity_factory>
+                    <autoenable_created_entities>false</autoenable_created_entities>
+                </entity_factory>
+            </publisher_qos>
+        </publisher>
+        
+        <subscriber name="MyPublisher">
+            <data_reader name="MySquareWriter" topic_ref="Square" />
+            <data_reader name="MyCircleWriter" topic_ref="Circle" />
+            <data_reader name="MyTriangleWriter" topic_ref="Triangle" />
+            <subscriber_qos base_name="SomeQosLibrary::SomeQosProfile">
+                <entity_factory>
+                    <autoenable_created_entities>false</autoenable_created_entities>
+                </entity_factory>
+            </subscriber_qos>
+        </subscriber>
+
+
+        <client name="RobotControlClient" rpc_service_ref="FoodDispenserControl" 
+            publisher_ref="HelloPublisher" subscriber_ref="HelloSubscriber" >
+            <request_datawriter_qos>
+                <history>
+                    <depth>100</depth>
+                    <kind>KEEP_LAST_HISTORY_QOS</kind>
+                </history>
+            </request_datawriter_qos>
+            <reply_datareader_qos></reply_datareader_qos>
+        </client>
+
+        <client name="RobotControlClient" rpc_service_ref="FoodDispenserControl">
+            <request_datawriter_qos></request_datawriter_qos>
+            <reply_datareader_qos></reply_datareader_qos>
+        </client>
+        <server name="RobotControlServer" rpc_service_ref="FoodDispenserControl">
+            <request_datareader_qos></request_datareader_qos>
+            <reply_datawriter_qos></reply_datawriter_qos>
+        </server>
+    </domain_participant>
+
+</domain_participant_library>

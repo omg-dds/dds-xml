@@ -12,8 +12,8 @@
     <!-- Inclusion of other Building Blocks -->
     <!-- ================================================================== -->
 
-    <xs:include schemaLocation="http://www.omg.org/spec/DDS-XML/20180501/dds-xml_type_definitions_nonamespace.xsd" />
-    <xs:include schemaLocation="http://www.omg.org/spec/DDS-XML/20180501/dds-xml_qos_definitions_nonamespace.xsd" />
+    <xs:include schemaLocation="./dds-xml_type_definitions_nonamespace.xsd" />
+    <xs:include schemaLocation="./dds-xml_qos_definitions_nonamespace.xsd" />
 
 
     <!-- ================================================================== -->
@@ -23,7 +23,7 @@
     <!-- Register Type -->
 
     <xs:complexType name="registerType">
-        <xs:choice minOccurs="0" maxOccurs="2">
+        <xs:choice minOccurs="0" maxOccurs="1">
             <xs:element name="registered_name" minOccurs="0"
                         type="elementName" />
         </xs:choice>
@@ -34,17 +34,74 @@
         <xs:attribute name="format" type="xs:string" use="optional" />
     </xs:complexType>
 
+    <xs:complexType name="registerInterface">
+        <xs:choice minOccurs="0" maxOccurs="1">
+            <xs:element name="registered_name" minOccurs="0"
+                        type="elementName" />
+        </xs:choice>
+
+        <xs:attribute name="name" type="elementName" use="required" />
+        <xs:attribute name="interface_ref" type="elementNameReference"
+                      use="optional" />
+        <xs:attribute name="format" type="xs:string" use="optional" />
+    </xs:complexType>
+
     <!-- Topic -->
 
     <xs:complexType name="topic">
-        <xs:sequence minOccurs="0" maxOccurs="2">
-            <xs:element name="registered_name" minOccurs="0"
-                        type="elementName" />
-            <xs:element name="topic_qos" type="topicQos" minOccurs="0" />
-        </xs:sequence>
+        <xs:all>
+            <xs:element name="topic_name"      type="elementName"   minOccurs="0" />
+            <xs:element name="topic_qos"       type="topicQos"      minOccurs="0" />
+            <xs:element name="datawriter_qos"  type="datawriterQos" minOccurs="0" />
+            <xs:element name="datareader_qos"  type="datareaderQos" minOccurs="0" />
+        </xs:all>
 
         <xs:attribute name="name" type="elementName" use="required" />
         <xs:attribute name="register_type_ref" type="elementNameReference"
+                      use="required" />
+    </xs:complexType>
+
+    <!-- RPC Services -->
+    <xs:complexType name="requesterOrClientConfig">
+        <xs:all>
+            <xs:element name="request_datawriter_qos" type="datawriterQosInline" minOccurs="0" />
+            <xs:element name="reply_datareader_qos" type="datareaderQosInline" minOccurs="0" />
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="serverOrReplierConfig">
+        <xs:all>
+            <xs:element name="request_datareader_qos" type="datareaderQosInline" minOccurs="0" />
+            <xs:element name="reply_datawriter_qos" type="datawriterQosInline" minOccurs="0" />
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="rpc_service">
+        <xs:all>
+            <xs:element name="service_name"          type="elementName"   minOccurs="0" />
+            <xs:element name="request_topic_name"     type="elementName"   minOccurs="0" />
+            <xs:element name="reply_topic_name"       type="elementName"   minOccurs="0" />
+            <xs:element name="client" type="requesterOrClientConfig" minOccurs="0" />
+            <xs:element name="server" type="serverOrReplierConfig" minOccurs="0" />
+        </xs:all>
+        <xs:attribute name="name" type="elementName" use="required" />
+        <xs:attribute name="register_interface_ref" type="elementNameReference"
+                      use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="request_reply_service">
+        <xs:all>
+            <xs:element name="service_name"           type="elementName"   minOccurs="0" />
+            <xs:element name="request_topic_name"     type="elementName"   minOccurs="0" />
+            <xs:element name="reply_topic_name"       type="elementName"   minOccurs="0" />
+            <xs:element name="requester" type="requesterOrClientConfig" minOccurs="0" />
+            <xs:element name="replier" type="serverOrReplierConfig" minOccurs="0" />    
+        </xs:all>
+
+        <xs:attribute name="name" type="elementName" use="required" />
+        <xs:attribute name="register_request_type_ref" type="elementNameReference"
+                      use="required" />
+        <xs:attribute name="register_reply_type_ref"   type="elementNameReference"
                       use="required" />
     </xs:complexType>
 
@@ -53,11 +110,15 @@
     <xs:complexType name="domain">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
             <xs:element name="register_type" type="registerType" />
+            <xs:element name="register_interface" type="registerInterface" />
             <xs:element name="topic" type="topic" />
+            <xs:element name="rpc_service" type="rpc_service" />
+            <xs:element name="request_reply_service" type="request_reply_service" />
         </xs:choice>
 
         <xs:attribute name="name" type="xs:string" use="required" />
         <xs:attribute name="domain_id" type="xs:nonNegativeInteger" />
+        <xs:attribute name="domain_tag" type="xs:string" />
     </xs:complexType>
 
 

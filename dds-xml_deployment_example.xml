@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment_library xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xmlns="http://www.omg.org/spec/DDS-XML"
+                    xsi:schemaLocation="http://www.omg.org/spec/DDS-XML ./dds-xml_deployment_definitions.xsd"
+                    name="MyDeploymentLibrary">
+    
+    <deployment_scenario name="Scenario1">
+        <deployment name="Hello">
+            <node node_ref="MyNode" />
+            <applications>
+                <application name="MyApp1" application_ref="MyAppRef"/>
+                <application name="MyApp2" application_ref="MyAppRef" />
+            </applications>
+        </deployment>
+        <deployment name="Deployment_Host_1">
+            <node node_ref="MyNodeLibrary::Host_1" />
+            <applications>
+                <application name="App1" application_ref="MyApplicationLibrary::Application_1" />
+                <application name="App2" application_ref="MyApplicationLibrary::Application_1" />
+            </applications>
+            <configuration>
+                <tsn>
+                    <tsn_listener name="MyListener1" stream_name="stream1" datareader_ref="App1::MySub::MyReader"></tsn_listener>
+                    <tsn_talker name="MyTalker1" stream_name="stream2" datawriter_ref="App1::MyPub::MyWriter"></tsn_talker>
+                </tsn>
+            </configuration>
+        </deployment>
+        <deployment name="DeploymentHost_2">
+            <node node_ref="MyNodeLibrary::Host_2" />
+            <applications>
+                <application name="App4" application_ref="MyApplicationLibrary::Application_2" />
+            </applications>
+            <configuration/>
+        </deployment>
+        <deployment name="Deployment_Host_3">
+            <node node_ref="MyNodeLibrary::Host_3" />
+            <applications>
+                <application name="MyApp" application_ref="MyApplicationLibrary::Application_3" />
+            </applications>
+        </deployment>
+    </deployment_scenario>
+
+    <deployment_scenario name="Scenario2" base_name="Scenario1">
+        <deployment name="Deployment_Host_4">
+            <node node_ref="MyNodeLibrary::Host_4" />
+            <applications>
+                <application name="MyApp" application_ref="MyApplicationLibrary::Application_4" />
+            </applications>
+        </deployment>
+        <deployment name="Deployment_Host_5">
+            <node node_ref="MyNodeLibrary::Host_5" />
+            <applications>
+                <application name="MyApp2" application_ref="MyApplicationLibrary::Application_5" />
+            </applications>
+        </deployment>
+    </deployment_scenario>
+</deployment_library>

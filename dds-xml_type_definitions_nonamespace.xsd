@@ -58,6 +58,47 @@
     <!-- Basic Types -->
     <!-- ================================================================== -->
 
+    <xs:simpleType name="allUnionDiscriminatorTypeKind">
+        <xs:restriction base="xs:string">
+            <!-- Primitive Types -->
+            <xs:enumeration value="boolean" />
+            <xs:enumeration value="byte" />
+            <xs:enumeration value="char8" />
+            <xs:enumeration value="char16" />
+            <xs:enumeration value="int16" />
+            <xs:enumeration value="uint16" />
+            <xs:enumeration value="int32" />
+            <xs:enumeration value="uint32" />
+            <xs:enumeration value="int64" />
+            <xs:enumeration value="uint64" />
+
+            <!-- Alias to other type -->
+            <xs:enumeration value="aliasType" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="allMapKeyTypeKind">
+        <xs:restriction base="xs:string">
+            <!-- Primitive Types -->
+            <xs:enumeration value="byte" />
+            <xs:enumeration value="char8" />
+            <xs:enumeration value="char16" />
+            <xs:enumeration value="int16" />
+            <xs:enumeration value="uint16" />
+            <xs:enumeration value="int32" />
+            <xs:enumeration value="uint32" />
+            <xs:enumeration value="int64" />
+            <xs:enumeration value="uint64" />
+
+            <!-- String containers -->
+            <xs:enumeration value="string" />
+            <xs:enumeration value="wstring" />
+
+            <!-- Alias to other type -->
+            <xs:enumeration value="aliasType" />
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="allTypeKind">
         <xs:restriction base="xs:string">
             <!-- Primitive Types -->
@@ -71,6 +112,7 @@
             <xs:enumeration value="uint32" />
             <xs:enumeration value="int64" />
             <xs:enumeration value="uint64" />
+
             <xs:enumeration value="float32" />
             <xs:enumeration value="float64" />
             <xs:enumeration value="float128" />
@@ -90,18 +132,104 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <!-- ================================================================== -->
+    <!-- Common Member Attributes -->
+    <!-- ================================================================== -->
+    <xs:attributeGroup name="constantElementAttributes">
+        <xs:attribute name="name" type="identifierName" 
+                use="required" />
+        <xs:attribute name="type" type="allTypeKind" 
+                use="required" />
+        <xs:attribute name="nonBasicTypeName" type="identifierName" 
+                use="optional" />
+        <xs:attribute name="units" type="xs:string" use="optional" />
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="typedElementAttributes">
+        <xs:attributeGroup ref="constantElementAttributes"/>
+        <xs:attribute name="stringMaxLength" type="xs:string"
+                use="optional" />
+        <xs:attribute name="sequenceMaxLength" type="xs:string"
+                use="optional" />
+        <xs:attribute name="arrayDimensions" type="arrayDimensionsKind"
+                use="optional" /> 
+        <xs:attribute name="mapKeyType" type="allMapKeyTypeKind"
+                use="optional" />
+        <xs:attribute name="mapKeyNonBasicTypeName"
+                type="identifierName" use="optional" />
+        <xs:attribute name="mapKeyStringMaxLength" type="xs:string"
+                use="optional" />
+        <xs:attribute name="mapMaxLength" type="xs:string"
+                use="optional" />
+        <xs:attribute name="optional" type="xs:boolean"  
+                use="optional" default="true" />
+        <xs:attribute name="external" type="xs:boolean"  
+                use="optional" default="true" />
+        <xs:attribute name="min" type="xs:float"    
+                use="optional" />
+        <xs:attribute name="max" type="xs:float"    
+                use="optional" />
+        <xs:attribute name="tryConstruct" type="tryConstructKind" 
+                use="optional" default="use_default" />
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="unionMemberAttributes">
+        <xs:attributeGroup ref="typedElementAttributes"/>
+        <xs:attribute name="mustUnderstand" type="xs:boolean"
+                use="optional" default="true" />
+        <xs:attribute name="nonSerialized" type="xs:boolean"
+                use="optional" default="true" />
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="structMemberAttributes">
+        <xs:attributeGroup ref="unionMemberAttributes"/>
+        <xs:attribute name="key" type="xs:boolean" use="optional"
+                default="true" />
+        <xs:attribute name="id" type="memberId" 
+                use="optional" />
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="operationArgumentAttributes">
+        <xs:attributeGroup ref="unionMemberAttributes"/>
+        <xs:attribute name="id" type="memberId" 
+                use="optional" />
+        <xs:attribute name="direction" type="operationArgumentDirectionKind" 
+                use="optional" default="in" />
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="unionTypeAttributes">
+        <xs:attribute name="nested" type="xs:boolean" 
+                use="optional"  default="false" />
+        <xs:attribute name="extensibility" type="extensibilityKind"
+                use="optional" default="append" />
+        <xs:attribute name="autoid" type="autoIdKind" 
+                use="optional"  default="hash" />
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="structTypeAttributes">
+        <xs:attributeGroup ref="unionTypeAttributes"/>
+        <xs:attribute name="baseType" type="identifierName"
+                use="optional" />
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="interfaceTypeAttributes">
+        <xs:attribute name="extensibility" type="extensibilityKind"
+                use="optional" default="append" />
+        <xs:attribute name="baseType" type="identifierName"
+                use="optional" />
+    </xs:attributeGroup>
+
 
     <!-- ================================================================== -->
     <!-- Constants -->
     <!-- ================================================================== -->
 
     <xs:complexType name="constDecl">
-        <xs:attribute name="name" type="identifierName" use="required" />
-        <xs:attribute name="type" type="allTypeKind" use="required" />
-        <xs:attribute name="nonBasicTypeName" type="identifierName"
-                      use="optional" />
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element name="annotations" type="typeAnnotationList" />
+        </xs:sequence>
+        <xs:attributeGroup ref="constantElementAttributes"/>
         <xs:attribute name="value" type="xs:string" use="required" />
-        <xs:attribute name="stringMaxLength" type="xs:string" use="optional" />
     </xs:complexType>
 
 
@@ -116,14 +244,52 @@
         </xs:restriction>
     </xs:simpleType>
 
-
+    <!-- Applies to annotatons -->
     <xs:complexType name="simpleMemberDecl">
         <xs:attribute name="name" type="identifierName" use="required" />
         <xs:attribute name="type" type="allTypeKind" use="required" />
         <xs:attribute name="nonBasicTypeName" type="identifierName"
-                      use="optional" />
+                      use="optional" />     
     </xs:complexType>
 
+    <!-- Applies to annotation parameters -->
+    <xs:complexType name="annotationParameterDecl">
+        <xs:complexContent>
+            <xs:extension base="simpleMemberDecl">  
+                <xs:sequence>
+                    <xs:element name="doc" type="docDecl" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+                <xs:attribute name="default" type="xs:string"
+                                use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <!-- Applies to exception parameters -->
+    <xs:complexType name="exceptionMemberDecl">
+        <xs:complexContent>
+            <xs:extension base="simpleMemberDecl"> 
+                <xs:sequence>
+                    <xs:element name="annotations" type="typeAnnotationList" 
+                            minOccurs="0" maxOccurs="1" />
+                    </xs:sequence> 
+                <xs:attribute name="stringMaxLength" type="xs:string"
+                              use="optional" />
+                <xs:attribute name="sequenceMaxLength" type="xs:string"
+                              use="optional" />
+                <xs:attribute name="arrayDimensions" type="arrayDimensionsKind"
+                              use="optional" /> 
+                <xs:attribute name="mapKeyType" type="allTypeKind"
+                              use="optional" />
+                <xs:attribute name="mapKeyNonBasicTypeName"
+                              type="identifierName" use="optional" />
+                <xs:attribute name="mapKeyStringMaxLength" type="xs:string"
+                              use="optional" />
+                <xs:attribute name="mapMaxLength" type="xs:string"
+                              use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
 
     <xs:simpleType name="tryConstructKind">
         <xs:restriction base="xs:string">
@@ -134,45 +300,21 @@
     </xs:simpleType>
 
     <xs:complexType name="memberDecl">
-        <xs:complexContent>
-            <xs:extension base="simpleMemberDecl">
-                <xs:sequence>
-                    <xs:element name="annotate" type="annotationDecl"
-                                minOccurs="0" maxOccurs="unbounded" />
-                </xs:sequence>
-
-                <xs:attribute name="external" type="xs:boolean"
-                              use="optional" default="true" />
-                <xs:attribute name="tryConstruct" type="tryConstructKind"
-                              use="optional" default="use_default" />
-                <xs:attribute name="mapKeyType" type="allTypeKind"
-                              use="optional" />
-                <xs:attribute name="mapKeyNonBasicTypeName"
-                              type="identifierName" use="optional" />
-                <xs:attribute name="stringMaxLength" type="xs:string"
-                              use="optional" />
-                <xs:attribute name="mapKeyStringMaxLength" type="xs:string"
-                              use="optional" />
-                <xs:attribute name="sequenceMaxLength" type="xs:string"
-                              use="optional" />
-                <xs:attribute name="mapMaxLength" type="xs:string"
-                              use="optional" />
-                <xs:attribute name="arrayDimensions" type="arrayDimensionsKind"
-                              use="optional" />
-            </xs:extension>
-        </xs:complexContent>
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element name="annotations" type="typeAnnotationList" />
+        </xs:sequence>
+        <xs:attributeGroup ref="typedElementAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="verbatimDecl">
-        <xs:sequence>
-            <xs:element name="text" type="xs:string" minOccurs="1"
-                        maxOccurs="1" />
-        </xs:sequence>
-
-        <xs:attribute name="language" type="xs:string" use="optional"
-                      default="*" />
-        <xs:attribute name="placement" type="xs:string" use="optional"
-                      default="before-declaration" />
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="language"  type="xs:string" use="optional"
+                              default="*" />
+                <xs:attribute name="placement" type="xs:string" use="optional" 
+                              default="before-declaration" />           
+            </xs:extension>
+        </xs:simpleContent>
     </xs:complexType>
 
     <xs:simpleType name="extensibilityKind">
@@ -186,17 +328,62 @@
     <xs:simpleType name="autoIdKind">
         <xs:restriction base="xs:string">
             <xs:enumeration value="hash" />
-            <xs:enumeration value="sequencial" />
+            <xs:enumeration value="sequential" />
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="structOrUnionTypeDecl">
-        <xs:sequence>
-            <xs:choice minOccurs="0" maxOccurs="unbounded">
-                <xs:element name="annotate" type="annotationDecl" />
-                <xs:element name="verbatim" type="verbatimDecl" />
-            </xs:choice>
+    <xs:complexType name="docDecl">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="format" type="xs:string" use="optional" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="licenseDefinitionDecl">
+        <xs:attribute name="name" type="xs:string"  use="required" />
+        <xs:attribute name="link" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="licenseUseDecl">
+        <xs:attribute name="use_name" type="xs:string" use="required" />
+        <xs:attribute name="license_definiion_ref" type="xs:string" use="required"/>
+        <xs:attribute name="link" type="xs:string" use="required"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="licenseDecl">
+        <xs:attribute name="license_use_ref" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="typeAnnotationList">
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="doc" type="docDecl" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="verbatim" type="verbatimDecl" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="custom" type="appliedAnnotation" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="license" type="licenseDecl" minOccurs="0" maxOccurs="1"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="memberAnnotationList">
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="doc" type="docDecl" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="verbatim" type="verbatimDecl" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="custom" type="appliedAnnotation" minOccurs="0" maxOccurs="unbounded" />
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="annotatedTypeDecl">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element name="annotations" type="typeAnnotationList" />
         </xs:sequence>
+        <xs:attribute name="name" type="identifierName" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="structOrUnionTypeDecl">
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="annotate" type="appliedAnnotation" />
+            </xs:choice>
 
         <xs:attribute name="name" type="identifierName" use="required" />
         <xs:attribute name="nested" type="xs:boolean" use="optional"
@@ -214,7 +401,8 @@
 
     <xs:complexType name="annotationTypeDecl">
         <xs:sequence>
-            <xs:element name="member" type="simpleMemberDecl"
+            <xs:element name="doc" type="docDecl" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="parameter" type="annotationParameterDecl"
                         minOccurs="0" maxOccurs="unbounded" />
         </xs:sequence>
 
@@ -222,18 +410,18 @@
         <xs:attribute name="baseType" type="identifierName" use="optional" />
     </xs:complexType>
 
-    <xs:complexType name="annotationMemberValueDecl">
+    <xs:complexType name="annotationParameterValue">
         <xs:attribute name="name" type="identifierName" use="required" />
-        <xs:attribute name="value" type="xs:string" use="optional" />
+        <xs:attribute name="value" type="xs:string" use="required" />
     </xs:complexType>
 
-    <xs:complexType name="annotationDecl">
+    <xs:complexType name="appliedAnnotation">
         <xs:sequence>
-            <xs:element name="member" type="annotationMemberValueDecl"
+            <xs:element name="parameter" type="annotationParameterValue"
                         minOccurs="0" maxOccurs="unbounded" />
         </xs:sequence>
 
-        <xs:attribute name="name" type="identifierName" use="required" />
+        <xs:attribute name="type" type="identifierName" use="required" />
     </xs:complexType>
 
 
@@ -242,59 +430,45 @@
     <!-- ================================================================== -->
 
     <xs:complexType name="structMemberDecl">
-        <xs:complexContent>
-            <xs:extension base="memberDecl">
-                <xs:attribute name="id" type="memberId" use="optional" />
-                <xs:attribute name="optional" type="xs:boolean"
-                              use="optional" default="true" />
-                <xs:attribute name="mustUnderstand" type="xs:boolean"
-                              use="optional" default="true" />
-                <xs:attribute name="nonSerialized" type="xs:boolean"
-                              use="optional" default="true" />
-                <xs:attribute name="key" type="xs:boolean" use="optional"
-                              default="true" />
-            </xs:extension>
-        </xs:complexContent>
+        <xs:sequence>
+            <xs:element name="annotations" type="memberAnnotationList" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attributeGroup ref="structMemberAttributes"/>
     </xs:complexType>
-
 
     <xs:complexType name="structDecl">
         <xs:complexContent>
-            <xs:extension base="structOrUnionTypeDecl">
-                <xs:sequence>
-                    <xs:choice maxOccurs="unbounded">
-                        <xs:element name="member" type="structMemberDecl"
-                                    minOccurs="1" />
-                        <xs:element name="const" type="constDecl"
-                                    minOccurs="0" />
-                    </xs:choice>
-                </xs:sequence>
+            <xs:extension base="annotatedTypeDecl">
+                <xs:choice maxOccurs="unbounded">
+                    <xs:element name="member" type="structMemberDecl"
+                                minOccurs="1" />
+                    <xs:element name="const" type="constDecl"
+                                minOccurs="0" />
+                </xs:choice>
 
-                <xs:attribute name="baseType" type="identifierName"
-                              use="optional" />
+                <xs:attributeGroup ref="structTypeAttributes" />
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-
 
     <!-- =================================================================== -->
     <!-- Unions -->
     <!-- =================================================================== -->
 
     <xs:complexType name="unionMemberDecl">
-        <xs:complexContent>
-            <xs:extension base="memberDecl" />
-        </xs:complexContent>
+        <xs:sequence>
+            <xs:element name="annotations" type="memberAnnotationList" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attributeGroup ref="unionMemberAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="discriminatorDecl">
         <xs:sequence>
-            <xs:element name="annotate" type="annotationDecl"
-                        minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="annotations" type="memberAnnotationList" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
 
-        <xs:attribute name="type" type="allTypeKind" use="required" />
-        <xs:attribute name="nonBasicTypeName" type="identifierName"
+        <xs:attribute name="type" type="allUnionDiscriminatorTypeKind" use="required" />
+        <xs:attribute name="aliasTypeName" type="identifierName"
                       use="optional" />
         <xs:attribute name="key" type="xs:boolean" use="optional"
                       default="false" />
@@ -313,15 +487,32 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="defaultCaseDecl">
+        <xs:sequence>
+            <xs:element name="member" type="unionMemberDecl"
+                        minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="baseUnionDecl">
+        <xs:attribute name="type" type="identifierName" use="required" />
+    </xs:complexType>
+
     <xs:complexType name="unionDecl">
         <xs:complexContent>
-            <xs:extension base="structOrUnionTypeDecl">
+            <xs:extension base="annotatedTypeDecl">
                 <xs:sequence>
-                    <xs:element name="discriminator" type="discriminatorDecl"
-                                minOccurs="1" maxOccurs="1" />
+                    <xs:choice minOccurs="1" maxOccurs="1">
+                        <xs:element name="discriminator" type="discriminatorDecl" />
+                        <xs:element name="baseUnion" type="baseUnionDecl" />
+                    </xs:choice>
                     <xs:element name="case" type="caseDecl"
                                 minOccurs="1" maxOccurs="unbounded" />
+                    <xs:element name="defaultCase" type="defaultCaseDecl"
+                                minOccurs="0" maxOccurs="1" />                                
                 </xs:sequence>
+
+                <xs:attributeGroup ref="unionTypeAttributes" />
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -332,22 +523,29 @@
     <!-- =================================================================== -->
 
     <xs:complexType name="typedefDecl">
-        <xs:attribute name="name" type="identifierName" use="required" />
-        <xs:attribute name="type" type="allTypeKind" use="required" />
-        <xs:attribute name="nonBasicTypeName" type="identifierName"
-                      use="optional" />
-        <xs:attribute name="mapKeyType" type="allTypeKind" use="optional" />
-        <xs:attribute name="mapKeyNonBasicTypeName" type="identifierName"
-                      use="optional" />
-        <xs:attribute name="stringMaxLength" type="xs:string" use="optional" />
-        <xs:attribute name="mapKeyStringMaxLength" type="xs:string"
-                      use="optional" />
-        <xs:attribute name="sequenceMaxLength" type="xs:string"
-                      use="optional" />
-        <xs:attribute name="mapMaxLength" type="xs:string" use="optional" />
-        <xs:attribute name="arrayDimensions" type="arrayDimensionsKind"
-                      use="optional" />
-        <xs:attribute name="external" type="xs:boolean" use="optional" />
+        <xs:complexContent>
+            <xs:extension base="annotatedTypeDecl">
+                <xs:attribute name="type" type="allTypeKind" use="required" />
+                <xs:attribute name="nonBasicTypeName" type="identifierName"
+                            use="optional" />
+                <xs:attribute name="mapKeyType" type="allMapKeyTypeKind" use="optional" />
+                <xs:attribute name="mapKeyAliasTypeName" type="identifierName"
+                            use="optional" />
+                <xs:attribute name="stringMaxLength" type="xs:string" use="optional" />
+                <xs:attribute name="mapKeyStringMaxLength" type="xs:string"
+                            use="optional" />
+                <xs:attribute name="sequenceMaxLength" type="xs:string"
+                            use="optional" />
+                <xs:attribute name="mapMaxLength" type="xs:string" use="optional" />
+                <xs:attribute name="arrayDimensions" type="arrayDimensionsKind"
+                            use="optional" />
+                <xs:attribute name="external" type="xs:boolean" use="optional" />
+                <xs:attribute name="min" type="xs:float" use="optional" />
+                <xs:attribute name="max" type="xs:float" use="optional" />
+                <xs:attribute name="units" type="xs:string" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+
     </xs:complexType>
 
 
@@ -363,9 +561,8 @@
     </xs:simpleType>
 
     <xs:complexType name="enumeratorDecl">
-        <xs:sequence>
-            <xs:element name="annotate" type="annotationDecl"
-                        minOccurs="0" maxOccurs="unbounded" />
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element name="annotations" type="memberAnnotationList" />
         </xs:sequence>
 
         <xs:attribute name="name" type="identifierName" use="required" />
@@ -375,18 +572,16 @@
     </xs:complexType>
 
     <xs:complexType name="enumDecl">
-        <xs:sequence>
-            <xs:element name="annotate" type="annotationDecl"
-                        minOccurs="0" maxOccurs="unbounded" />
-            <xs:element name="verbatim" type="verbatimDecl"
-                        minOccurs="0" maxOccurs="unbounded" />
-            <xs:element name="enumerator" type="enumeratorDecl"
-                        minOccurs="1" maxOccurs="unbounded" />
-        </xs:sequence>
-
-        <xs:attribute name="name" type="identifierName" use="required" />
-        <xs:attribute name="bitBound" type="enumBitBound" use="optional"
-                      default="32" />
+        <xs:complexContent>
+            <xs:extension base="annotatedTypeDecl">
+                <xs:sequence>
+                    <xs:element name="enumerator" type="enumeratorDecl"
+                                minOccurs="1" maxOccurs="unbounded" />
+                </xs:sequence>
+                <xs:attribute name="bitBound" type="enumBitBound" use="optional"
+                              default="32" />
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
 
@@ -410,7 +605,7 @@
 
     <xs:complexType name="flagDecl">
         <xs:sequence>
-            <xs:element name="annotate" type="annotationDecl"
+            <xs:element name="annotations" type="memberAnnotationList"
                         minOccurs="0" maxOccurs="unbounded" />
         </xs:sequence>
 
@@ -420,8 +615,8 @@
 
     <xs:complexType name="bitmaskDecl">
         <xs:sequence>
-            <xs:element name="annotate" type="annotationDecl"
-                        minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="annotations" type="typeAnnotationList"
+                        minOccurs="0" maxOccurs="1" />
             <xs:element name="flag" type="flagDecl" minOccurs="0"
                         maxOccurs="64" />
         </xs:sequence>
@@ -431,6 +626,110 @@
                       default="32" />
     </xs:complexType>
 
+
+    <!-- ================================================================== -->
+    <!-- Interfaces -->
+    <!-- ================================================================== -->
+    <xs:complexType name="operationReturnAndEceptionMemberDecl">
+        <xs:attribute name="type" type="allTypeKind" use="required" />
+        <xs:attribute name="nonBasicTypeName" type="identifierName"
+                      use="optional" />
+        <xs:attribute name="stringMaxLength" type="xs:string"
+                      use="optional" />
+        <xs:attribute name="sequenceMaxLength" type="xs:string"
+                      use="optional" />
+        <xs:attribute name="arrayDimensions" type="arrayDimensionsKind"
+                      use="optional" /> 
+        <xs:attribute name="mapKeyType" type="allTypeKind"
+                      use="optional" />
+        <xs:attribute name="mapKeyNonBasicTypeName"
+                      type="identifierName" use="optional" />
+        <xs:attribute name="mapKeyStringMaxLength" type="xs:string"
+                      use="optional" />
+        <xs:attribute name="mapMaxLength" type="xs:string"
+                      use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="operationReturnDecl">
+        <xs:complexContent>
+            <xs:extension base="operationReturnAndEceptionMemberDecl">
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="exceptionTypeDecl">
+        <xs:sequence>
+            <xs:element name="annotations" type="typeAnnotationList" 
+                        minOccurs="0" maxOccurs="1" />
+            <xs:element name="member" type="exceptionMemberDecl"
+                        minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+
+        <xs:attribute name="name" type="identifierName" use="required" />
+        <xs:attribute name="baseType" type="identifierName" use="optional" />
+    </xs:complexType>
+
+    <xs:simpleType name="operationArgumentDirectionKind">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="in" />
+            <xs:enumeration value="out" />
+            <xs:enumeration value="inout" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="operationArgumentDecl">
+        <xs:sequence>
+            <xs:element name="annotations" type="memberAnnotationList" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attributeGroup ref="operationArgumentAttributes"/>
+    </xs:complexType> 
+
+    <xs:complexType name="exceptionDecl">
+        <xs:attribute name="type" type="identifierName" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="raisesDecl">
+        <xs:sequence>
+            <xs:element name="exception" type="exceptionDecl" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="operationArgumentList">
+        <xs:sequence>
+            <xs:element name="argument" type="operationArgumentDecl" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="operationDecl">
+        <xs:all>
+            <xs:element name="annotations" type="memberAnnotationList" 
+                minOccurs="0" />            
+            <xs:element name="return" type="operationReturnDecl" 
+                minOccurs="0" />
+            <xs:element name="raises" type="raisesDecl" 
+                minOccurs="0" />                
+            <xs:element name="arguments"  type="operationArgumentList"
+                minOccurs="0" />
+        </xs:all>
+        <xs:attribute name="name" type="identifierName" use="required" />
+        <xs:attribute name="extensibility" type="extensibilityKind" 
+                      use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="interfaceDecl">
+        <xs:complexContent>
+            <xs:extension base="annotatedTypeDecl">
+                <xs:choice maxOccurs="unbounded">
+                    <xs:element name="operation" type="operationDecl" 
+                        minOccurs="0"  maxOccurs="unbounded" />
+                    <xs:element name="const" type="constDecl"
+                                minOccurs="0" />
+                </xs:choice>
+
+                <xs:attributeGroup ref="interfaceTypeAttributes" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
 
     <!-- ================================================================== -->
     <!-- Modules -->
@@ -446,6 +745,8 @@
                 <xs:element name="const" type="constDecl" minOccurs="0" />
                 <xs:element name="module" type="moduleDecl"
                             minOccurs="0" />
+                <xs:element name="struct2" type="structDecl"
+                            minOccurs="0" />
                 <xs:element name="struct" type="structDecl"
                             minOccurs="0" />
                 <xs:element name="union" type="unionDecl" minOccurs="0" />
@@ -456,6 +757,14 @@
                 <xs:element name="enum" type="enumDecl" minOccurs="0" />
                 <xs:element name="bitmask" type="bitmaskDecl"
                             minOccurs="0" />
+                <xs:element name="exception" type="exceptionTypeDecl"
+                            minOccurs="0" />
+                <xs:element name="interface" type="interfaceDecl" 
+                            minOccurs="0" />
+                <xs:element name="license_definition" type="licenseDefinitionDecl" 
+                            minOccurs="0" />
+                <xs:element name="license_use" type="licenseUseDecl" 
+                            minOccurs="0" />             
             </xs:choice>
         </xs:sequence>
     </xs:group>

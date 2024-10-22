@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <!-- Same as elementName redefined here to avoid inclusion of another XSD -->
+    <xs:simpleType name="tsnElementName">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="((::)?[a-zA-Z0-9_.])+" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="tsnElementNameReference">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="((::)?[a-zA-Z0-9_.])+" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Same as macAddress, ipv4Address, ipv6Address redefined here to avoid inclusion of another XSD -->
+    <xs:simpleType name="tsnMacAddress">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="tsnIpv4Address">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+    <xs:simpleType name="tsnIpv6Address">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+
+    <!-- Same as duration redefined here to avoid inclusion of another XSD -->
+    <xs:complexType name="tsnDuration">
+        <xs:all>
+            <xs:element name="sec" type="xs:nonNegativeInteger"
+                minOccurs="0" />
+            <xs:element name="nanosec" type="xs:nonNegativeInteger"
+                minOccurs="0" />
+        </xs:all>
+    </xs:complexType>
+
+    <xs:simpleType name="transmissionSelectionAlgorithm">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="STRICT_PRIORITY"/>
+                    <xs:enumeration value="CREDIT_BASED_SHAPER"/>
+                    <xs:enumeration value="ENHANCED_TRANSMISSION_SELECTION"/>
+                    <xs:enumeration value="ATS_TRANSMISSION_SELECTION"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:nonNegativeInteger"/>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:complexType name="timeAware">
+            <xs:all>
+                <xs:element name="earliest_transmit_offset" type="xs:unsignedInt" minOccurs="0" />
+                <xs:element name="latest_transmit_offset" type="xs:unsignedInt"  minOccurs="0" />
+                <xs:element name="jitter" type="xs:unsignedInt"  minOccurs="0" />
+            </xs:all>
+    </xs:complexType>
+    <xs:complexType name="trafficSpecification">
+        <xs:all>
+            <xs:element name="periodicity" type="tsnDuration" minOccurs="0" />
+            <xs:element name="samples_per_period" type="xs:unsignedShort" minOccurs="0" />
+            <xs:element name="max_bytes_per_sample" type="xs:unsignedShort" minOccurs="0" />
+            <xs:element name="transmission_selection" type="transmissionSelectionAlgorithm" minOccurs="0" />
+            <xs:element name="time_aware" type="timeAware" minOccurs="0" />
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="networkRequirements">
+        <xs:all>
+            <xs:element name="num_seamless_trees" type="xs:unsignedByte" minOccurs="0" />
+            <xs:element name="max_latency" type="xs:unsignedInt" minOccurs="0" />
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="ieee802MacAddresses">
+        <xs:all>
+            <xs:element name="destination_mac_address" type="tsnMacAddress" minOccurs="0" />
+            <xs:element name="source_mac_address" type="tsnMacAddress" minOccurs="0" />
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="ieee802VlanTag">
+        <xs:all>
+            <xs:element name="priority_code_point" type="xs:unsignedByte" minOccurs="0" />
+            <xs:element name="vlan_id" type="xs:unsignedShort" minOccurs="0" />
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="ipv4Tuple">
+        <xs:all>
+            <xs:element name="source_ip_address" type="tsnIpv4Address" minOccurs="0" />
+            <xs:element name="destination_ip_address" type="tsnIpv4Address" minOccurs="0" />
+            <xs:element name="dscp" type="xs:unsignedByte" minOccurs="0" />
+            <xs:element name="protocol" type="xs:unsignedShort" minOccurs="0" />
+            <xs:element name="source_port" type="xs:unsignedShort" minOccurs="0" />
+            <xs:element name="destination_port" type="xs:unsignedShort" minOccurs="0" />
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="ipv6Tuple">
+        <xs:all>
+            <xs:element name="source_ip_address" type="tsnIpv6Address" minOccurs="0" />
+            <xs:element name="destination_ip_address" type="tsnIpv6Address" minOccurs="0" />
+            <xs:element name="dscp" type="xs:unsignedByte" minOccurs="0" />
+            <xs:element name="protocol" type="xs:unsignedShort" minOccurs="0" />
+            <xs:element name="source_port" type="xs:unsignedShort" minOccurs="0" />
+            <xs:element name="destination_port" type="xs:unsignedShort" minOccurs="0" />
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="dataFrameSpecification">
+        <xs:all>
+            <xs:element name="mac_addresses" type="ieee802MacAddresses" minOccurs="0" />
+            <xs:element name="vlan_tag" type="ieee802VlanTag" minOccurs="0" />
+            <xs:element name="ipv4_tuple" type="ipv4Tuple" minOccurs="0" />
+            <xs:element name="ipv6_tuple" type="ipv6Tuple" minOccurs="0" />
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="tsnTalker">
+        <xs:all>
+            <xs:element name="traffic_specification" type="trafficSpecification" minOccurs="0" />
+            <xs:element name="network_requirements" type="networkRequirements" minOccurs="0" />
+            <xs:element name="data_frame_specification" type="dataFrameSpecification" minOccurs="0" />
+        </xs:all>
+        <xs:attribute name="name" type="tsnElementName" use="required" />
+        <xs:attribute name="stream_name" type="tsnElementName" use="required" />
+        <xs:attribute name="datawriter_ref" type="tsnElementNameReference" use="required" />
+    </xs:complexType>
+    <xs:complexType name="tsnListener">
+        <xs:all>
+            <xs:element name="network_requirements" type="networkRequirements" minOccurs="0" />
+        </xs:all>
+        <xs:attribute name="name" type="tsnElementName" use="required" />
+        <xs:attribute name="stream_name" type="tsnElementName" use="required" />
+        <xs:attribute name="datareader_ref" type="tsnElementNameReference" use="required" />
+    </xs:complexType>
+    <xs:complexType name="tsnConfiguration">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="tsn_talker" type="tsnTalker" />
+                <xs:element name="tsn_listener" type="tsnListener" />
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

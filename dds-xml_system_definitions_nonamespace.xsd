@@ -5,9 +5,8 @@
            attributeFormDefault="unqualified">
 
     <!-- Include all the necessary building blocks -->
-    
-    <xs:include schemaLocation="http://www.omg.org/spec/DDS-XML/20180501/dds-xml_application_definitions_nonamespace.xsd" />
-    
+    <xs:include schemaLocation="./dds-xml_deployment_definitions_nonamespace.xsd" />
+
     <!-- Define DDS top-level element -->
     <xs:complexType name="ddsSystem">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -18,6 +17,8 @@
                         type="domainParticipantLibrary" />
             <xs:element name="application_library" 
                         type="applicationLibrary" />
+            <xs:element name="node_library" type="nodeLibrary" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="deployment_library" type="deploymentLibrary" minOccurs="0" maxOccurs="unbounded" />
         </xs:choice>
     </xs:complexType>
 

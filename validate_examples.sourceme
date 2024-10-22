@@ -1,0 +1,21 @@
+# To run source this file 
+
+# The default libxml used by xmllint causes it to hang on some files
+# I updated to the latest libxml2 using "brew install libxml2 " /  brew update libxml2   
+# But the use of this canot be configured systemwide: brew link --force libxml2
+#  returns an error:  Warning: Refusing to link macOS provided/shadowed software: libxml2
+#  so setting the path accomplishes the same ensuring xmllint uses the latest libxml2                                     
+export PATH="/usr/local/opt/libxml2/bin:$PATH"
+xmllint --noout --schema dds-xml_type_definitions.xsd    dds-xml_type_example.xml
+xmllint --noout --schema dds-xml_qos_definitions.xsd     dds-xml_qos_example.xml
+xmllint --noout --schema dds-xml_domain_definitions.xsd  dds-xml_domain_example.xml
+xmllint --noout --schema dds-xml_domainparticipant_definitions.xsd dds-xml_domainparticipant_example.xml
+
+xmllint --noout --schema dds-xml_node_definitions.xsd        dds-xml_node_example.xml
+xmllint --noout --schema dds-xml_application_definitions.xsd dds-xml_application_example.xml
+xmllint --noout --schema dds-xml_deployment_definitions.xsd  dds-xml_deployment_example.xml
+
+xmllint --noout --schema dds-xml_configuration_tsn_definitions.xsd dds-xml_configuration_tsn_example.xml
+
+xmllint --noout --schema dds-xml_system_definitions.xsd      dds-xml_system_example.xml
+xmllint --noout --schema dds-xml_system_definitions.xsd      dds-xml_configuration_tsn_system_example.xml

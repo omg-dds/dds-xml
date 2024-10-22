@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<node_library xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.omg.org/spec/DDS-XML"
+                     xsi:schemaLocation="http://www.omg.org/spec/DDS-XML ./dds-xml_node_definitions.xsd"
+                     name="MyNodeLibrary">
+    <node name="Host_1">
+        <hostname>Host1</hostname>
+        <ipv4_address>192.168.1.1</ipv4_address>
+        <mac_address>AA:AA:AA:AA:AA:AA</mac_address>
+    </node>
+    <node name="Host_2">
+        <hostname>Host2</hostname>
+        <ipv4_address>192.168.1.2</ipv4_address>
+        <mac_address>BB:BB:BB:BB:BB:BB</mac_address>
+        <hostname>AnotherName</hostname>
+    </node>
+    <node name="Host_3">
+        <hostname>Host3</hostname>
+        <ipv4_address>192.168.1.3</ipv4_address>
+        <mac_address>CC:CC:CC:CC:CC:CC</mac_address>
+    </node>
+    <node name="Host_4">
+        <hostname>Host3</hostname>
+        <ipv4_address>192.168.1.4</ipv4_address>
+        <mac_address>DD:DD:DD:DD:DD:DD</mac_address>
+    </node>
+    <node name="Host_5">
+        <hostname>Host3</hostname>
+        <ipv4_address>192.168.1.5</ipv4_address>
+        <mac_address>EE:EE:EE:EE:EE:EE</mac_address>
+    </node>
+    <node name="Ken">
+        <hostname></hostname>
+        <ipv4_address>1.1.1.1</ipv4_address>
+        <ipv4_address>8.8.8.8</ipv4_address>
+        <mac_address>ff:00:22:33:ee:aa</mac_address>
+    </node>
+</node_library>

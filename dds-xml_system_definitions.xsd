@@ -6,10 +6,10 @@
            elementFormDefault="qualified"
            attributeFormDefault="unqualified">
 
-    <!-- Include Chameleon Schema -->
-    <xs:include schemaLocation="./dds-xml_domain_definitions_nonamespace.xsd" />
-
-    <!-- Define top-level element -->
-    <xs:element name="domain_library" type="domainLibrary" />
+    <!-- Include chameleon schema -->
+    <xs:include schemaLocation="./dds-xml_system_definitions_nonamespace.xsd" />
+    
+    <!-- Define DDS top-level element -->
+    <xs:element name="dds" type="ddsSystem" />
 
 </xs:schema>

@@ -13,7 +13,7 @@
 
     <xs:simpleType name="elementName">
         <xs:restriction base="xs:string">
-            <xs:pattern value="((::)?[a-zA-Z0-9_.])+" />
+            <xs:pattern value="([a-zA-Z0-9_.])+" />
         </xs:restriction>
     </xs:simpleType>
 
@@ -21,6 +21,13 @@
         <xs:restriction base="xs:string">
             <xs:whiteSpace value="collapse" />
             <xs:pattern value="((::)?[a-zA-Z0-9_.])+" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Similar to xs:hexBinary except optional whitespace -->
+    <xs:simpleType name="hexBinaryWithWhitespace">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="\s*([0-9a-fA-F]{2}(\s*[0-9a-fA-F]{2})*)?\s*"/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -107,10 +114,6 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <!-- ================================================================== -->
-    <!-- Definition of named types -->
-    <!-- ================================================================== -->
-
     <xs:complexType name="duration">
         <xs:all>
             <xs:element name="sec" type="nonNegativeInteger_Duration_SEC"
@@ -126,6 +129,40 @@
                 maxOccurs="unbounded" />
         </xs:sequence>
     </xs:complexType>
+
+    <!-- RTF1 -->
+    <xs:simpleType name="propertyName">
+        <xs:restriction base="xs:string">
+            <xs:whiteSpace value="collapse"/>
+            <xs:pattern value="([a-zA-Z0-9_.:])+"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="propertyValue">
+        <xs:sequence>
+            <xs:element name="name"
+                        type="propertyName"
+                        minOccurs="0"/>
+            <xs:element name="value"
+                        type="xs:string"
+                        minOccurs="0"/>
+            <xs:element name="propagate"
+                        type="xs:boolean"
+                        minOccurs="0">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="propertyValueSeq">
+        <xs:sequence>
+            <xs:element name="element"
+                        type="propertyValue"
+                        minOccurs="0"
+                        maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- ================================================================== -->
+    <!-- Qos Policy definitions -->
+    <!-- ================================================================== -->
 
     <xs:complexType name="deadlineQosPolicy">
         <xs:all>
@@ -173,7 +210,7 @@
 
     <xs:complexType name="groupDataQosPolicy">
         <xs:all>
-            <xs:element name="value" type="xs:base64Binary"
+            <xs:element name="value" type="hexBinaryWithWhitespace"
                 minOccurs="0" />
         </xs:all>
     </xs:complexType>
@@ -279,7 +316,7 @@
 
     <xs:complexType name="topicDataQosPolicy">
         <xs:all>
-            <xs:element name="value" type="xs:base64Binary"
+            <xs:element name="value" type="hexBinaryWithWhitespace"
                 minOccurs="0" />
         </xs:all>
     </xs:complexType>
@@ -291,21 +328,14 @@
         </xs:all>
     </xs:complexType>
 
-    <!-- userDataQosPolicy uses base64Binary encoding:
-        * Allowed characters are all letters: a-z, A-Z,  digits: 0-9, the
-          characters: '+' '/' '=' and ' ' +,/.=,the plus sign (+), the slash
-          (/), the equals sign (=), and XML whitespace characters.
-        * The number of non whitespace characters must be divisible by four.
-        * Equals signs, which are used as padding, can only appear at the end
-          of the value, and there can be zero, one, or two of them.
-        * If there are two equals signs, they must be preceded by one of the
-          following characters: A, Q, g, w.
-        * If there is only one equals sign, it must be preceded by one of the
-           following characters:
-           A, E, I, M, Q, U, Y, c, g, k, o, s, w, 0, 4, 8. -->
+    <!-- userDataQosPolicy uses hexBinary encoding:
+        * Allowed characters are all letters: a-z, A-Z,  digits: 0-9
+        * Each two chracters encodes 1 Byte
+        * Threre must be an even number of characters
+    -->
     <xs:complexType name="userDataQosPolicy">
         <xs:all>
-            <xs:element name="value" type="xs:base64Binary"
+            <xs:element name="value" type="hexBinaryWithWhitespace"
                 minOccurs="0"></xs:element>
         </xs:all>
     </xs:complexType>
@@ -317,12 +347,77 @@
         </xs:all>
     </xs:complexType>
 
+    <!-- RTF1 -->
+    <xs:complexType name="propertyQosPolicy">
+        <xs:sequence>
+            <xs:element name="value" type="propertyValueSeq" minOccurs="0"/>
+        </xs:sequence>
+
+        <xs:attribute name="inherit" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="simplePropertyDeclOld">
+        <xs:sequence>
+            <xs:element name="value" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="propertyName" use="required" />
+        <xs:attribute name="propagate" type="xs:boolean" use="optional" />     
+    </xs:complexType>
+
+    <xs:complexType name="simplePropertyDecl">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="name" type="propertyName" use="required" />
+                <xs:attribute name="propagate" type="xs:boolean" use="optional" />     
+                    </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="propertyList">
+        <xs:sequence>
+            <xs:element name="property" type="simplePropertyDecl" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+
+        <xs:attribute name="inherit" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="simpleBinaryPropertyDecl">
+        <xs:sequence>
+            <xs:element name="value" type="hexBinaryWithWhitespace"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="propertyName" use="required"/>
+        <xs:attribute name="propagate" type="xs:boolean" use="optional" />     
+    </xs:complexType>
+
+    <xs:complexType name="binaryPropertyList">
+        <xs:sequence>
+            <xs:element name="binary_property" type="simpleBinaryPropertyDecl" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+
+        <xs:attribute name="inherit" type="xs:boolean"/>
+    </xs:complexType>
+
+    <!-- ================================================================== -->
+    <!-- Entity Qos definitions -->
+    <!-- ================================================================== -->
+
     <xs:complexType name="domainparticipantQos">
         <xs:all>
+            <xs:element name="qos_snippets" type="appliedQosSnippetSeq"
+                    minOccurs="0" maxOccurs="1" />
             <xs:element name="user_data" type="userDataQosPolicy"
-                minOccurs="0"></xs:element>
+                minOccurs="0" />
             <xs:element name="entity_factory" type="entityFactoryQosPolicy"
-                minOccurs="0"></xs:element>
+                minOccurs="0" />
+            <!-- RTF1 -->
+            <xs:element name="property" type="propertyQosPolicy"
+                minOccurs="0" />
+            <xs:element name="properties" type="propertyList"
+                minOccurs="0" />
+            <xs:element name="binary_properties" type="binaryPropertyList"
+                minOccurs="0" />
+            <xs:element name="partition" type="partitionQosPolicy"
+                minOccurs="0" />
         </xs:all>
 
         <xs:attribute name="name" type="elementName" />
@@ -332,6 +427,8 @@
 
     <xs:complexType name="publisherQos">
         <xs:all>
+            <xs:element name="qos_snippets" type="appliedQosSnippetSeq"
+                minOccurs="0" />
             <xs:element name="presentation" type="presentationQosPolicy"
                 minOccurs="0" />
             <xs:element name="partition" type="partitionQosPolicy"
@@ -349,14 +446,16 @@
 
     <xs:complexType name="subscriberQos">
         <xs:all>
+            <xs:element name="qos_snippets" type="appliedQosSnippetSeq"
+                minOccurs="0" />
             <xs:element name="presentation" type="presentationQosPolicy"
-                minOccurs="0"></xs:element>
+                minOccurs="0" />
             <xs:element name="partition" type="partitionQosPolicy"
-                minOccurs="0"></xs:element>
+                minOccurs="0" />
             <xs:element name="group_data" type="groupDataQosPolicy"
-                minOccurs="0"></xs:element>
+                minOccurs="0" />
             <xs:element name="entity_factory" type="entityFactoryQosPolicy"
-                minOccurs="0"></xs:element>
+                minOccurs="0" />
         </xs:all>
 
         <xs:attribute name="name" type="elementName" />
@@ -366,6 +465,8 @@
 
     <xs:complexType name="topicQos">
         <xs:all>
+            <xs:element name="qos_snippets" type="appliedQosSnippetSeq"
+                minOccurs="0" />
             <xs:element name="topic_data" type="topicDataQosPolicy"
                 minOccurs="0" />
             <xs:element name="durability" type="durabilityQosPolicy"
@@ -392,6 +493,13 @@
                 minOccurs="0" />
             <xs:element name="ownership" type="ownershipQosPolicy"
                 minOccurs="0" />
+            <!-- RTF1 -->
+            <xs:element name="property" type="propertyQosPolicy"
+                minOccurs="0" />
+            <xs:element name="partition" type="partitionQosPolicy"
+                minOccurs="0" />
+            <xs:element name="properties" type="propertyList"
+                minOccurs="0" />
         </xs:all>
 
         <xs:attribute name="name" type="elementName"/>
@@ -399,8 +507,10 @@
         <xs:attribute name="topic_filter" type="topicNameFilter"/>
     </xs:complexType>
 
-    <xs:complexType name="datareaderQos">
+    <xs:complexType name="datareaderQosInline">
         <xs:all>
+            <xs:element name="qos_snippets" type="appliedQosSnippetSeq"
+                minOccurs="0" />
             <xs:element name="durability" type="durabilityQosPolicy"
                 minOccurs="0" />
             <xs:element name="deadline" type="deadlineQosPolicy"
@@ -425,15 +535,31 @@
                 minOccurs="0" />
             <xs:element name="reader_data_lifecycle" type="readerDataLifecycleQosPolicy"
                 minOccurs="0" />
+            <!-- RTF1 -->
+            <xs:element name="property" type="propertyQosPolicy"
+                minOccurs="0" />
+            <xs:element name="partition" type="partitionQosPolicy"
+                minOccurs="0" />
+            <xs:element name="properties" type="propertyList"
+                minOccurs="0" />
         </xs:all>
 
-        <xs:attribute name="name" type="elementName" />
         <xs:attribute name="base_name" type="elementNameReference" />
-        <xs:attribute name="topic_filter" type="topicNameFilter" />
     </xs:complexType>
 
-    <xs:complexType name="datawriterQos">
+    <xs:complexType name="datareaderQos">
+        <xs:complexContent>
+            <xs:extension base="datareaderQosInline">
+                <xs:attribute name="name" type="elementName" />
+                <xs:attribute name="topic_filter" type="topicNameFilter" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="datawriterQosInline">
         <xs:all>
+            <xs:element name="qos_snippets" type="appliedQosSnippetSeq"
+                minOccurs="0" />
             <xs:element name="durability" type="durabilityQosPolicy"
                 minOccurs="0" />
             <xs:element name="durability_service" type="durabilityServiceQosPolicy"
@@ -464,12 +590,26 @@
                 minOccurs="0" />
             <xs:element name="writer_data_lifecycle" type="writerDataLifecycleQosPolicy"
                 minOccurs="0" />
-        </xs:all>
+            <xs:element name="property" type="propertyQosPolicy"
+                minOccurs="0" />
+            <xs:element name="partition" type="partitionQosPolicy"
+                minOccurs="0" />
+            <xs:element name="properties" type="propertyList"
+                minOccurs="0" />
+            </xs:all>
 
-        <xs:attribute name="name" type="elementName" />
         <xs:attribute name="base_name" type="elementNameReference" />
-        <xs:attribute name="topic_filter" type="topicNameFilter" />
     </xs:complexType>
+
+    <xs:complexType name="datawriterQos">
+        <xs:complexContent>
+            <xs:extension base="datawriterQosInline">
+                <xs:attribute name="name" type="elementName" />
+                <xs:attribute name="topic_filter" type="topicNameFilter" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
 
     <xs:complexType name="domainparticipantQosProfile">
         <xs:complexContent>
@@ -519,8 +659,21 @@
         </xs:complexContent>
     </xs:complexType>
 
-    <xs:complexType name="qosProfile">
+    <xs:complexType name="snippetRef">
+        <xs:attribute name="snippet_ref" type="elementNameReference" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="appliedQosSnippetSeq">
         <xs:sequence>
+            <xs:element name="snippet" type="snippetRef"
+                        minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="qosSnippet">
+        <xs:sequence>
+            <xs:element name="qos_snippets" type="appliedQosSnippetSeq"
+                minOccurs="0" maxOccurs="1" />
             <xs:choice maxOccurs="unbounded">
                 <xs:element name="datareader_qos" type="datareaderQos"
                     minOccurs="0" maxOccurs="unbounded" />
@@ -538,12 +691,21 @@
         </xs:sequence>
 
         <xs:attribute name="name" type="elementName" use="required" />
-        <xs:attribute name="base_name" type="elementNameReference" />
+    </xs:complexType>
+
+    <xs:complexType name="qosProfile">
+        <xs:complexContent>
+            <xs:extension base="qosSnippet">
+                <xs:attribute name="base_name" type="elementNameReference" />
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="qosLibrary">
         <xs:sequence>
             <xs:choice maxOccurs="unbounded">
+                <xs:element name="qos_snippet" type="qosSnippet"
+                    minOccurs="0" maxOccurs="unbounded" />
                 <xs:element name="qos_profile" type="qosProfile"
                     minOccurs="0" maxOccurs="unbounded" />
                 <xs:element name="datareader_qos" type="datareaderQos"

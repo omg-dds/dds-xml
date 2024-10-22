@@ -2,14 +2,89 @@
 
 <qos_library xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://www.omg.org/spec/DDS-XML"
-    xsi:schemaLocation="http://www.omg.org/spec/DDS-XML http://www.omg.org/spec/DDS-XML/20180501/dds-xml_qos_definitions.xsd"
+    xsi:schemaLocation="http://www.omg.org/spec/DDS-XML ./dds-xml_qos_definitions.xsd"
     name="DDSDefaultQoSLibrary">
 
-    <qos_profile name="DDSDefaultQosProfile">
+    <qos_snippet name="DDS_DefaultReliability">
+        <datawriter_qos>
+            <reliability>
+                <kind>BEST_EFFORT_RELIABILITY_QOS</kind>
+                <max_blocking_time>
+                    <sec>0</sec>
+                    <nanosec>100000000</nanosec>
+                </max_blocking_time>
+            </reliability>
+        </datawriter_qos>
         <datareader_qos>
+            <reliability>
+                <kind>BEST_EFFORT_RELIABILITY_QOS</kind>
+            </reliability>
+        </datareader_qos>
+    </qos_snippet>
+
+    <qos_snippet name="DDS_DefaultHistory">
+        <datawriter_qos>
+            <history>
+                <kind>KEEP_LAST_HISTORY_QOS</kind>
+                <depth>1</depth>
+            </history>
+        </datawriter_qos>
+        <datareader_qos>
+            <history>
+                <kind>KEEP_LAST_HISTORY_QOS</kind>
+                <depth>1</depth>
+            </history>
+        </datareader_qos>
+    </qos_snippet>
+
+    <qos_snippet name="DDS_DefaultOwnership">
+        <datawriter_qos>
+            <ownership>
+                <kind>SHARED_OWNERSHIP_QOS</kind>
+            </ownership>
+            <ownership_strength>
+                <value>0</value>
+            </ownership_strength>
+        </datawriter_qos>
+        <datareader_qos>
+            <ownership>
+                <kind>SHARED_OWNERSHIP_QOS</kind>
+            </ownership>
+        </datareader_qos>
+        <topic_qos>
+            <ownership>
+                <kind>SHARED_OWNERSHIP_QOS</kind>
+            </ownership>            
+        </topic_qos>
+    </qos_snippet>
+
+    <qos_snippet name="DDS_DefaultReliabilityHistoryDurability" >
+        <qos_snippets>
+            <!-- TODO Need to figure out element/attribute names-->
+            <snippet snippet_ref="DDS_DefaultReliability" />
+            <snippet snippet_ref="DDS_DefaultHistory" />
+        </qos_snippets>
+        <datawriter_qos>
             <durability>
                 <kind>VOLATILE_DURABILITY_QOS</kind>
             </durability>
+        </datawriter_qos>
+        <datareader_qos>
+            <durability>
+                <kind>VOLATILE_DURABILITY_QOS</kind>
+            </durability>        
+        </datareader_qos>
+    </qos_snippet>
+
+    <qos_profile name="MyCustomProfile" base_name="MyBaseProfile">
+        <qos_snippets>
+            <snippet snippet_ref="DDS_DefaultReliabilityHistoryDurability" />
+            <snippet snippet_ref="DDS_DefaultOwnership" />
+        </qos_snippets>
+        <datareader_qos>
+            <qos_snippets>
+                <snippet snippet_ref="StrictReliable" />
+            </qos_snippets>
             <deadline>
                 <period>
                     <sec>DURATION_INFINITE_SEC</sec>
@@ -29,20 +104,9 @@
                     <nanosec>DURATION_INFINITE_NSEC</nanosec>
                 </lease_duration>
             </liveliness>
-            <reliability>
-                <kind>BEST_EFFORT_RELIABILITY_QOS</kind>
-                <max_blocking_time>
-                    <sec>0</sec>
-                    <nanosec>100000000</nanosec>
-                </max_blocking_time>
-            </reliability>
             <destination_order>
                 <kind>BY_RECEPTION_TIMESTAMP_DESTINATIONORDER_QOS</kind>
             </destination_order>
-            <history>
-                <kind>KEEP_LAST_HISTORY_QOS</kind>
-                <depth>1</depth>
-            </history>
             <resource_limits>
                 <max_samples>LENGTH_UNLIMITED</max_samples>
                 <max_instances>LENGTH_UNLIMITED</max_instances>
@@ -51,9 +115,6 @@
             <user_data>
                 <value></value>
             </user_data>
-            <ownership>
-                <kind>SHARED_OWNERSHIP_QOS</kind>
-            </ownership>
             <time_based_filter>
                 <minimum_separation>
                     <sec>0</sec>
@@ -73,9 +134,10 @@
         </datareader_qos>
 
         <datawriter_qos>
-            <durability>
-                <kind>VOLATILE_DURABILITY_QOS</kind>
-            </durability>
+            <qos_snippets>
+                <snippet snippet_ref="Snippet1" />
+                <snippet snippet_ref="Snippet2" />
+            </qos_snippets>
             <durability_service>
                 <service_cleanup_delay>
                     <sec>0</sec>
@@ -106,20 +168,9 @@
                     <nanosec>DURATION_INFINITE_NSEC</nanosec>
                 </lease_duration>
             </liveliness>
-            <reliability>
-                <kind>RELIABLE_RELIABILITY_QOS</kind>
-                <max_blocking_time>
-                    <sec>0</sec>
-                    <nanosec>100000000</nanosec>
-                </max_blocking_time>
-            </reliability>
             <destination_order>
                 <kind>BY_RECEPTION_TIMESTAMP_DESTINATIONORDER_QOS</kind>
             </destination_order>
-            <history>
-                <kind>KEEP_LAST_HISTORY_QOS</kind>
-                <depth>1</depth>
-            </history>
             <resource_limits>
                 <max_samples>LENGTH_UNLIMITED</max_samples>
                 <max_instances>LENGTH_UNLIMITED</max_instances>
@@ -137,12 +188,6 @@
             <user_data>
                 <value></value>
             </user_data>
-            <ownership>
-                <kind>SHARED_OWNERSHIP_QOS</kind>
-            </ownership>
-            <ownership_strength>
-                <value>0</value>
-            </ownership_strength>
             <writer_data_lifecycle>
                 <autodispose_unregistered_instances>
                     true
@@ -151,12 +196,42 @@
         </datawriter_qos>
 
         <domain_participant_qos>
+            <qos_snippets>
+                <snippet snippet_ref="Snippet1" />
+            </qos_snippets>
             <user_data>
                 <value></value>
             </user_data>
             <entity_factory>
                 <autoenable_created_entities>true</autoenable_created_entities>
             </entity_factory>
+            <!-- Legacy syntax (currently used by Connext) -->
+            <property>
+                <value>
+                    <element>
+                        <name>MyPName1</name>
+                        <value>MyPValue1</value>
+                    </element>
+                    <element>
+                        <name>MyPName2</name>
+                        <value>MyPValue2</value>
+                        <propagate>true</propagate>
+                    </element>
+                </value>
+            </property>
+            <!-- New syntax -->
+            <properties>
+                <!-- Leading and training whitespace is trimmed in XML element content -->
+                <property name="MyPName1">  MyPValue1   </property>
+                <property name="MyPName2" propagate="true"> file://MyPValue1 </property>
+             </properties>
+            <!-- This is the syntax used by Connext -->
+            <partition>
+                <name>
+                    <element>MyDomainPartition1</element>
+                    <element>MyDomainPartition2</element>
+                </name>
+            </partition>
         </domain_participant_qos>
 
         <subscriber_qos>
@@ -258,10 +333,20 @@
                     <nanosec>DURATION_INFINITE_NSEC</nanosec>
                 </duration>
             </lifespan>
-            <ownership>
-                <kind>SHARED_OWNERSHIP_QOS</kind>
-            </ownership>
         </topic_qos>
 
+    </qos_profile>
+
+    <qos_profile name="CustomProfile" base_name="DDSDefaultQosProfile" >
+        <datawriter_qos>
+            <properties>
+                <property name="Hello">World</property>
+            </properties>
+            <ownership><kind>EXCLUSIVE_OWNERSHIP_QOS</kind></ownership>
+            <ownership_strength><value>10</value></ownership_strength>
+        </datawriter_qos>
+        <datareader_qos>
+            <ownership><kind>EXCLUSIVE_OWNERSHIP_QOS</kind></ownership>
+        </datareader_qos>
     </qos_profile>
 </qos_library>
