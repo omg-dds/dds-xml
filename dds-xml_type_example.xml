@@ -82,10 +82,18 @@
                 nonBasicTypeName="PlainEnum" />
         <member name="aMap" type="nonBasic" nonBasicTypeName="PlainEnum"
                 mapKeyType="int32" mapMaxLength="1000" />
+        <member name="aMap2" type="nonBasic" nonBasicTypeName="PlainEnum"
+                mapKeyType="string" mapKeyStringMaxLength="32" mapMaxLength="1000" />
+
+        <member name="aMap2" type="nonBasic" nonBasicTypeName="PlainEnum"
+                mapKeyType="aliasType" mapKeyAliasTypeName="anIntAlias" mapMaxLength="1000" />
+
         <member name="aComplexType" type="nonBasic"
                 nonBasicTypeName="PlainStruct1" />
         <member name="aComplexSequenceType" type="nonBasic"
                 nonBasicTypeName="PlainStruct1" sequenceMaxLength="32" />
+        <member type="int64" name="aMustUndertandMember" mustUnderstand="true"/>
+
     </struct>
 
     <struct name="DerivedStruct" baseType="PlainStruct2">
@@ -166,7 +174,7 @@
             </arguments>
         </operation>
         
-        <operation name="get_path">
+        <operation name="get_path" >
             <return type="nonBasic" nonBasicTypeName="Point" sequenceMaxLength="10"/>
         </operation>
 
@@ -214,11 +222,11 @@
     <license_definition name="MIT" link="https://spdx.org/licenses/MIT.html" />
     <license_definition name="OMG-RAND" link="https://www.omg.org/cgi-bin/doc?ipr/12-09-02.pdf" />
 
-    <license_use use_name="OMG_RAND:OARIS" license_definiion_ref="OMG-RAND" link="https://www.omg.org/spec/OARIS" />
-    <license_use use_name="APACHE2:MYPACKAGE" license_definiion_ref="APACHE-2.0" link="https://my.gitrepo.com/myPackge/myLicense.txt" />
+    <license_use use_name="RAND:OARIS" license_definition="OMG-RAND" link="https://www.omg.org/spec/OARIS" />
+    <license_use use_name="APACHE2:MYPACKAGE" license_definition="APACHE-2.0" link="https://my.gitrepo.com/myPackge/myLicense.txt" />
 
     <!-- Enumerations -->
-    <enum name="AnnotatedEnum" bitBound="16">
+    <enum name="AnnotatedEnum" bitBound="16" license_use="APACHE2:MYPACKAGE">
         <annotations>
             <doc>Documentation on the type</doc>
             <doc format="markdown">
@@ -237,7 +245,6 @@
                 </ul>
                 ]]>
             </doc>
-            <license license_use_ref="APACHE2:MYPACKAGE" />
             <custom type="SimpleAnnotation"/>
             <custom type="ComplexAnnotation">
                 <parameter name="intParam" value="32" />
@@ -265,10 +272,9 @@
     </enum>
 
     <!-- Bitmasks -->
-    <bitmask name="AnnotatedBitmsak" bitBound="16">
+    <bitmask name="AnnotatedBitmsak" bitBound="16" license_use="APACHE2:MYPACKAGE">
         <annotations>
             <doc>Documentation on the type</doc>
-            <license license_use_ref="APACHE2:MYPACKAGE" />
             <custom type="SimpleAnnotation"/>
             <custom type="ComplexAnnotation">
                 <parameter name="intParam" value="32" />
@@ -295,10 +301,9 @@
     </bitmask>
 
     <!-- Aliases -->
-    <typedef name="AnnotatedTypedef" type="float32">
+    <typedef name="AnnotatedTypedef" type="float32" license_use="APACHE2:MYPACKAGE">
         <annotations>
             <doc>Documentation on the type</doc>
-            <license license_use_ref="APACHE2:MYPACKAGE" />
             <custom type="SimpleAnnotation"/>
             <custom type="ComplexAnnotation">
                 <parameter name="intParam" value="32" />
@@ -311,9 +316,8 @@
     </typedef>
 
     <!-- Constants -->
-    <const name="DOCUMENTED_CONSTANT1" type="int32" value="255">
+    <const name="DOCUMENTED_CONSTANT1" type="int32" value="255" license_use="APACHE2:MYPACKAGE">
         <annotations>
-            <license license_use_ref="APACHE2:MYPACKAGE" />
             <doc>Description of the constant</doc>
             <verbatim language="C++" placement="before-declaration">
                 // Put this in the C++ code
@@ -322,9 +326,8 @@
         </annotations>
     </const>
 
-    <const name="DOCUMENTED_CONSTANT3" type="float32" value="3.1416" units="meter">
+    <const name="DOCUMENTED_CONSTANT3" type="float32" value="3.1416" units="meter" license_use="APACHE2:MYPACKAGE">
         <annotations>
-            <license license_use_ref="APACHE2:MYPACKAGE" />
             <doc format="html">
             <![CDATA[ 
             <h1>Constant description Heading</h1>
@@ -342,10 +345,9 @@
         </annotations>
     </const>
 
-    <const name="ANNOTATED_CONSTANT1" type="float32" value="3.1416" units="meter" >
+    <const name="ANNOTATED_CONSTANT1" type="float32" value="3.1416" units="meter" license_use="APACHE2:MYPACKAGE">
         <annotations>
             <doc>Description of the constant</doc>
-            <license license_use_ref="APACHE2:MYPACKAGE" />
             <custom type="SimpleAnnotation"/>
             <custom type="ComplexAnnotation">
                 <parameter name="intParam" value="55" />
@@ -357,7 +359,7 @@
         </annotations>
     </const>
 
-    <const name="ANNOTATED_CONSTANT2" type="float32" value="3.1416" units="meter">
+    <const name="ANNOTATED_CONSTANT2" type="float32" value="3.1416" units="meter" license_use="APACHE2:MYPACKAGE">
         <annotations>
             <doc>Description of the constant</doc>
             <custom type="SimpleAnnotation"/>
@@ -369,13 +371,12 @@
 
 
     <!-- Structures -->
-    <struct name="AnnotatedStruct" extensibility="append" autoid="hash" nested="true">
+    <struct name="AnnotatedStruct" extensibility="append" autoid="hash" nested="true" license_use="APACHE2:MYPACKAGE">
         <annotations>
             <doc>
                 Some documentation
                 Multiple lines are allowed
             </doc>
-            <license license_use_ref="APACHE2:MYPACKAGE" />
             <custom type="Annotation1"/>
             <doc format="markdown">More markdown documentation</doc>
             <doc format="html">HTML documentation</doc>
@@ -405,10 +406,9 @@
     </struct>
 
     <!-- Unions -->
-    <union name="AnnotatednUnion">
+    <union name="AnnotatednUnion" license_use="APACHE2:MYPACKAGE">
         <annotations>
             <doc>Type documentation</doc>
-            <license license_use_ref="APACHE2:MYPACKAGE" />
             <custom type="SimpleAnnotation"/>
             <custom type="ComplexAnnotation">
                 <parameter name="intParam" value="32" />
@@ -443,7 +443,7 @@
 
 
     <!-- Exceptions -->
-    <exception name="AnnotatedException" baseType="Generic">
+    <exception name="AnnotatedException" baseType="Generic" >
         <annotations>
             <doc></doc>
             <custom type="SimpleAnnotation"/>
@@ -456,10 +456,9 @@
         <member name="message" type="string" sequenceMaxLength="32" />
     </exception>
 
-    <interface name="AnnotatedInterface" >
+    <interface name="AnnotatedInterface" license_use="APACHE2:MYPACKAGE">
         <annotations>
             <doc>Interface documentation</doc>
-            <license license_use_ref="APACHE2:MYPACKAGE" />
             <custom type="SimpleAnnotation"/>
             <custom type="ComplexAnnotation">
                 <parameter name="intParam" value="32" />
