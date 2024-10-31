@@ -57,7 +57,7 @@
                 <datareader_qos></datareader_qos>
                 <query_condition name="MyQueryCondition" kind="builtin.sql"></query_condition>
                 <content_filter name="MyCFT" kind="builtin.sql">
-                    <expression>X &gt; 5</expression>
+                    <expression><![CDATA[ x > 5 && y < 2 ]]></expression>
                 </content_filter>
                 <status_condition>
                     <status>DATA_AVAILABLE</status>
@@ -65,6 +65,15 @@
                 <read_condition name="MyReadCondition">
                     <instance_state>ALIVE</instance_state>
                 </read_condition>
+            </data_reader>
+            <data_reader name="HelloReaderWithFilterViaQos" topic_ref="HelloReader">
+                <datareader_qos>
+                    <properties>
+                        <property name="dds.content_filter.builtin.sql">
+                            <![CDATA[  X=x > 5 && y < 2  ]]>
+                        </property>
+                    </properties>
+                </datareader_qos>
             </data_reader>
         </subscriber>
 
@@ -81,7 +90,6 @@
         </replier>
 
         <publisher name="HelloPublisher2" />
-        <subscriber name="HelloSubscriber2"/>
 
 
         <domain_participant_qos>
@@ -93,12 +101,6 @@
                 <property name="Hello">World</property>
                 <property name="Good" propagate="true">Day</property>
             </properties>
-            <!-- More compact syntax. Does not work well with long or complex-syntax values
-            <properties>
-                <property name="Hello" value="World" />
-                <property name="Good" value="Day" propagate="true" />
-            </properties>             
-            -->
 
             <!-- Alternative (existing) Syntax -->
             <property>

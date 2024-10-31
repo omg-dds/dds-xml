@@ -49,12 +49,12 @@
     <const name="PLAIN_CONSTANT2" type="string" value="Hello" />
     <const name="PLAIN_CONSTANT3" type="nonBasic" nonBasicTypeName="PlainEnum1"
             value="KING" />
-    <const name="MAX_SPEED" type="float32" value="100" units="m/s" />
+    <const name="MAX_SPEED" type="float32" value="100" unit="m/s" />
 
     <!-- Structures -->
     <struct name="PlainStruct1">
         <member name="aString" type="string" stringMaxLength="MAX_COLOR_LEN" />
-        <member name="aShort" type="int16" min="100" max="1000" units="m" />
+        <member name="aShort" type="int16" min="100" max="1000" unit="m" />
         <member name="aLong" type="int32" />
         <member name="aBoolean" type="boolean" />
         <member name="aUnsignedShort" type="uint16" />
@@ -167,7 +167,7 @@
     <interface name="RobotControl" extensibility="mutable">
         <operation name="stop"/>
         
-        <const name="MIN_DELAY" type="float32" value="0.001" units="second"/>
+        <const name="MIN_DELAY" type="float32" value="0.001" unit="second"/>
         <operation name="start">
             <arguments>
                 <argument name="delay" type="float32" />
@@ -178,7 +178,7 @@
             <return type="nonBasic" nonBasicTypeName="Point" sequenceMaxLength="10"/>
         </operation>
 
-        <const name="MAX_SPEED" type="float32" value="32" units="m/s"/>
+        <const name="MAX_SPEED" type="float32" value="32" unit="m/s"/>
         <operation name="move" extensibility="mutable">
             <raises>
                 <exception type="Rejected" />
@@ -326,7 +326,7 @@
         </annotations>
     </const>
 
-    <const name="DOCUMENTED_CONSTANT3" type="float32" value="3.1416" units="meter" license_use="APACHE2:MYPACKAGE">
+    <const name="DOCUMENTED_CONSTANT3" type="float32" value="3.1416" unit="meter" license_use="APACHE2:MYPACKAGE">
         <annotations>
             <doc format="html">
             <![CDATA[ 
@@ -345,7 +345,7 @@
         </annotations>
     </const>
 
-    <const name="ANNOTATED_CONSTANT1" type="float32" value="3.1416" units="meter" license_use="APACHE2:MYPACKAGE">
+    <const name="ANNOTATED_CONSTANT1" type="float32" value="3.1416" unit="meter" license_use="APACHE2:MYPACKAGE">
         <annotations>
             <doc>Description of the constant</doc>
             <custom type="SimpleAnnotation"/>
@@ -359,7 +359,7 @@
         </annotations>
     </const>
 
-    <const name="ANNOTATED_CONSTANT2" type="float32" value="3.1416" units="meter" license_use="APACHE2:MYPACKAGE">
+    <const name="ANNOTATED_CONSTANT2" type="float32" value="3.1416" unit="meter" license_use="APACHE2:MYPACKAGE">
         <annotations>
             <doc>Description of the constant</doc>
             <custom type="SimpleAnnotation"/>
@@ -389,7 +389,7 @@
         
         <const name="aBoolConst" type="boolean" value="false" />
         <member name="anInt" type="int32" id="33" key="true"/>
-        <member name="aFloat" type="float32" min="0" max="250" optional="true" units="volt">
+        <member name="aFloat" type="float32" min="0" max="250" optional="true" unit="volt">
             <annotations>
                 <doc>Member documentation</doc>
                 <verbatim language="C++" placement="before-declaration">
