@@ -151,7 +151,7 @@
     <xs:attributeGroup name="constantElementAttributes">
         <xs:attributeGroup ref="commonElementAttributes"/>
 
-        <xs:attribute name="units" type="xs:string" use="optional" />
+        <xs:attribute name="unit" type="xs:string" use="optional" />
     </xs:attributeGroup>
 
     <xs:attributeGroup name="exceptionElementAttributes">
