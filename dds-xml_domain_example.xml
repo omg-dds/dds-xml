@@ -6,16 +6,16 @@
                 name="MyDomainLibrary">
 
     <domain name="ShapesDomain" domain_id="32">
-        <register_type name="ShapeType" type_ref="ShapeType" />
+        <register_type name="ShapeType" type_ref="ShapeType"/>
 
-        <topic name="Pentagon" register_type_ref="ShapeType" />
-        <topic name="Hexagon" register_type_ref="ShapeType" />
-        <topic name="Heptagon" register_type_ref="ShapeType" />
-        <topic name="Octagon" register_type_ref="ShapeType" />
-        <topic name="Nonagon" register_type_ref="ShapeType" />
-        <topic name="Decagon" register_type_ref="ShapeType" />
-        <topic name="Hendecagon" register_type_ref="ShapeType" />
-        <topic name="Dodecagon" register_type_ref="ShapeType" />
+        <topic name="Pentagon" register_type_ref="ShapeType"/>
+        <topic name="Hexagon" register_type_ref="ShapeType"/>
+        <topic name="Heptagon" register_type_ref="ShapeType"/>
+        <topic name="Octagon" register_type_ref="ShapeType"/>
+        <topic name="Nonagon" register_type_ref="ShapeType"/>
+        <topic name="Decagon" register_type_ref="ShapeType"/>
+        <topic name="Hendecagon" register_type_ref="ShapeType"/>
+        <topic name="Dodecagon" register_type_ref="ShapeType"/>
 
     </domain>
 
@@ -23,13 +23,13 @@
         <register_type name="ShapeTypeReg" type_ref="ShapeType" >
             <registered_name>ThusIsTheDatabusName</registered_name>
         </register_type>
-        <topic name="Square" register_type_ref="ShapeTypeReg" />
+        <topic name="Square" register_type_ref="ShapeTypeReg"/>
 
-        <topic name="CircleBase" register_type_ref="ShapeTypeReg" />
-        <topic name="CircleExt" register_type_ref="ShapeTypeExtendeReg" />
+        <topic name="CircleBase" register_type_ref="ShapeTypeReg"/>
+        <topic name="CircleExt" register_type_ref="ShapeTypeExtendeReg"/>
         <topic name="TriangleBase" register_type_ref="ShapeTypeReg" >
             <topic_name>Triangle</topic_name> <!-- Currently: registered_name -->
-            <datawriter_qos base_name="StandardProfileForThisSystem" />
+            <datawriter_qos base_name="StandardProfileForThisSystem"/>
             <datareader_qos  base_name="StandardProfileForThisSystem2">
                 <deadline><period><sec>3</sec></period></deadline>
             </datareader_qos>
@@ -40,8 +40,8 @@
             <datareader_qos></datareader_qos>
         </topic>
 
-        <register_type name="MoveCommandResponse" type_ref="MoveCommandResponse" />
-        <register_type name="MoveCommand" type_ref="MoveCommand" />
+        <register_type name="MoveCommandResponse" type_ref="MoveCommandResponse"/>
+        <register_type name="MoveCommand" type_ref="MoveCommand"/>
         <request_reply_service name="RobotCommandService"  
             register_request_type_ref="MoveCommand" register_reply_type_ref="MoveCommandResponse">
             <service_name>MyServiceRR</service_name>
@@ -58,7 +58,7 @@
         </request_reply_service>
 
 
-        <register_interface name="RobotControl" interface_ref="RobotControlIf" />
+        <register_interface name="RobotControl" interface_ref="RobotControlIf"/>
 
         <rpc_service name="FoodDispenserControl"  register_interface_ref="RobotControl">
             <service_name>MyService</service_name>
@@ -78,8 +78,8 @@
         </rpc_service>
 
 
-        <register_type name="MoveCommandResponse" type_ref="MoveCommandResponse" />
-        <register_type name="MoveCommand" type_ref="MoveCommand" />
+        <register_type name="MoveCommandResponse" type_ref="MoveCommandResponse"/>
+        <register_type name="MoveCommand" type_ref="MoveCommand"/>
         <request_reply_service name="FoodDispenserService"  
             register_request_type_ref="MoveCommand" register_reply_type_ref="MoveCommandResponse">
             <service_name>MyServiceRR</service_name>
@@ -94,21 +94,6 @@
                 <reply_datawriter_qos></reply_datawriter_qos>
             </replier>
         </request_reply_service>
-        <!-- Alternative:
-        <request_reply_service name="FoodDispenderService"  register_request_type_ref="MoveCommand" register_reply_type_ref="MoveCommandResponse">
-            <service_name>MyServiceRR</service_name>
-            <request>
-                <topic_name/>
-                <datareader_qos/>
-                <datawriter_qos/>
-            </request>
-            <reply>
-                <topic_name/>
-                <datareader_qos/>
-                <datawriter_qos/>
-            </reply>
-        </request_reply_service>        
-        -->
     </domain>
 
 </domain_library>
