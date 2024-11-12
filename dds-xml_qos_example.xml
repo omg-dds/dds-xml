@@ -6,6 +6,9 @@
     name="DDSDefaultQoSLibrary">
 
     <qos_snippet name="DDS_DefaultReliability">
+        <!-- Entity Qos: datareader_qos, datawriter_qos, etc. appearing inside <qos_snippet>
+             can optionally have a name attribute. But no base_name or topic_filer attributes
+        -->
         <datawriter_qos>
             <reliability>
                 <kind>BEST_EFFORT_RELIABILITY_QOS</kind>
@@ -15,7 +18,7 @@
                 </max_blocking_time>
             </reliability>
         </datawriter_qos>
-        <datareader_qos>
+        <datareader_qos name="aName">
             <reliability>
                 <kind>BEST_EFFORT_RELIABILITY_QOS</kind>
             </reliability>
@@ -29,7 +32,7 @@
                 <depth>1</depth>
             </history>
         </datawriter_qos>
-        <datareader_qos>
+        <datareader_qos name="OptionalName" >
             <history>
                 <kind>KEEP_LAST_HISTORY_QOS</kind>
                 <depth>1</depth>
@@ -81,10 +84,49 @@
             <snippet snippet_ref="DDS_DefaultReliabilityHistoryDurability" />
             <snippet snippet_ref="DDS_DefaultOwnership" />
         </qos_snippets>
+        <domain_participant_qos>
+            <properties inherit="true">
+                <property name="my_property_name" propagate="true">ThePropertyValue</property>
+            </properties>
+            <user_data>
+                <value>
+                    01234567 89ABCDEF 
+                    ab cd ef 01 23 45 67 89 AB CD EF
+                    0123456789ABCDEFabcdef0123456789ABCDEF
+                </value>
+            </user_data>
+            <binary_properties>
+                <binary_property name="my_binary_property_name1" propagate="true">
+                    0123456789ABCDEabcde  0123456789ABCDEabcde
+                </binary_property>
+                <binary_property name="my_binary_property_name2" propagate="true">
+                    0123456789ABCDEabcde
+                    01 23 45 67 89 AB CD EF ab cd ef
+                    0123 456789AB
+                </binary_property>
+            </binary_properties>
+            <property>  <!-- Legacy format use <properties> -->
+                <value>
+                    <element>
+                        <name>my_property_name</name>
+                        <value>ThePropertyValue</value>
+                        <propagate>true</propagate>
+                    </element>
+                    <element>
+                        <name>FAE_Property</name>
+                        <value>100</value>
+                    </element>
+                </value>
+            </property>
+        </domain_participant_qos>
+
         <datareader_qos>
             <qos_snippets>
                 <snippet snippet_ref="StrictReliable" />
             </qos_snippets>
+            <reliability>
+                <kind>BEST_EFFORT_RELIABILITY_QOS</kind>
+            </reliability>
             <deadline>
                 <period>
                     <sec>DURATION_INFINITE_SEC</sec>
@@ -113,7 +155,10 @@
                 <max_samples_per_instance>LENGTH_UNLIMITED</max_samples_per_instance>
             </resource_limits>
             <user_data>
-                <value></value>
+                <value>
+                    0123456789ABCDEFabcdef
+                    01 23 45 67 89 AB CD EF ab cd ef
+                </value>
             </user_data>
             <time_based_filter>
                 <minimum_separation>
@@ -134,6 +179,40 @@
                     <nanosec>DURATION_INFINITE_NSEC</nanosec>
                 </autopurge_disposed_samples_delay>
             </reader_data_lifecycle>
+            <data_representation>
+                <value>
+                    <element>XCDR_DATA_REPRESENTATION</element>
+                    <element>XCDR2_DATA_REPRESENTATION</element>
+                </value>
+            </data_representation>
+            <durability>
+                <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+            </durability>
+            <history>
+                <kind>KEEP_LAST_HISTORY_QOS</kind>
+                <depth>10</depth>
+            </history>
+            <ownership>
+                <kind>SHARED_OWNERSHIP_QOS</kind>
+            </ownership>
+            <partition>
+                <name>
+                    <element>Partition1</element>
+                    <element>Partition2</element>
+                </name>
+            </partition>
+            <transport_priority>
+                <value>10</value>
+            </transport_priority>
+            <type_consistency>
+                <kind>ALLOW_TYPE_COERCION</kind>
+                <force_type_validation>true</force_type_validation>
+                <ignore_enum_literal_names>true</ignore_enum_literal_names>
+                <ignore_member_names>true</ignore_member_names>
+                <ignore_sequence_bounds>true</ignore_sequence_bounds>
+                <ignore_string_bounds>true</ignore_string_bounds>
+                <prevent_type_widening>true</prevent_type_widening>
+            </type_consistency>
         </datareader_qos>
 
         <datawriter_qos>
@@ -141,6 +220,28 @@
                 <snippet snippet_ref="Snippet1" />
                 <snippet snippet_ref="Snippet2" />
             </qos_snippets>
+            <properties inherit="true">
+                <property name="my_property_name" propagate="true">ThePropertyValue</property>
+            </properties>
+            <binary_properties>
+                <binary_property name="my_binary_property_name1" propagate="true">
+                    0123456789ABCDEabcde  0123456789ABCDEabcde
+                </binary_property>
+                <binary_property name="my_binary_property_name2" propagate="true">
+                    0123456789ABCDEabcde
+                    01 23 45 67 89 AB CD EF ab cd ef
+                    0123 456789AB
+                </binary_property>
+            </binary_properties>
+            <property>  <!-- Legacy format use <properties> -->
+                <value>
+                    <element>
+                        <name>my_property_name</name>
+                        <value>ThePropertyValue</value>
+                        <propagate>true</propagate>
+                    </element>
+                </value>
+            </property>
             <durability_service>
                 <service_cleanup_delay>
                     <sec>0</sec>
@@ -196,6 +297,11 @@
                     true
                 </autodispose_unregistered_instances>
             </writer_data_lifecycle>
+            <data_representation>
+                <value>
+                    <element>XCDR2_DATA_REPRESENTATION</element>
+                </value>
+            </data_representation>
         </datawriter_qos>
 
         <domain_participant_qos>
@@ -208,8 +314,21 @@
             <entity_factory>
                 <autoenable_created_entities>true</autoenable_created_entities>
             </entity_factory>
-            <!-- Legacy syntax (currently used by Connext) -->
-            <property>
+
+            <!-- New syntax -->
+            <properties>
+                <property name="MyPName1">  MyPValue1   </property>
+                <property name="MyPName2" propagate="true"> file://MyPValue1 </property>
+             </properties>
+             <binary_properties>
+                <binary_property name="MyBPName1">
+                    0123456789ABCDEabcde
+                    01 23 45 67 89 AB CD EF ab cd ef
+                    0123 456789AB
+                </binary_property>
+             </binary_properties>
+
+             <property>  <!-- Legacy format use <properties> -->
                 <value>
                     <element>
                         <name>MyPName1</name>
@@ -222,13 +341,7 @@
                     </element>
                 </value>
             </property>
-            <!-- New syntax -->
-            <properties>
-                <!-- Leading and training whitespace is trimmed in XML element content -->
-                <property name="MyPName1">  MyPValue1   </property>
-                <property name="MyPName2" propagate="true"> file://MyPValue1 </property>
-             </properties>
-            <!-- This is the syntax used by Connext -->
+            
             <partition>
                 <name>
                     <element>MyDomainPartition1</element>
@@ -336,20 +449,73 @@
                     <nanosec>DURATION_INFINITE_NSEC</nanosec>
                 </duration>
             </lifespan>
+            <data_representation>
+                <value>
+                    <element>XCDR2_DATA_REPRESENTATION</element>
+                </value>
+            </data_representation>
         </topic_qos>
 
     </qos_profile>
 
     <qos_profile name="CustomProfile" base_name="DDSDefaultQosProfile" >
-        <datawriter_qos>
+        <!-- name, base_name, and topic_filter are optional inside <qos_profile> definition -->
+        <domain_participant_qos>
+            <user_data><value>0A0B0C</value></user_data>
+        </domain_participant_qos>
+        <datawriter_qos topic_filter="A*Topic">
             <properties>
                 <property name="Hello">World</property>
             </properties>
             <ownership><kind>EXCLUSIVE_OWNERSHIP_QOS</kind></ownership>
             <ownership_strength><value>10</value></ownership_strength>
         </datawriter_qos>
-        <datareader_qos>
+
+        <datawriter_qos name="writer_qos_option2" topic_filter="B*Topic" base_name="AnotherQosProfile">
+            <properties>
+                <property name="Hello">World</property>
+            </properties>
+            <ownership><kind>SHARED_OWNERSHIP_QOS</kind></ownership>
+            <ownership_strength><value>10</value></ownership_strength>
+        </datawriter_qos>
+
+        <datareader_qos  name="reader_qos_option1" topic_filter="A*Topic"> 
             <ownership><kind>EXCLUSIVE_OWNERSHIP_QOS</kind></ownership>
         </datareader_qos>
+
+        <datareader_qos  name="reader_qos_option2" topic_filter="B*Topic"  base_name="AnotherQosProfile"> 
+            <ownership><kind>SHARED_OWNERSHIP_QOS</kind></ownership>
+        </datareader_qos>
     </qos_profile>
+
+    <!-- Entity Qos: datareader_qos, datawriter_qos, etc. May be used as a profile as well
+         in this case name is mandatory, base_name is optional, and thre is no topic_filter
+    -->
+    <datareader_qos name="MyDataReaderQosProfile" base_name="MyBaseProfile">
+        <qos_snippets>
+            <snippet snippet_ref="DDS_DefaultReliabilityHistoryDurability" />
+        </qos_snippets>
+        <reliability>
+            <kind>BEST_EFFORT_RELIABILITY_QOS</kind>
+        </reliability>
+    </datareader_qos>
+
+    <datawriter_qos name="MyDataWriterQosProfile" base_name="MyBaseProfile">
+        <qos_snippets>
+            <snippet snippet_ref="DDS_DefaultReliabilityHistoryDurability" />
+        </qos_snippets>
+        <reliability>
+            <kind>BEST_EFFORT_RELIABILITY_QOS</kind>
+        </reliability>
+    </datawriter_qos>
+
+    <topic_qos name="MyTopicQosProfile" base_name="MyBaseProfile">
+        <qos_snippets>
+            <snippet snippet_ref="DDS_DefaultReliabilityHistoryDurability" />
+        </qos_snippets>
+        <reliability>
+            <kind>BEST_EFFORT_RELIABILITY_QOS</kind>
+        </reliability>
+    </topic_qos>
+
 </qos_library>

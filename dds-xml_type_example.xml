@@ -4,211 +4,396 @@
        xmlns="http://www.omg.org/spec/DDS-XML"
        xsi:schemaLocation="http://www.omg.org/spec/DDS-XML ./dds-xml_type_definitions.xsd">
 
-    <!-- Enumerations -->
-    <enum name="PlainEnum1">
-        <enumerator name="ACE"   />
-        <enumerator name="KING"  />
-        <enumerator name="QUEEN" />
-    </enum>
+     <!-- Forward Declarations -->
+    <forward_dcl name="PlainEnum"      kind="enum"/>
+    <forward_dcl name="PlainBitmask"   kind="bitmask"/>
+    <forward_dcl name="PlainBitset"    kind="bitset"/>
+    <forward_dcl name="PlainStruct"    kind="struct"/>
+    <forward_dcl name="PlainUnion"     kind="union"/>
+    <forward_dcl name="PlainException" kind="exception"/>
+    <forward_dcl name="PlainInterface" kind="interface"/>
 
-    <enum name="PlainEnum2" bitBound="16">
-        <enumerator name="ACE"    value="1"  />
+    <!-- Constants -->
+    <const name="INT_CONSTANT"     type="int32"    value="32"/>
+    <const name="INT_CONSTANT2"    type="int32"    value="2"/>
+    <const name="INT16_CONSTANT11" type="int16"    value="11"/>
+    <const name="INT16_CONSTANT12" type="int16"    value="12"/>
+    <const name="FLOAT_CONSTANT"   type="float32"  value="3.14"/>
+    <const name="STRING_CONSTANT"  type="string"   value="Hello"/>
+    <const name="STRING_CONSTANT2" type="string"   value="STRING_CONSTANT"/>
+    <const name="STRING_CONSTANT3" type="string"   value="::STRING_CONSTANT"/>
+    <const name="STRING_CONSTANT4" type="string"   value="&quot;STRING_CONSTANT&quot;"/>
+
+    <const name="ENUM_CONSTANT"    type="nonBasic" nonBasicTypeName="PlainEnum"
+        value="KING"/>
+    <const name="ENUM_CONSTANT2"  type="nonBasic" nonBasicTypeName="::PlainEnum"
+        value="::KING"/>
+
+    <!-- Constants with builtin annotations -->
+    <const name="SPEED_OF_LIGHT" type="float32" value="299792.458" unit="Km/s"/>
+    <const name="ABSOLUTE_ZERO_TEMPERATURE" type="float32" value="-273.15" unit="Celsius"/>
+    <const name="MAX_DEGREES" type="int32" value="360" unit="Degrees"/>
+
+    <!-- Enumerations with builtin annotations -->
+    <enum name="PlainEnum">
+        <enumerator name="ACE"/>
+        <enumerator name="KING"/>
+        <enumerator name="QUEEN"/>
+    </enum>
+    
+    <enum name="emumWithBuiltinAnnotations" bitBound="16" ignoreLiteralNames="true">
+        <enumerator name="ACE"    value="1"/>
         <enumerator name="KING"   value="12" defaultLiteral="true"/>
-        <enumerator name="QUEEN"  value="11" />
-        <enumerator name="KNIGHT" value="10" />
+        <enumerator name="QUEEN"  value="INT16_CONSTANT11"/>
+        <enumerator name="KNIGHT" value="::INT16_CONSTANT12"/>
     </enum>
 
     <!-- Bitmasks -->
-    <bitmask name="PlainBitmask1">
-        <flag name="flg1" position="1"/>
-        <flag name="flg2" position="2"/>
+    <bitmask name="PlainBitmask">
+        <flag name="flg1"/>
+        <flag name="flg2"/>
     </bitmask>
     
-    <bitmask name="PlainBitmask2" bitBound="16">
-        <flag name="flg1" position="1"/>
+    <!-- Bitmasks with builtin annotations -->
+    <bitmask name="PlainBitmask2" bitBound="64">
+        <flag name="flg1"/>
         <flag name="flg2" position="2"/>
+        <flag name="flg3" position="INT_CONSTANT2"/>
+        <flag name="flg4" position="::INT_CONSTANT11"/>
+        <flag name="flg5" position="63"/>
     </bitmask>
+
+
+    <!-- Bitset -->
+    <bitset name="PlainBitset">
+        <bitfield name="bf1" bitSize="1"/>
+        <bitfield name="bf1" bitSize="INT_CONSTANT2"/>
+        <bitfield name="bf3" bitSize="::INT_CONSTANT2"/>
+        <bitpadding bitSize="5"/>
+        <bitpadding bitSize="INT_CONSTANT2"/>
+        <bitpadding bitSize="::INT_CONSTANT2"/>
+        <bitfield name="bf4" bitSize="1"/>
+    </bitset> 
+
+    <bitset name="DerivedBitset" baseType="PlainBitset">
+        <bitfield name="bf5" bitSize="1"/>
+    </bitset>
+
+    <!-- Bitset with builtin annotations -->
+    <bitset name="BitsetWithAnnotations">
+        <bitfield name="bf1" bitSize="16"/>
+        <bitfield name="bf2" bitSize="INT_CONSTANT2" holdingType="auto"/>
+        <bitfield name="bf3" bitSize="::INT_CONSTANT2" holdingType="int16"/>
+        <bitpadding bitSize="5"/>
+        <bitfield name="bf4" bitSize="1" holdingType="boolean"/>
+    </bitset> 
 
     <!-- Aliases -->
-    <typedef name="anIntAlias"    type="int32" />
-    <typedef name="SequenceAlias" type="int32"  sequenceMaxLength="32"/>
-    <typedef name="ArrayAlias" type="int32"  arrayDimensions="2,3"/>
-    <typedef name="StringAlias" type="string" stringMaxLength="32"/>
+    <typedef name="aBoolAlias"     type="boolean"/>
+    <typedef name="anOctetAlias"   type="byte"/>
+    <typedef name="aCharAlias"     type="char8"/>
+    <typedef name="aWCharAlias"    type="char16"/>
+    <typedef name="anInt8Alias"    type="int8"/>
+    <typedef name="anUInt8Alias"   type="uint8"/>
+    <typedef name="anInt16Alias"   type="int16"/>
+    <typedef name="anUInt16Alias"  type="uint16"/>   
+    <typedef name="anInt32Alias"   type="int32"/>
+    <typedef name="anUInt32Alias"  type="uint32"/>
+    <typedef name="anInt64Alias"   type="int64"/>
+    <typedef name="anUInt64Alias"  type="uint64"/>
+    <typedef name="aFloat32Alias"  type="float32"/>
+    <typedef name="aFloat64Alias"  type="float64"/>
+
+    <typedef name="SequenceAlias" type="int32"  
+        sequenceMaxLength="32"/>
+    <typedef name="SequenceAlias2" type="int32"
+        sequenceMaxLength="INT_CONSTANT"/>
+    <typedef name="ArrayAlias" type="int32"  
+        arrayDimensions=" 2, 3, 5 "/>
+    <typedef name="ArrayAlias2" type="int32"  
+        arrayDimensions=" INT_CONSTANT, 3, ::INT_CONSTANT2"/>
+    <typedef name="StringAlias" type="string" 
+        stringMaxLength="32"/>
     <typedef name="StringSeqAlias" type="string" stringMaxLength="32"
-                                                sequenceMaxLength="32"/>
+        sequenceMaxLength="32"/>
+    <typedef name="StringSeqAlias2" type="string" stringMaxLength="INT_CONSTANT"
+        sequenceMaxLength="::INT_CONSTANT"/>
     <typedef name="ComplexAlias" type="nonBasic" nonBasicTypeName="PlainEnum1"/>
+    <typedef name="ComplexAliasSequence" type="nonBasic" nonBasicTypeName="::PlainEnum1"
+        sequenceMaxLength="32"/>
     <typedef name="MapAlias"     type="string" 
-            mapKeyType="uint32" />
+        mapKeyType="string" mapKeyStringMaxLength="32"/>
     <typedef name="MapAlias2"     type="string" 
-            mapKeyType="aliasType" mapKeyAliasTypeName="anIntAlias"/>
+        mapKeyType="nonBasic" mapKeyNonBasicTypeName="anIntAlias"/>
     <typedef name="ComplexMapAlias"  type="nonBasic" nonBasicTypeName="PlainEnum1"
-            mapKeyType="uint32" />
+        mapKeyType="uint32"/>
     
-    <!-- Constants -->
-    <const name="PLAIN_CONSTANT1" type="int32" value="255" />
-    <const name="PLAIN_CONSTANT2" type="string" value="Hello" />
-    <const name="PLAIN_CONSTANT3" type="nonBasic" nonBasicTypeName="PlainEnum1"
-            value="KING" />
-    <const name="MAX_SPEED" type="float32" value="100" unit="m/s" />
+    <!-- Aliases with builtin Annotations -->
+    <typedef name="Angle" type="int32" min="0" max="MAX_DEGREES" unit="Degrees"/>
+    <typedef name="Temperature" type="float32" min="::ABSOLUTE_ZERO_TEMPERATURE" max="10000000"
+        unit="Celsius" default="100" external="true"/>
 
     <!-- Structures -->
-    <struct name="PlainStruct1">
-        <member name="aString" type="string" stringMaxLength="MAX_COLOR_LEN" />
-        <member name="aShort" type="int16" min="100" max="1000" unit="m" />
-        <member name="aLong" type="int32" />
-        <member name="aBoolean" type="boolean" />
-        <member name="aUnsignedShort" type="uint16" />
-        <member name="aUnsignedLong" type="uint32" />
-        <member name="aFloat" type="float32" />
-        <member name="aDouble" type="float64" />
-        <member name="aChar" type="char8" />
-        <member name="aWchar" type="char16" />
-        <member name="aLongLong" type="int64" />
-        <member name="aUnsignedLongLong" type="uint64" />
+    <struct name="PlainStruct">
+        <member name="aString"  type="string" stringMaxLength="INT_CONSTANT"/>
+        <member name="aString2" type="string" stringMaxLength="::INT_CONSTANT"/>
+        <member name="aOneByteInt" type="int8"/>
+        <member name="aShort" type="int16"/>
+        <member name="aLong" type="int32"/>
+        <member name="aBoolean" type="boolean"/>
+        <member name="aUnsignedShort" type="uint16"/>
+        <member name="aUnsignedLong" type="uint32"/>
+        <member name="aFloat" type="float32"/>
+        <member name="aDouble" type="float64"/>
+        <member name="aChar" type="char8"/>
+        <member name="aWchar" type="char16"/>
+        <member name="aLongLong" type="int64"/>
+        <member name="aUnsignedLongLong" type="uint64"/>
     </struct>
 
-    <struct name="PlainStruct2"
-        nested="true"  extensibility="mutable" autoid="hash" >
+    <struct name="DerivedStruct" baseType="PlainStruct">
+        <member name="anotherBooleanMember" type="boolean"/>
+    </struct>
 
-        <const name="BOOL_CONST" type="boolean" value="true" />
+    <struct name="StructWithComplexMembers" >
+        <const name="BOOL_CONST" type="boolean" value="true"/>
         <member name="anAliasComplexStruct" type="nonBasic" 
-                nonBasicTypeName="PlainTypedef2" />
+                nonBasicTypeName="PlainTypedef2"/>
     
-        <const name="LONG_CONST" type="int32" value="1234" />
-        <member name="anEnum" type="nonBasic" nonBasicTypeName="PlainEnum" />
+        <const name="U64_CONST" type="uint64" value="1234"/>
+        <member name="anEnum" type="nonBasic" nonBasicTypeName="PlainEnum"/>
         <member sequenceMaxLength="3" name="anEnumSeq" type="nonBasic"
-                nonBasicTypeName="PlainEnum" />
+                nonBasicTypeName="PlainEnum"/>
         <member arrayDimensions="3,4" name="anEnumArr" type="nonBasic"
-                nonBasicTypeName="PlainEnum" />
+                nonBasicTypeName="PlainEnum"/>
+
         <member name="aMap" type="nonBasic" nonBasicTypeName="PlainEnum"
-                mapKeyType="int32" mapMaxLength="1000" />
-        <member name="aMap2" type="nonBasic" nonBasicTypeName="PlainEnum"
-                mapKeyType="string" mapKeyStringMaxLength="32" mapMaxLength="1000" />
+                mapKeyType="int32" mapMaxLength="1000"/>
 
         <member name="aMap2" type="nonBasic" nonBasicTypeName="PlainEnum"
-                mapKeyType="aliasType" mapKeyAliasTypeName="anIntAlias" mapMaxLength="1000" />
+                mapKeyType="string" mapKeyStringMaxLength="32" mapMaxLength="1000"/>
+
+        <member name="aMap2" type="nonBasic" nonBasicTypeName="PlainEnum"
+                mapKeyType="nonBasic" mapKeyNonBasicTypeName="anIntAlias" mapMaxLength="1000"/>
 
         <member name="aComplexType" type="nonBasic"
-                nonBasicTypeName="PlainStruct1" />
+                nonBasicTypeName="PlainStruct1"/>
         <member name="aComplexSequenceType" type="nonBasic"
-                nonBasicTypeName="PlainStruct1" sequenceMaxLength="32" />
-        <member type="int64" name="aMustUndertandMember" mustUnderstand="true"/>
-
+                nonBasicTypeName="PlainStruct1" sequenceMaxLength="32"/>
     </struct>
 
-    <struct name="DerivedStruct" baseType="PlainStruct2">
-        <member name="anotherBooleanMember" type="boolean"/>
+    <!-- Structures with builtin annotations -->
+    <struct name="StructWithBuiltinAnnotations"
+            nested="false"  extensibility="mutable" autoid="hash" 
+            data_representation="xcdr2" 
+            topic="MyTopic1/slash.dot-hyphen_underscore and space allowed" >
+
+        <member type="int64" name="aMemberWithId"  id="33"/>
+        <member type="int64" name="aMemberWithId2" id="INT_CONSTANT"/>
+        <member type="int64" name="aMemberWithId2" id="::INT_CONSTANT2"/>
+        <member type="int64" name="aMemberWithHashId" hashid="oldMemberName"/>
+        <member type="int64" name="aMemberWithHashId2" hashid="STR_CONSTANT"/>
+        <member type="int64" name="aMemberWithHashId3" hashid="::STR_CONSTANT2"/>
+        <member type="int64" name="aMemberWithHashId3" hashid="&quot;STR_CONSTANT2&quot;"/>
+        <member type="int64" name="aMemberWithDefaultHashId" hashid=""/>
+        <member type="int64" name="aMemberWithAutoId" autoid="hash"/>
+        <member type="int64" name="aMustUndertandMember" mustUnderstand="true"/>
+        <member type="int64" name="aOptionalMember" optional="true"/>
+        <member type="int64" name="aExternalMember" external="true"/>
+        <member type="int64" name="aDefaultValueMember"  default="1014"/>
+        <member type="int64" name="aDefaultValueMember2" default="INT_CONSTANT"/>
+        <member type="int64" name="aDefaultValueMember3" default="::INT_CONSTANT2"/>
+        <member type="int32" name="aTryConstructMember" sequenceMaxLength="100" 
+                tryConstruct="trim"/>
+        <member type="int64" name="aonSeriaizedMember" nonSerialized="true"/>
+        <member type="int64" name="aMinValueMember"  min="1014"/>
+        <member type="int64" name="aMaxValueMember1" max="INT_CONSTANT"/>
+        <member type="int64" name="aMaxValueMember2" max="::INT_CONSTANT2"/>
+        <member type="float32" name="aUnitMember" unit="m"/>
     </struct>
 
     <!-- Unions -->
     <union name="PlainUnion">
         <discriminator type="boolean"/>
         <case>
-            <caseDiscriminator value="42" />
+            <caseDiscriminator value="2"/>
             <member type="boolean" name="unionValue1" optional="true"/>
         </case>
         <case>
-            <caseDiscriminator value="34" />
-            <caseDiscriminator value="35" />
+            <caseDiscriminator value="INT_CONST"/>
+            <caseDiscriminator value="::INT_CONST2"/>
             <member type="float64" name="unionValue2"/>
         </case>
         <defaultCase>
-            <member type="int32" name="unionValueDefault" />
+            <member type="int32" name="unionValueDefault"/>
         </defaultCase>
     </union>
 
     <union name="KeyedUnion">
         <discriminator type="int32" key="true"/>
         <case>
-            <caseDiscriminator value="42" />
-            <member type="boolean" name="unionValue1" optional="true"/>
+            <caseDiscriminator value="42"/>
+            <member type="boolean" name="unionValue1"/>
         </case>
         <case>
-            <caseDiscriminator value="34" />
-            <caseDiscriminator value="35" />
+            <caseDiscriminator value="34"/>
+            <caseDiscriminator value="35"/>
             <member type="float64" name="unionValue2"/>
         </case>
         <defaultCase>
-            <member type="int32" name="unionValueDefault" />
+            <member type="int32" name="unionValueDefault"/>
         </defaultCase>
     </union>
 
     <union name="DerivedUnion">
-        <baseUnion type="PlainUnion" />
+        <baseUnion type="PlainUnion"/>
         <case>
-            <caseDiscriminator value="37" />
-            <member type="boolean" name="anotherValue" />
+            <caseDiscriminator value="37"/>
+            <member type="boolean" name="anotherValue"/>
         </case>
     </union>
 
+    <!-- Unions with builtin Annotations -->
+    <union name="UnionWithBuiltinAnnotations"
+        nested="false"  extensibility="mutable" autoid="hash" 
+        data_representation="xcdr2" 
+        topic="MyTopic/slash.dot-hyphen_underscore and space allowed" >
+
+        <discriminator type="int32" key="true" default="10"/>
+
+
+        <case>
+            <caseDiscriminator value="1"/>
+            <member type="int64" name="aMemberWithId" id="33"/>
+        </case>
+        <case>
+            <caseDiscriminator value="2"/>
+            <member type="int64" name="aMemberWithHashId" hashid="oldMemberName"/>
+        </case>
+        <case>
+            <caseDiscriminator value="3"/>
+            <member type="int64" name="aMemberWithAutoId" autoid="hash"/>
+        </case>
+
+        <case>
+            <caseDiscriminator value="10"/>
+            <member type="int32" name="anOptionalMember" optional="true"/>
+        </case>        
+        <case>
+            <caseDiscriminator value="20"/>
+            <member type="int32" name="aTrimMember" sequenceMaxLength="20" tryConstruct="trim"/>
+        </case>
+        <case>
+            <caseDiscriminator value="30"/>
+            <member type="int32" name="aMustUnderstand" mustUnderstand="true"/>
+        </case>
+        <case>
+            <caseDiscriminator value="40"/>
+            <caseDiscriminator value="50"/>
+            <member type="float64" name="aNonSerializedMember" nonSerialized="true"/>
+        </case>
+        <case>
+            <caseDiscriminator value="60"/>
+            <member type="float64" name="anExternalMember" external="true"/>
+        </case>
+        <case>
+            <caseDiscriminator value="70"/>
+            <member type="float64" name="aMemberWithDefaultValue" default="3.14"/>
+        </case>
+        <case>
+            <caseDiscriminator value="71"/>
+            <member type="float64" name="aMemberWithDefaultValue2" default="FLOAT_CONSTANT"/>
+        </case>
+        <defaultCase>
+            <member type="int32" name="unionValueDefault" default="1234"/>
+        </defaultCase>
+    </union>    
+
     <!-- Exceptions -->
-    <exception name="Rejected">
-        <member name="reason" type="string" stringMaxLength="128"/>
+    <exception name="PlainException"/>  
+
+    <exception name="PlainException2">
+        <member name="aBoolMember"     type="boolean"/>
+        <member name="aCharMember"     type="char8"/>
+        <member name="anIntMember"     type="int32"/>
+        <member name="aFloatMember"    type="float32"/>
+        <member name="aStringMember"   type="string"  stringMaxLength="32"/>
+        <member name="aSequenceMember" type="int32"   sequenceMaxLength="32"/>
+        <member name="anArrayMember"   type="int32"   arrayDimensions="32, 4"/>
+        <member name="aMapMember"      type="int32"   mapMaxLength="32" 
+            mapKeyType="string" mapKeyStringMaxLength="32"/>
+        <member name="aComplexMember"  type="nonBasic" 
+            nonBasicTypeName="PlainStruct2"/> 
+        <member name="aComplexMemberSequence"  type="nonBasic" nonBasicTypeName="PlainStruct2"
+            sequenceMaxLength="32"/>        
     </exception>
 
-    <exception name="DerivedExeption" baseType="Rejected">
+    <exception name="DerivedException" baseType="PlainException">
         <member name="level" type="float32"/>
     </exception>
 
-    <exception name="LowPower" baseType="Generic">
-        <member name="hello" type="boolean" />
-        <member name="level" type="float32"/>
-        <member name="message" type="string" sequenceMaxLength="32" />
-        <member name="complexData" type="nonBasic" 
-                nonBasicTypeName="PlainStruct2" />
-    </exception>
-
-    <struct name="Point">
-        <member name="x" type="float32"/>
-        <member name="y" type="float32"/>
-    </struct>
+    <!-- Exceptions don't have builtin Annotations -->
 
     <!-- Interfaces -->
-    <interface name="RobotControl" extensibility="mutable">
-        <operation name="stop"/>
-        
-        <const name="MIN_DELAY" type="float32" value="0.001" unit="second"/>
-        <operation name="start">
-            <arguments>
-                <argument name="delay" type="float32" />
-            </arguments>
-        </operation>
-        
-        <operation name="get_path" >
-            <return type="nonBasic" nonBasicTypeName="Point" sequenceMaxLength="10"/>
-        </operation>
-
-        <const name="MAX_SPEED" type="float32" value="32" unit="m/s"/>
-        <operation name="move" extensibility="mutable">
-            <raises>
-                <exception type="Rejected" />
-                <exception type="LowPower" />
-            </raises>
-            <return type="boolean"/>
-            <arguments>
-                <argument name="speed" type="float32" optional="true" />
-                <argument direction="in"    name="acceleration" type="float32" optional="true" />
-                <argument direction="inout" name="path" type="nonBasic" nonBasicTypeName="Point" sequenceMaxLength="3" />
-                <argument direction="out"   name="expectedCompletion" type="float32" />
-            </arguments>
-        </operation>
-    </interface> 
-
-    <interface name="DerivedInterface" baseType="RobotControl">
+    <interface name="PlainInterface">
+        <const name="MAX_SPEED" type="float32" value="32"/>
         <operation name="pause"/>
         <operation name="resume"/>
+        <operation name="set_speed">
+            <raises>
+                <exception type="PlainException"/>
+            </raises>
+            <arguments>
+                <argument name="item_identfier" 
+                        type="int32"/>
+                <argument name="speed" 
+                        type="float32"/>
+            </arguments>
+        </operation>
+        <operation name="get_speed">
+            <return type="float32"/>
+            <arguments>
+                <argument name="item_identfier" type="int32"/>
+            </arguments>
+        </operation>
+    </interface>
+
+    <!-- Interfaces -->
+
+    <interface name="InterfaceWithBuiltinAnnotations" extensibility="mutable"
+        service="DDS">
+        <const name="MAX_SPEED" type="float32" value="32" unit="m/s"/>
+        <operation name="pause"/>
+        <operation name="resume"/>
+        <operation name="set_speed">
+            <raises>
+                <exception type="PlainException"/>
+            </raises>
+            <arguments>
+                <argument name="item_identfier" 
+                        type="int32"/>
+                <argument name="speed" unit="m/s" max="MAX_SPEED"
+                        type="float32"/>
+            </arguments>
+        </operation>
+        <operation name="get_speed">
+            <return type="float32" unit="m/s" max="MAX_SPEED"/>
+            <arguments>
+                <argument name="item_identfier" type="int32"/>
+            </arguments>
+        </operation>
     </interface>
 
     <!-- =============================================== -->
     <!-- Documentation, Verbatim, License, and Custom Annotations -->
 
     <!-- Annotation declatations -->
-    <annotation name="PlainAnnotation"/>
+    <annotation name="SimpleAnnotation"/>
 
-    <annotation name="PlainAnnotation2">
+    <annotation name="AnnotationWithParams">
         <parameter name="intParam" type="int32"  default="32"/>
         <parameter name="strParam" type="string"/>
-        <parameter name="aliasParam" type="nonBasic" nonBasicTypeName="anIntAlias" />
+        <parameter name="aliasParam" type="nonBasic" nonBasicTypeName="anIntAlias"/>
     </annotation>
 
     <annotation name="DocumentedAnnotation">
@@ -218,15 +403,64 @@
         </parameter>
     </annotation>
 
-    <license_definition name="APACHE-2.0" link="https://spdx.org/licenses/Apache-2.0.html" />
-    <license_definition name="MIT" link="https://spdx.org/licenses/MIT.html" />
-    <license_definition name="OMG-RAND" link="https://www.omg.org/cgi-bin/doc?ipr/12-09-02.pdf" />
+    <!-- License Definitions -->
+    <license_type name="APACHE-2.0" link="https://spdx.org/licenses/Apache-2.0.html"/>
+    <license_type name="MIT"        link="https://spdx.org/licenses/MIT.html"/>
 
-    <license_use use_name="RAND:OARIS" license_definition="OMG-RAND" link="https://www.omg.org/spec/OARIS" />
-    <license_use use_name="APACHE2:MYPACKAGE" license_definition="APACHE-2.0" link="https://my.gitrepo.com/myPackge/myLicense.txt" />
+    <module name="OMG">
+        <license_type name="RAND" link="https://www.omg.org/cgi-bin/doc?ipr/12-09-02.pdf"/>
+    </module>
+
+    <license_use name="APACHE2.MYPACKAGE" license_type="APACHE-2.0" link="https://my.gitrepo.com/myPackge/myLicense.txt"/>
+    <license_use name="RAND.OARIS"        license_type="OMG::RAND" link="https://www.omg.org/spec/OARIS"/>
+
+    <!-- Constants -->
+    <const name="DOCUMENTED_CONSTANT1" type="int32" value="255" license_use="APACHE2.MYPACKAGE">
+        <annotations>
+            <doc>Description of the constant</doc>
+            <verbatim language="C++" placement="before-declaration">
+                // Put this in the C++ code
+            </verbatim>
+            <custom type="SimpleAnnotation"/>
+        </annotations>
+    </const>
+
+    <const name="DOCUMENTED_CONSTANT3" type="float32" value="3.1416" unit="meter" license_use="::APACHE2.MYPACKAGE">
+        <annotations>
+            <doc format="html">
+            <![CDATA[ 
+            <h1>Constant description Heading</h1>
+            <p>Bullet points:</p>
+            <ul>
+                <li>First bullet point</li>
+                <li>Second bullet point</li>
+                <li>Third bullet point</li>
+            </ul>
+            ]]>
+            </doc>
+            <custom type="ComplexAnnotation">
+                <parameter name="strParam" value="Hello"/>
+            </custom>
+        </annotations>
+    </const>
+
+    <const name="ANNOTATED_CONSTANT" type="float32" value="3.1416" unit="meter" license_use="OMG::RAND.OARIS">
+        <annotations>
+            <doc>Description of the constant</doc>
+            <custom type="SimpleAnnotation"/>
+            <custom type="AnnotationWithParams">
+                <parameter name="intParam" value="55"/>
+                <parameter name="strParam" value="Hello World"/>
+                <parameter name="aliasParam" value="INT_CONSTANT"/>
+            </custom>
+            <verbatim language="C++" placement="before-declaration">
+                // Put this in the C++ code
+            </verbatim>
+        </annotations>
+    </const>
 
     <!-- Enumerations -->
-    <enum name="AnnotatedEnum" bitBound="16" license_use="APACHE2:MYPACKAGE">
+    <enum name="AnnotatedEnum" bitBound="16" license_use="::OMG::RAND.OARIS">
         <annotations>
             <doc>Documentation on the type</doc>
             <doc format="markdown">
@@ -246,23 +480,23 @@
                 ]]>
             </doc>
             <custom type="SimpleAnnotation"/>
-            <custom type="ComplexAnnotation">
-                <parameter name="intParam" value="32" />
-                <parameter name="strParam" value="Hello" />
+            <custom type="AnnotationWithParams">
+                <parameter name="intParam" value="32"/>
+                <parameter name="strParam" value="Hello"/>
             </custom>
             <verbatim language="C++" placement="before-declaration">
                 // Put this in the C++ code
             </verbatim>            
         </annotations>
-        <enumerator name="ACE" value="1" />
-        <enumerator name="KING" value="13" />
+        <enumerator name="ACE" value="1"/>
+        <enumerator name="KING" value="13"/>
         <enumerator name="QUEEN" value="12">
             <annotations>
                 <doc>Documentation on the enumerator</doc>
                 <custom type="SimpleAnnotation"/>
-                <custom type="ComplexAnnotation">
-                    <parameter name="intParam" value="32" />
-                    <parameter name="strParam" value="Hello" />
+                <custom type="AnnotationWithParams">
+                    <parameter name="intParam" value="32"/>
+                    <parameter name="strParam" value="Hello"/>
                 </custom>
                 <verbatim language="C++" placement="before-declaration">
                     // Put this in the C++ code
@@ -272,13 +506,13 @@
     </enum>
 
     <!-- Bitmasks -->
-    <bitmask name="AnnotatedBitmsak" bitBound="16" license_use="APACHE2:MYPACKAGE">
+    <bitmask name="AnnotatedBitmsak" bitBound="16" license_use="APACHE2.MYPACKAGE">
         <annotations>
             <doc>Documentation on the type</doc>
             <custom type="SimpleAnnotation"/>
-            <custom type="ComplexAnnotation">
-                <parameter name="intParam" value="32" />
-                <parameter name="strParam" value="Hello" />
+            <custom type="AnnotationWithParams">
+                <parameter name="intParam" value="32"/>
+                <parameter name="strParam" value="Hello"/>
             </custom>
             <verbatim language="C++" placement="before-declaration">
                 // Put this in the C++ code
@@ -290,8 +524,8 @@
                 <doc>Documentation on the flag</doc>
                 <custom type="SimpleAnnotation"/>
                 <custom type="ComplexAnnotation">
-                    <parameter name="intParam" value="32" />
-                    <parameter name="strParam" value="Hello" />
+                    <parameter name="intParam" value="32"/>
+                    <parameter name="strParam" value="Hello"/>
                 </custom>
                 <verbatim language="C++" placement="before-declaration">
                     // Put this in the C++ code
@@ -300,14 +534,44 @@
         </flag>
     </bitmask>
 
-    <!-- Aliases -->
-    <typedef name="AnnotatedTypedef" type="float32" license_use="APACHE2:MYPACKAGE">
+
+    <!-- Bitset -->
+    <bitset name="AnnotatedBitset" license_use="APACHE2.MYPACKAGE">
         <annotations>
             <doc>Documentation on the type</doc>
             <custom type="SimpleAnnotation"/>
             <custom type="ComplexAnnotation">
-                <parameter name="intParam" value="32" />
-                <parameter name="strParam" value="Hello" />
+                <parameter name="intParam" value="32"/>
+                <parameter name="strParam" value="Hello"/>
+            </custom>
+            <verbatim language="C++" placement="before-declaration">
+                // Put this in the C++ code
+            </verbatim>             
+        </annotations>
+
+        <bitfield  name="bf1" bitSize="6">
+            <annotations>
+                <doc>Documentation on the flag</doc>
+                <custom type="SimpleAnnotation"/>
+                <custom type="ComplexAnnotation">
+                    <parameter name="intParam" value="32"/>
+                    <parameter name="strParam" value="Hello"/>
+                </custom>
+                <verbatim language="C++" placement="before-declaration">
+                    // Put this in the C++ code
+                </verbatim>                        
+            </annotations>
+        </bitfield>
+    </bitset>    
+
+    <!-- Aliases -->
+    <typedef name="AnnotatedTypedef" type="float32" license_use="APACHE2.MYPACKAGE">
+        <annotations>
+            <doc>Documentation on the type</doc>
+            <custom type="SimpleAnnotation"/>
+            <custom type="ComplexAnnotation">
+                <parameter name="intParam" value="32"/>
+                <parameter name="strParam" value="Hello"/>
             </custom>
             <verbatim language="C++" placement="before-declaration">
                 // Put this in the C++ code
@@ -315,63 +579,8 @@
         </annotations>
     </typedef>
 
-    <!-- Constants -->
-    <const name="DOCUMENTED_CONSTANT1" type="int32" value="255" license_use="APACHE2:MYPACKAGE">
-        <annotations>
-            <doc>Description of the constant</doc>
-            <verbatim language="C++" placement="before-declaration">
-                // Put this in the C++ code
-            </verbatim>
-            <custom type="SimpleAnnotation"/>
-        </annotations>
-    </const>
-
-    <const name="DOCUMENTED_CONSTANT3" type="float32" value="3.1416" unit="meter" license_use="APACHE2:MYPACKAGE">
-        <annotations>
-            <doc format="html">
-            <![CDATA[ 
-            <h1>Constant description Heading</h1>
-            <p>Bullet points:</p>
-            <ul>
-                <li>First bullet point</li>
-                <li>Second bullet point</li>
-                <li>Third bullet point</li>
-            </ul>
-            ]]>
-            </doc>
-            <custom type="ComplexAnnotation">
-                <parameter name="strParam" value="Hello" />
-            </custom>
-        </annotations>
-    </const>
-
-    <const name="ANNOTATED_CONSTANT1" type="float32" value="3.1416" unit="meter" license_use="APACHE2:MYPACKAGE">
-        <annotations>
-            <doc>Description of the constant</doc>
-            <custom type="SimpleAnnotation"/>
-            <custom type="ComplexAnnotation">
-                <parameter name="intParam" value="55" />
-                <parameter name="strParam" value="Hello" />
-            </custom>
-            <verbatim language="C++" placement="before-declaration">
-                // Put this in the C++ code
-            </verbatim>
-        </annotations>
-    </const>
-
-    <const name="ANNOTATED_CONSTANT2" type="float32" value="3.1416" unit="meter" license_use="APACHE2:MYPACKAGE">
-        <annotations>
-            <doc>Description of the constant</doc>
-            <custom type="SimpleAnnotation"/>
-            <custom type="ComplexAnnotation">
-                <parameter name="strParam" value="Bye" />
-            </custom>
-        </annotations>
-    </const>
-
-
     <!-- Structures -->
-    <struct name="AnnotatedStruct" extensibility="append" autoid="hash" nested="true" license_use="APACHE2:MYPACKAGE">
+    <struct name="AnnotatedStruct" license_use="APACHE2.MYPACKAGE">
         <annotations>
             <doc>
                 Some documentation
@@ -382,12 +591,14 @@
             <doc format="html">HTML documentation</doc>
             <custom type="SimpleAnnotation"/>
             <custom type="ComplexAnnotation">
-                <parameter name="intParam" value="32" />
-                <parameter name="strParam" value="Hello" />
+                <parameter name="intParam" value="32"/>
+                <parameter name="strParam" value="Hello"/>
             </custom>
+            <verbatim language="C++">//This is  C++ comment</verbatim>
         </annotations>
         
-        <const name="aBoolConst" type="boolean" value="false" />
+        
+        <const name="aBoolConst" type="boolean" value="false"/>
         <member name="anInt" type="int32" id="33" key="true"/>
         <member name="aFloat" type="float32" min="0" max="250" optional="true" unit="volt">
             <annotations>
@@ -398,52 +609,51 @@
                 </verbatim>
                 <custom type="SimpleAnnotation"/>
                 <custom type="ComplexAnnotation">
-                    <parameter name="intParam" value="32" />
-                    <parameter name="strParam" value="Hello" />
+                    <parameter name="intParam" value="32"/>
+                    <parameter name="strParam" value="Hello"/>
                 </custom>
             </annotations>
         </member>
     </struct>
 
     <!-- Unions -->
-    <union name="AnnotatednUnion" license_use="APACHE2:MYPACKAGE">
+    <union name="AnnotatednUnion" license_use="APACHE2.MYPACKAGE">
         <annotations>
             <doc>Type documentation</doc>
             <custom type="SimpleAnnotation"/>
             <custom type="ComplexAnnotation">
-                <parameter name="intParam" value="32" />
-                <parameter name="strParam" value="Hello" />
+                <parameter name="intParam" value="32"/>
+                <parameter name="strParam" value="Hello"/>
             </custom>
         </annotations>
 
-        <discriminator type="aliasType" aliasTypeName="PlainEnum"> 
+        <discriminator type="nonBasic" nonBasicTypeName="PlainEnum"> 
             <annotations>
                 <doc>Discriminator documentation</doc>
                 <custom type="SimpleAnnotation"/>                
             </annotations>
         </discriminator>
         <case>
-            <caseDiscriminator value="ACE" />
+            <caseDiscriminator value="ACE"/>
             <member type="float64" name="unionValue1">
                 <annotations>
                     <doc>Member Documentation</doc>
                     <custom type="SimpleAnnotation"/>
                     <custom type="ComplexAnnotation">
-                        <parameter name="intParam" value="32" />
-                        <parameter name="strParam" value="Hello" />
+                        <parameter name="intParam" value="32"/>
+                        <parameter name="strParam" value="Hello"/>
                     </custom>
                 </annotations>
             </member>
         </case>
         <case>
-            <caseDiscriminator value="KING" />
-            <member type="float64" name="unionValue2" />
+            <caseDiscriminator value="KING"/>
+            <member type="float64" name="unionValue2"/>
         </case>
     </union>
 
-
     <!-- Exceptions -->
-    <exception name="AnnotatedException" baseType="Generic" >
+    <exception name="AnnotatedException" baseType="Generic" license_use="APACHE2.MYPACKAGE">
         <annotations>
             <doc></doc>
             <custom type="SimpleAnnotation"/>
@@ -453,16 +663,16 @@
             <annotations></annotations>
         </member>
         <member name="level" type="float32"/>
-        <member name="message" type="string" sequenceMaxLength="32" />
+        <member name="message" type="string" sequenceMaxLength="32"/>
     </exception>
 
-    <interface name="AnnotatedInterface" license_use="APACHE2:MYPACKAGE">
+    <interface name="AnnotatedInterface" service="DDS" license_use="APACHE2.MYPACKAGE"  >
         <annotations>
             <doc>Interface documentation</doc>
             <custom type="SimpleAnnotation"/>
             <custom type="ComplexAnnotation">
-                <parameter name="intParam" value="32" />
-                <parameter name="strParam" value="Hello" />
+                <parameter name="intParam" value="32"/>
+                <parameter name="strParam" value="Hello"/>
             </custom>  
             <verbatim language="C++" placement="before-declaration">
                 // Put this comment
@@ -476,7 +686,7 @@
                 <custom type="SimpleAnnotation"/>
                 <custom type="ComplexAnnotation">
                     <parameter name="intParam" value="32"/>
-                    <parameter name="strParam" value="Hello" />
+                    <parameter name="strParam" value="Hello"/>
                 </custom> 
                 <verbatim language="C++" placement="before-declaration">
                     // Put this comment
@@ -492,8 +702,8 @@
                         <doc>Argument documentation</doc>
                         <custom type="SimpleAnnotation"/>
                         <custom type="ComplexAnnotation">
-                            <parameter name="intParam" value="32" />
-                            <parameter name="strParam" value="Hello" />
+                            <parameter name="intParam" value="32"/>
+                            <parameter name="strParam" value="Hello"/>
                         </custom> 
                         <verbatim language="C++" placement="before-declaration">
                             // Put this comment
@@ -506,9 +716,327 @@
 
         <operation name="another_operation" >
             <!-- No <annotations> on raises, exception and return -->
-            <raises><exception type="Rejected"/></raises>
-            <return type="int64" />
+            <raises><exception type="PlainException"/></raises>
+            <return type="int64"/>
         </operation>
     </interface> 
 
+    <!-- Modules -->
+    <module name="Module1"
+         autoid="hash" defaultNested="true" >
+        <annotations>
+            <doc>Module documentation</doc>
+            <custom type="SimpleAnnotation"/>
+            <custom type="ComplexAnnotation">
+                <parameter name="intParam" value="32"/>
+                <parameter name="strParam" value="Hello"/>
+            </custom> 
+            <verbatim language="C++" placement="before-declaration">
+                // Put this comment
+                // In the C++ code
+            </verbatim>  
+        </annotations>    
+        
+        <include file="AnotherFile.xml"/>
+
+        <annotation name="aCustomAnnotation">
+            <parameter name="intParam" type="int32"  default="32"/>
+            <parameter name="strParam" type="string"/>
+            <parameter name="aliasParam" type="nonBasic" nonBasicTypeName="anIntAlias"/>
+        </annotation>
+
+        <const name="M1_CONSTANT"  type="int32" value="100"/>
+        <const name="M1_CONSTANT2" type="int32" value="INT_CONSTANT"/>
+        <const name="M1_CONSTANT3" type="int32" value="::INT_CONSTANT"/>
+        <const name="M1_CONSTANT4" type="int32" value="M1_CONSTANT"/>
+        <const name="M1_CONSTANT5" type="int32" value="Module1::M1_CONSTANT"/>
+        <const name="M1_CONSTANT6" type="int32" value="::Module1::M1_CONSTANT"/>
+
+        <typedef name="m1_Alias"  type="boolean"/>
+        <typedef name="m1_Alias2" type="nonBasic" nonBasicTypeName="aBoolAlias"/>
+        <typedef name="m1_Alias3" type="nonBasic" nonBasicTypeName="::aBoolAlias"/>
+        <typedef name="m1_Alias4" type="nonBasic" nonBasicTypeName="m1_Alias"/>
+        <typedef name="m1_Alias5" type="nonBasic" nonBasicTypeName="Module1::m1_Alias"/>
+        <typedef name="m1_Alias6" type="nonBasic" nonBasicTypeName="::Module1::m1_Alias"/>
+        <typedef name="m1_Alias7" type="nonBasic" nonBasicTypeName="::aBoolAlias"/>
+
+
+        <struct name="MyStruct">
+            <member type="boolean" name="aMember"/>
+        </struct>
+
+        <module name="Module1Nested1">
+            <const name="M1_N1_CONSTANT"   type="int32" value="100"/>
+            <const name="M1_N1_CONSTANT2"  type="int32" value="INT_CONSTANT"/>
+            <const name="M1_N1_CONSTANT3"  type="int32" value="::INT_CONSTANT"/>
+            <const name="M1_N1_CONSTANT4"  type="int32" value="M1_CONSTANT"/>
+            <const name="M1_N1_CONSTANT5"  type="int32" value="Module1::M1_CONSTANT"/>
+            <const name="M1_N1_CONSTANT6"  type="int32" value="::Module1::M1_CONSTANT"/>
+            <const name="M1_N1_CONSTANT7"  type="int32" value="M1_N1_CONSTANT"/>
+            <const name="M1_N1_CONSTANT8"  type="int32" value="Module1Nested1::M1_N1_CONSTANT"/>
+            <const name="M1_N1_CONSTANT9"  type="int32" value="Module1::Module1Nested1::M1_N1_CONSTANT"/>
+            <const name="M1_N1_CONSTANT10" type="int32" value="::Module1::Module1Nested1::M1_N1_CONSTANT"/>
+
+
+            <typedef name="m1_n1_Alias"   type="boolean"/>
+            <typedef name="m1_n1_Alias2"  type="nonBasic" nonBasicTypeName="aBoolAlias"/>
+            <typedef name="m1_n1_Alias3"  type="nonBasic" nonBasicTypeName="::aBoolAlias"/>
+            <typedef name="m1_n1_Alias4"  type="nonBasic" nonBasicTypeName="m1_Alias"/>
+            <typedef name="m1_n1_Alias5"  type="nonBasic" nonBasicTypeName="Module1::m1_Alias"/>
+            <typedef name="m1_n1_Alias6"  type="nonBasic" nonBasicTypeName="::Module1::m1_Alias"/>
+            <typedef name="m1_n1_Alias7"  type="nonBasic" nonBasicTypeName="m1_n1_Alias"/>
+            <typedef name="m1_n1_Alias8"  type="nonBasic" nonBasicTypeName="Module1Nested1::m1_n1_Alias"/>
+            <typedef name="m1_n1_Alias9"  type="nonBasic" nonBasicTypeName="Module1::Module1Nested1::m1_n1_Alias"/>
+            <typedef name="m1_n1_Alias10" type="nonBasic" nonBasicTypeName="::Module1::Module1Nested1::m1_n1_Alias"/>
+
+        </module>
+
+        <const name="M1_CONSTANT7" type="int32" value="Module1Nested1::M1_N1_CONSTANT"/>
+        <const name="M1_CONSTANT8" type="int32" value="Module1::Module1Nested1::M1_N1_CONSTANT"/>
+        <const name="M1_CONSTANT9" type="int32" value="::Module1::Module1Nested1::M1_N1_CONSTANT"/>
+
+        <typedef name="m1_Alias7" type="nonBasic" nonBasicTypeName="Module1Nested1::m1_n1_Alias"/>
+        <typedef name="m1_Alias8" type="nonBasic" nonBasicTypeName="Module1::Module1Nested1::m1_n1_Alias"/>
+        <typedef name="m1_Alias9" type="nonBasic" nonBasicTypeName="::Module1::Module1Nested1::m1_n1_Alias"/>
+
+    </module>
+
+    <!-- ============== -->
+    <!-- SHAPES EXAMPLE -->
+    <!-- ============== -->
+    <module name="ShapeExample">
+
+        <const name="COLOR_MAX_LEN" value="32" 
+                type="int32"/>
+
+        <struct name="ShapeType" extensibility="append">
+            <member name="color" key="true"
+                    type="string" stringMaxLength="COLOR_MAX_LEN"/>
+            <member name="x" 
+                    type="int32"/>
+            <member name="y" 
+                    type="int32"/>
+            <member name="shapesize" 
+                    type="int32"/>
+        </struct>
+
+        <struct name="ShapeExtended" baseType="ShapeType">
+            <member name="angle" min="0" max="360" unit="degree"
+                    type="int32"/>
+        </struct>
+
+
+        <const name="MIN_DELAY" type="float32" value="0.001"/>
+        <const name="MAX_SPEED" type="float32" value="32" unit="m/s"/>
+        <const name="MAX_POIMTS" type="float32" value="100"/>
+
+        <struct name="Point">
+            <member name="x" type="int32"/>
+            <member name="y" type="int32"/>
+        </struct>
+
+        <!-- Shape Service: RPC Style -->
+        <!-- ======================== -->
+
+        <exception name="TooFast"/>
+        <exception name="Rejected">
+            <member name="reason" type="string"/>
+        </exception>
+
+        <interface name="ShapeCommand" service="DDS">
+            <operation name="stop"/>
+            
+            <operation name="start">
+                <arguments>
+                    <argument name="delay" unit="sec"
+                            type="float32"/>
+                </arguments>
+            </operation>
+            
+            <operation name="get_path" >
+                <return type="nonBasic" nonBasicTypeName="Point" sequenceMaxLength="10"/>
+            </operation>
+    
+            <operation name="move" extensibility="mutable">
+                <raises>
+                    <exception type="TooFast"/>
+                    <exception type="Rejected"/>
+                </raises>
+                <arguments>
+                    <argument name="color"
+                            type="string" stringMaxLength="COLOR_MAX_LEN"/>
+                    <argument name="speed" max="MAX_SPEED" unit="m/s" default="1"
+                            type="float32"/>
+                    <argument name="path" direction="in" external="true"
+                            type="nonBasic" nonBasicTypeName="Point"/>
+                    <argument name="expected_completion" direction="inout" unit="s"
+                            type="float32"/>
+                </arguments>
+            </operation>
+        </interface> 
+    
+        <!-- Extended Command -->
+        <interface name="ShapeCommandExtended" baseType="ShapeCommand">
+            <operation name="pause_single_shape">
+                <arguments>
+                    <argument name="color" 
+                            type="string" mapKeyStringMaxLength="COLOR_MAX_LEN"/>
+                </arguments>
+            </operation>
+        </interface>
+
+        <!-- ShapeCommand Service: Request/Reply style -->
+        <!-- ========================================= -->
+
+        <!-- Request Types -->
+        <enum name="ShapeCommandKind">
+            <enumerator name="START"/>
+            <enumerator name="STOP"/>
+            <enumerator name="GET_PATH"/>
+            <enumerator name="MOVE"/>
+        </enum>
+
+        <struct name="EmptyStruct"/>
+     
+        <typedef name="StopArguments"    type="nonBasic" nonBasicTypeName="EmptyStruct"/>
+    
+        <struct name="StartArguments">
+            <member name="delay" min="MIN_DELAY"
+                    type="float32"/>
+        </struct> 
+
+        <typedef name="GetPathArguments" type="nonBasic" nonBasicTypeName="EmptyStruct"/>
+
+        <struct name="MoveArguments">
+            <member name="color" 
+                    type="string"  stringMaxLength="COLOR_MAX_LEN"/>
+            <member name="speed"  max="MAX_SPEED" unit="m/s"
+                    type="float32"/> 
+            <member name="path"
+                    type="nonBasic" nonBasicTypeName="Point" sequenceMaxLength="MAX_POIMTS"/>
+            <member name="expected_completion"
+                    type="float32"/>
+        </struct> 
+
+        <union name="RobotComamndRequest">
+            <discriminator type="nonBasic" nonBasicTypeName="RequestKind"/>
+            <case>
+                <caseDiscriminator value="START"/>
+                <member name="start_args"
+                        type="nonBasic" nonBasicTypeName="StartArguments"/>
+            </case>
+            <case>
+                <caseDiscriminator value="STOP"/>
+                <member name="stop_args"
+                        type="nonBasic" nonBasicTypeName="StopArguments"/>            
+            </case>
+            <case>
+                <caseDiscriminator value="GET_PATH"/>
+                <member name="get_path_args" 
+                        type="nonBasic" nonBasicTypeName="GerPathArguments"/>   
+            </case>
+            <case>
+                <caseDiscriminator value="MOVE"/>
+                <member name="move_args"
+                        type="nonBasic" nonBasicTypeName="MoveArguments"/>            
+            </case>               
+        </union>
+
+        <!-- Reply Types -->
+        <typedef name="StopReply" type="nonBasic" nonBasicTypeName="EmptyStruct"/>
+    
+        <typedef name="StartReply" type="nonBasic" nonBasicTypeName="EmptyStruct"/>
+
+        <struct name="GetPathReply">
+            <member name="path" 
+                    type="nonBasic" nonBasicTypeName="Point" sequenceMaxLength="MAX_POINTS"/>
+        </struct>
+
+        <enum name="MoveReply_ReturnCode">
+            <enumerator name="OK"/>
+            <enumerator name="TOO_FAST"/>
+            <enumerator name="REJECTED"/>
+        </enum>
+        
+        <struct name="MoveReply_ReturnCode_OK">
+            <member name="expected_completion" type="float32"/>            
+        </struct>
+
+        <typedef name="MoveReply_ReturnCode_TooFast"
+                type="nonBasic" nonBasicTypeName="EmptyStruct"/>
+
+        <struct name="MoveReply_ReturnCode_Rejected">
+            <member name="reason" type="string"/>
+        </struct>
+
+        <union name="MoveReply">
+            <discriminator type="nonBasic" nonBasicTypeName="MoveReply_ReturnCode"/>
+            <case>
+                <caseDiscriminator value="OK"/>
+                <member name="ok_reply" 
+                        type="nonBasic" nonBasicTypeName="MoveReply_ReturnCode_OK"/>
+            </case> 
+            <case>
+                <caseDiscriminator value="TOO_FAST"/>
+                <member name="too_fast_reply"  
+                        type="nonBasic" nonBasicTypeName="MoveReply_ReturnCode_TooFast"/>
+            </case>
+            <case>
+                <caseDiscriminator value="REJECTED"/>
+                <member name="low_power_reply"
+                        type="nonBasic" nonBasicTypeName="MoveReply_ReturnCode_Rejected"/>     
+            </case>
+        </union>       
+
+        <union name="ShapeComamndReply">
+            <discriminator type="nonBasic" nonBasicTypeName="RequestKind"/>
+            <case>
+                <caseDiscriminator value="START"/>
+                <member name="start_reply"
+                        type="nonBasic" nonBasicTypeName="StartReply"/>
+            </case>
+            <case>
+                <caseDiscriminator value="STOP"/>
+                <member name="stop_reply" 
+                        type="nonBasic" nonBasicTypeName="StopReply"/>            
+            </case>
+            <case>
+                <caseDiscriminator value="GET_PATH"/>
+                <member name="get_path_reply"
+                        type="nonBasic" nonBasicTypeName="GetPathReply"/>   
+            </case>
+            <case>
+                <caseDiscriminator value="MOVE"/>
+                <member name="move_reply" 
+                        type="nonBasic" nonBasicTypeName="MoveReply"/>               
+            </case>               
+        </union>
+
+        <!-- Extended Command -->
+        <struct name="PauseSingleShapeArguments">
+            <member name="color" 
+                    type="string"  stringMaxLength="COLOR_MAX_LEN"/>
+        </struct> 
+
+        <union name="ShapeCommandExtendedRequest">
+            <baseUnion type="ShapeCommandRequest"/>
+            <case>
+                <caseDiscriminator value="PAUSE_SINGLE_SHAPE"/>
+                <member name="pause_single_shape_args" 
+                        type="nonBasic" nonBasicTypeName="PauseSingleShapeArguments"/>
+            </case>
+        </union>
+
+        <typedef name="PauseSingleShapeReply" type="nonBasic" nonBasicTypeName="EmptyStruct"/>
+
+        <union name="ShapeCommandExtendedReply">
+            <baseUnion type="ShapeCommandReply"/>
+            <case>
+                <caseDiscriminator value="PAUSE_SINGLE_SHAPE"/>
+                <member name="pause_single_shape_reply" 
+                        type="nonBasic" nonBasicTypeName="PauseSingleShapeReply"/>
+            </case>
+        </union>
+
+    </module>
 </types>

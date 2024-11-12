@@ -6,7 +6,8 @@
     <!-- Same as elementName redefined here to avoid inclusion of another XSD -->
     <xs:simpleType name="tsnElementName">
         <xs:restriction base="xs:string">
-            <xs:pattern value="((::)?[a-zA-Z0-9_.])+" />
+            <xs:pattern value="[a-zA-Z0-9_.]+" />
+            <xs:maxLength value="255"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="tsnElementNameReference">
@@ -42,6 +43,7 @@
         <xs:union>
             <xs:simpleType>
                 <xs:restriction base="xs:string">
+                    <xs:whiteSpace value="collapse"/>
                     <xs:enumeration value="STRICT_PRIORITY"/>
                     <xs:enumeration value="CREDIT_BASED_SHAPER"/>
                     <xs:enumeration value="ENHANCED_TRANSMISSION_SELECTION"/>

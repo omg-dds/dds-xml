@@ -114,10 +114,17 @@
     <!-- DDS Entities Definition -->
     <!-- ================================================================== -->
 
+    <xs:attributeGroup name="commonPubSubEndpointAttributeGroup">
+        <xs:attribute name="name" type="elementName" 
+            use="required" />
+        <xs:attribute name="topic_ref" type="elementNameReference"
+            use="required" />
+    </xs:attributeGroup>
+
     <xs:complexType name="dataReader">
         <xs:all>
                 <xs:element name="datareader_qos" minOccurs="0"
-                    maxOccurs="1" type="datareaderQos" />
+                    maxOccurs="1" type="datareaderQosInline" />
                 <xs:element name="content_filter" minOccurs="0"
                     maxOccurs="1" type="filter" />
                 <xs:element name="status_condition" type="statusCondition"
@@ -128,78 +135,78 @@
                     minOccurs="0" />
         </xs:all>
 
-        <xs:attribute name="name" type="elementName" use="required" />
-        <xs:attribute name="topic_ref" type="elementNameReference"
-            use="required" />
+        <xs:attributeGroup ref="commonPubSubEndpointAttributeGroup"/>
     </xs:complexType>
 
     <xs:complexType name="dataWriter">
         <xs:all>
             <xs:element name="datawriter_qos" minOccurs="0" maxOccurs="1" 
-                type="datawriterQos" />
+                type="datawriterQosInline" />
         </xs:all>
 
-        <xs:attribute name="name" type="elementName" use="required" />
-        <xs:attribute name="topic_ref" type="elementNameReference"
-            use="required" />
+        <xs:attributeGroup ref="commonPubSubEndpointAttributeGroup"/>
     </xs:complexType>
+
+    <xs:attributeGroup name="commonServiceEndpointAttributeGroup">
+        <xs:attribute name="name" type="elementName" use="required" />
+        <xs:attribute name="publisher_ref" type="elementNameReference" />
+        <xs:attribute name="subscriber_ref" type="elementNameReference" />
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="requesterReplierAttributeGroup">
+        <xs:attributeGroup ref="commonServiceEndpointAttributeGroup"/>
+        <xs:attribute name="request_reply_service_ref" type="elementNameReference"
+            use="required" />
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="clientServerAttributeGroup">
+        <xs:attributeGroup ref="commonServiceEndpointAttributeGroup"/>
+        <xs:attribute name="rpc_service_ref" type="elementNameReference"
+            use="required" />
+    </xs:attributeGroup>
 
     <xs:complexType name="requester">
         <xs:all>
-            <xs:element name="request_datawriter_qos" minOccurs="0" maxOccurs="1"
-                type="datawriterQos" />
-            <xs:element name="reply_datareader_qos"   minOccurs="0" maxOccurs="1"
-                type="datareaderQos" />
+            <xs:element name="request_datawriter_qos" minOccurs="0"
+                type="datawriterQosInline" />
+            <xs:element name="reply_datareader_qos"   minOccurs="0"
+                type="datareaderQosInline" />
         </xs:all>
 
-        <xs:attribute name="name" type="elementName" use="required" />
-        <xs:attribute name="request_reply_service_ref" type="elementNameReference"
-            use="required" />
-        <xs:attribute name="publisher_ref" type="elementNameReference" />
-        <xs:attribute name="subscriber_ref" type="elementNameReference" />
+        <xs:attributeGroup ref="requesterReplierAttributeGroup"/>
     </xs:complexType>
 
     <xs:complexType name="replier">
         <xs:all>
             <xs:element name="request_datareader_qos" minOccurs="0"
-                type="datareaderQos" />
+                type="datareaderQosInline" />
             <xs:element name="reply_datawriter_qos"   minOccurs="0"
-                type="datawriterQos" />
+                type="datawriterQosInline" />
         </xs:all>
 
-        <xs:attribute name="name" type="elementName" use="required" />
-        <xs:attribute name="request_reply_service_ref" type="elementNameReference"
-            use="required" />
-        <xs:attribute name="publisher_ref" type="elementNameReference" />
-        <xs:attribute name="subscriber_ref" type="elementNameReference" />
+        <xs:attributeGroup ref="requesterReplierAttributeGroup"/>
     </xs:complexType>
 
     <xs:complexType name="client">
         <xs:all>
             <xs:element name="request_datawriter_qos" minOccurs="0"
-                type="datawriterQos" />
+                type="datawriterQosInline" />
             <xs:element name="reply_datareader_qos"   minOccurs="0"
-                type="datareaderQos" />
+                type="datareaderQosInline" />
         </xs:all>
 
-        <xs:attribute name="name" type="elementName" use="required" />
-        <xs:attribute name="rpc_service_ref" type="elementNameReference" use="required" />
-        <xs:attribute name="publisher_ref" type="elementNameReference" />
-        <xs:attribute name="subscriber_ref" type="elementNameReference" />
+        <xs:attributeGroup ref="clientServerAttributeGroup"/>
     </xs:complexType>
 
     <xs:complexType name="server">
         <xs:all>
             <xs:element name="request_datareader_qos" minOccurs="0"
-                type="datareaderQos" />
+                type="datareaderQosInline" />
             <xs:element name="reply_datawriter_qos"   minOccurs="0"
-                type="datawriterQos" />
+                type="datawriterQosInline" />
         </xs:all>
 
-        <xs:attribute name="name" type="elementName" use="required" />
-        <xs:attribute name="rpc_service_ref" type="elementNameReference" use="required" />
-        <xs:attribute name="publisher_ref" type="elementNameReference" />
-        <xs:attribute name="subscriber_ref" type="elementNameReference" />
+        <xs:attributeGroup ref="clientServerAttributeGroup"/>
     </xs:complexType>
 
     <xs:complexType name="subscriber">
@@ -207,7 +214,7 @@
             <xs:element name="data_reader"    minOccurs="0" maxOccurs="unbounded"
                 type="dataReader" />
             <xs:element name="subscriber_qos" minOccurs="0" maxOccurs="1" 
-                type="subscriberQos" />
+                type="subscriberQosInline" />
         </xs:choice>
         <xs:attribute name="name" type="elementName" use="required" />
     </xs:complexType>
@@ -217,7 +224,7 @@
             <xs:element name="data_writer"   minOccurs="0" maxOccurs="unbounded"
                 type="dataWriter" />
             <xs:element name="publisher_qos" minOccurs="0" maxOccurs="1"
-                type="publisherQos" />
+                type="publisherQosInline" />
         </xs:choice>
 
         <xs:attribute name="name" type="elementName" use="required" />
@@ -226,7 +233,7 @@
     <xs:complexType name="domainParticipant">
         <xs:choice maxOccurs="unbounded"     minOccurs="0">
             <xs:element name="domain_participant_qos" minOccurs="0" maxOccurs="1"
-                type="domainparticipantQos" />
+                type="domainparticipantQosInline" />
 
             <xs:element name="register_type" minOccurs="0" maxOccurs="unbounded"
                 type="registerType" />
@@ -236,9 +243,9 @@
             <xs:element name="topic"         minOccurs="0" maxOccurs="unbounded"
                 type="topic" />
             <xs:element name="rpc_service"   minOccurs="0" maxOccurs="unbounded"
-                type="rpc_service" />
+                type="rpcService" />
             <xs:element name="request_reply_service" minOccurs="0" maxOccurs="unbounded"
-                type="request_reply_service" />
+                type="requestReplyService" />
 
             <xs:element name="publisher"     minOccurs="0" maxOccurs="unbounded"
                 type="publisher" />

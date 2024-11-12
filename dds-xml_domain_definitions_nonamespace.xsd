@@ -25,7 +25,7 @@
     <xs:complexType name="registerType">
         <xs:choice minOccurs="0" maxOccurs="1">
             <xs:element name="registered_name" minOccurs="0"
-                        type="elementName" />
+                        type="identifierName" />
         </xs:choice>
 
         <xs:attribute name="name" type="elementName" use="required" />
@@ -37,7 +37,7 @@
     <xs:complexType name="registerInterface">
         <xs:choice minOccurs="0" maxOccurs="1">
             <xs:element name="registered_name" minOccurs="0"
-                        type="elementName" />
+                        type="identifierName" />
         </xs:choice>
 
         <xs:attribute name="name" type="elementName" use="required" />
@@ -50,10 +50,10 @@
 
     <xs:complexType name="topic">
         <xs:all>
-            <xs:element name="topic_name"      type="elementName"   minOccurs="0" />
-            <xs:element name="topic_qos"       type="topicQos"      minOccurs="0" />
-            <xs:element name="datawriter_qos"  type="datawriterQos" minOccurs="0" />
-            <xs:element name="datareader_qos"  type="datareaderQos" minOccurs="0" />
+            <xs:element name="topic_name"      type="topicOrServiceName"  minOccurs="0" />
+            <xs:element name="topic_qos"       type="topicQosInline"      minOccurs="0" />
+            <xs:element name="datawriter_qos"  type="datawriterQosInline" minOccurs="0" />
+            <xs:element name="datareader_qos"  type="datareaderQosInline" minOccurs="0" />
         </xs:all>
 
         <xs:attribute name="name" type="elementName" use="required" />
@@ -76,11 +76,11 @@
         </xs:all>
     </xs:complexType>
 
-    <xs:complexType name="rpc_service">
+    <xs:complexType name="rpcService">
         <xs:all>
-            <xs:element name="service_name"          type="elementName"   minOccurs="0" />
-            <xs:element name="request_topic_name"     type="elementName"   minOccurs="0" />
-            <xs:element name="reply_topic_name"       type="elementName"   minOccurs="0" />
+            <xs:element name="service_name"           type="topicOrServiceName"   minOccurs="0" />
+            <xs:element name="request_topic_name"     type="topicOrServiceName"   minOccurs="0" />
+            <xs:element name="reply_topic_name"       type="topicOrServiceName"   minOccurs="0" />
             <xs:element name="client" type="requesterOrClientConfig" minOccurs="0" />
             <xs:element name="server" type="serverOrReplierConfig" minOccurs="0" />
         </xs:all>
@@ -89,11 +89,11 @@
                       use="required" />
     </xs:complexType>
 
-    <xs:complexType name="request_reply_service">
+    <xs:complexType name="requestReplyService">
         <xs:all>
-            <xs:element name="service_name"           type="elementName"   minOccurs="0" />
-            <xs:element name="request_topic_name"     type="elementName"   minOccurs="0" />
-            <xs:element name="reply_topic_name"       type="elementName"   minOccurs="0" />
+            <xs:element name="service_name"           type="topicOrServiceName"   minOccurs="0" />
+            <xs:element name="request_topic_name"     type="topicOrServiceName"   minOccurs="0" />
+            <xs:element name="reply_topic_name"       type="topicOrServiceName"   minOccurs="0" />
             <xs:element name="requester" type="requesterOrClientConfig" minOccurs="0" />
             <xs:element name="replier" type="serverOrReplierConfig" minOccurs="0" />    
         </xs:all>
@@ -112,13 +112,14 @@
             <xs:element name="register_type" type="registerType" />
             <xs:element name="register_interface" type="registerInterface" />
             <xs:element name="topic" type="topic" />
-            <xs:element name="rpc_service" type="rpc_service" />
-            <xs:element name="request_reply_service" type="request_reply_service" />
+            <xs:element name="rpc_service" type="rpcService" />
+            <xs:element name="request_reply_service" type="requestReplyService" />
         </xs:choice>
 
-        <xs:attribute name="name" type="xs:string" use="required" />
-        <xs:attribute name="domain_id" type="xs:nonNegativeInteger" />
+        <xs:attribute name="name" type="elementName" use="required" />
+        <xs:attribute name="domain_id"  type="xs:nonNegativeInteger" />
         <xs:attribute name="domain_tag" type="xs:string" />
+        <xs:attribute name="base_name"  type="elementNameReference"/>
     </xs:complexType>
 
 
@@ -131,7 +132,7 @@
             <xs:element name="domain" type="domain" minOccurs="1" />
         </xs:choice>
 
-        <xs:attribute name="name" type="xs:string" use="required" />
+        <xs:attribute name="name" type="elementName" use="required" />
     </xs:complexType>
 
 </xs:schema>
