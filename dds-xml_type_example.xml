@@ -13,34 +13,38 @@
     <forward_dcl name="PlainException" kind="exception"/>
     <forward_dcl name="PlainInterface" kind="interface"/>
 
-    <!-- Constants -->
+    <!-- Enums and Constants -->
+    <enum name="PlainEnum">
+        <enumerator name="ACE"/>
+        <enumerator name="KING"/>
+        <enumerator name="QUEEN"/>
+    </enum>
+
     <const name="INT_CONSTANT"     type="int32"    value="32"/>
     <const name="INT_CONSTANT2"    type="int32"    value="2"/>
     <const name="INT16_CONSTANT11" type="int16"    value="11"/>
     <const name="INT16_CONSTANT12" type="int16"    value="12"/>
     <const name="FLOAT_CONSTANT"   type="float32"  value="3.14"/>
     <const name="STRING_CONSTANT"  type="string"   value="Hello"/>
+
+    <!-- Resolving a string value with a constant is done ahead of a literal string -->
     <const name="STRING_CONSTANT2" type="string"   value="STRING_CONSTANT"/>
     <const name="STRING_CONSTANT3" type="string"   value="::STRING_CONSTANT"/>
+
+    <!-- If the literal string is desired it an be escaped -->
     <const name="STRING_CONSTANT4" type="string"   value="&quot;STRING_CONSTANT&quot;"/>
 
+    <!-- Enum literals can be used to initilize constant integer values -->
     <const name="ENUM_CONSTANT"    type="nonBasic" nonBasicTypeName="PlainEnum"
         value="KING"/>
     <const name="ENUM_CONSTANT2"  type="nonBasic" nonBasicTypeName="::PlainEnum"
         value="::KING"/>
 
-    <!-- Constants with builtin annotations -->
+    <!-- Enums and Constants with builtin annotations -->
     <const name="SPEED_OF_LIGHT" type="float32" value="299792.458" unit="Km/s"/>
     <const name="ABSOLUTE_ZERO_TEMPERATURE" type="float32" value="-273.15" unit="Celsius"/>
     <const name="MAX_DEGREES" type="int32" value="360" unit="Degrees"/>
 
-    <!-- Enumerations with builtin annotations -->
-    <enum name="PlainEnum">
-        <enumerator name="ACE"/>
-        <enumerator name="KING"/>
-        <enumerator name="QUEEN"/>
-    </enum>
-    
     <enum name="emumWithBuiltinAnnotations" bitBound="16" ignoreLiteralNames="true">
         <enumerator name="ACE"    value="1"/>
         <enumerator name="KING"   value="12" defaultLiteral="true"/>
@@ -160,15 +164,17 @@
         <member name="anAliasComplexStruct" type="nonBasic" 
                 nonBasicTypeName="PlainTypedef2"/>
     
-        <const name="U64_CONST" type="uint64" value="1234"/>
+        <const name="INT32_CONST" type="uint32" value="1024"/>
         <member name="anEnum" type="nonBasic" nonBasicTypeName="PlainEnum"/>
-        <member sequenceMaxLength="3" name="anEnumSeq" type="nonBasic"
-                nonBasicTypeName="PlainEnum"/>
-        <member arrayDimensions="3,4" name="anEnumArr" type="nonBasic"
-                nonBasicTypeName="PlainEnum"/>
+
+        <member name="anEnumSeq" type="nonBasic" nonBasicTypeName="PlainEnum"
+                sequenceMaxLength="3"/>
+
+        <member name="anEnumArr" type="nonBasic" nonBasicTypeName="PlainEnum" 
+                arrayDimensions="3,4" />
 
         <member name="aMap" type="nonBasic" nonBasicTypeName="PlainEnum"
-                mapKeyType="int32" mapMaxLength="1000"/>
+                mapKeyType="int32" mapMaxLength="INT32_CONST"/>
 
         <member name="aMap2" type="nonBasic" nonBasicTypeName="PlainEnum"
                 mapKeyType="string" mapKeyStringMaxLength="32" mapMaxLength="1000"/>
@@ -176,10 +182,9 @@
         <member name="aMap2" type="nonBasic" nonBasicTypeName="PlainEnum"
                 mapKeyType="nonBasic" mapKeyNonBasicTypeName="anIntAlias" mapMaxLength="1000"/>
 
-        <member name="aComplexType" type="nonBasic"
-                nonBasicTypeName="PlainStruct1"/>
-        <member name="aComplexSequenceType" type="nonBasic"
-                nonBasicTypeName="PlainStruct1" sequenceMaxLength="32"/>
+        <member name="aComplexType" type="nonBasic" nonBasicTypeName="PlainStruct1"/>
+        <member name="aComplexSequenceType" type="nonBasic" nonBasicTypeName="PlainStruct1" 
+                sequenceMaxLength="32"/>
     </struct>
 
     <!-- Structures with builtin annotations -->
@@ -188,28 +193,34 @@
             data_representation="xcdr2" 
             topic="MyTopic1/slash.dot-hyphen_underscore and space allowed" >
 
-        <member type="int64" name="aMemberWithId"  id="33"/>
+        <member type="int64" name="aMemberWithId1" id="33"/>
         <member type="int64" name="aMemberWithId2" id="INT_CONSTANT"/>
-        <member type="int64" name="aMemberWithId2" id="::INT_CONSTANT2"/>
-        <member type="int64" name="aMemberWithHashId" hashid="oldMemberName"/>
+        <member type="int64" name="aMemberWithId3" id="::INT_CONSTANT2"/>
+
+        <member type="int64" name="aMemberWithHashId1" hashid="oldMemberName"/>
         <member type="int64" name="aMemberWithHashId2" hashid="STR_CONSTANT"/>
         <member type="int64" name="aMemberWithHashId3" hashid="::STR_CONSTANT2"/>
-        <member type="int64" name="aMemberWithHashId3" hashid="&quot;STR_CONSTANT2&quot;"/>
+        <member type="int64" name="aMemberWithHashId4" hashid="&quot;STR_CONSTANT2&quot;"/>
+
         <member type="int64" name="aMemberWithDefaultHashId" hashid=""/>
         <member type="int64" name="aMemberWithAutoId" autoid="hash"/>
-        <member type="int64" name="aMustUndertandMember" mustUnderstand="true"/>
-        <member type="int64" name="aOptionalMember" optional="true"/>
-        <member type="int64" name="aExternalMember" external="true"/>
-        <member type="int64" name="aDefaultValueMember"  default="1014"/>
-        <member type="int64" name="aDefaultValueMember2" default="INT_CONSTANT"/>
-        <member type="int64" name="aDefaultValueMember3" default="::INT_CONSTANT2"/>
-        <member type="int32" name="aTryConstructMember" sequenceMaxLength="100" 
+        <member type="int64" name="aMemberWithMustUndertand" mustUnderstand="true"/>
+        <member type="int64" name="aMemberWithOptional" optional="true"/>
+        <member type="int64" name="aMemberWithExternal" external="true"/>
+
+        <member type="int64" name="aMemberWithDefaultValue1" default="1014"/>
+        <member type="int64" name="aMemberWithDefaultValue2" default="INT_CONSTANT"/>
+        <member type="int64" name="aMemberWithDefaultValue3" default="::INT_CONSTANT2"/>
+
+        <member type="int32" name="aMemberWithTryConstruct"  sequenceMaxLength="100" 
                 tryConstruct="trim"/>
-        <member type="int64" name="aonSeriaizedMember" nonSerialized="true"/>
-        <member type="int64" name="aMinValueMember"  min="1014"/>
-        <member type="int64" name="aMaxValueMember1" max="INT_CONSTANT"/>
-        <member type="int64" name="aMaxValueMember2" max="::INT_CONSTANT2"/>
-        <member type="float32" name="aUnitMember" unit="m"/>
+        <member type="int64" name="aMemberWithNonSeriaized"  nonSerialized="true"/>
+
+        <member type="int64" name="aMemberWithMinValue1" min="1014"/>
+        <member type="int64" name="aMemberWithMaxValue2" max="INT_CONSTANT"/>
+        <member type="int64" name="aMemberWithMaxValue3" max="::INT_CONSTANT2"/>
+
+        <member type="float32" name="aMemberWithUnit" unit="m"/>
     </struct>
 
     <!-- Unions -->
@@ -260,7 +271,6 @@
         topic="MyTopic/slash.dot-hyphen_underscore and space allowed" >
 
         <discriminator type="int32" key="true" default="10"/>
-
 
         <case>
             <caseDiscriminator value="1"/>
@@ -344,10 +354,8 @@
                 <exception type="PlainException"/>
             </raises>
             <arguments>
-                <argument name="item_identfier" 
-                        type="int32"/>
-                <argument name="speed" 
-                        type="float32"/>
+                <argument name="item_identfier" type="int32"/>
+                <argument name="speed" type="float32"/>
             </arguments>
         </operation>
         <operation name="get_speed">
@@ -361,7 +369,7 @@
     <!-- Interfaces -->
 
     <interface name="InterfaceWithBuiltinAnnotations" extensibility="mutable"
-        service="DDS">
+            service="DDS">
         <const name="MAX_SPEED" type="float32" value="32" unit="m/s"/>
         <operation name="pause"/>
         <operation name="resume"/>
@@ -370,10 +378,9 @@
                 <exception type="PlainException"/>
             </raises>
             <arguments>
-                <argument name="item_identfier" 
-                        type="int32"/>
-                <argument name="speed" unit="m/s" max="MAX_SPEED"
-                        type="float32"/>
+                <argument name="item_identfier" type="int32"/>
+                <argument name="speed" type="float32" 
+                        unit="m/s" max="MAX_SPEED"/>
             </arguments>
         </operation>
         <operation name="get_speed">
@@ -599,7 +606,7 @@
         
         
         <const name="aBoolConst" type="boolean" value="false"/>
-        <member name="anInt" type="int32" id="33" key="true"/>
+        <member name="anInt"  type="int32" id="33" key="true"/>
         <member name="aFloat" type="float32" min="0" max="250" optional="true" unit="volt">
             <annotations>
                 <doc>Member documentation</doc>
@@ -680,7 +687,7 @@
             </verbatim>          
         </annotations>
 
-        <operation name="stop">
+        <operation name="my_operation1">
             <annotations>
                 <doc>Operation documentation</doc>
                 <custom type="SimpleAnnotation"/>
@@ -695,9 +702,9 @@
             </annotations>
         </operation>
         
-        <operation name="start">
+        <operation name="my_operation2">
             <arguments>
-                <argument name="delay" type="float32">
+                <argument name="argument1" type="float32">
                     <annotations>
                         <doc>Argument documentation</doc>
                         <custom type="SimpleAnnotation"/>
@@ -745,14 +752,14 @@
             <parameter name="aliasParam" type="nonBasic" nonBasicTypeName="anIntAlias"/>
         </annotation>
 
-        <const name="M1_CONSTANT"  type="int32" value="100"/>
+        <const name="M1_CONSTANT1" type="int32" value="100"/>
         <const name="M1_CONSTANT2" type="int32" value="INT_CONSTANT"/>
         <const name="M1_CONSTANT3" type="int32" value="::INT_CONSTANT"/>
         <const name="M1_CONSTANT4" type="int32" value="M1_CONSTANT"/>
         <const name="M1_CONSTANT5" type="int32" value="Module1::M1_CONSTANT"/>
         <const name="M1_CONSTANT6" type="int32" value="::Module1::M1_CONSTANT"/>
 
-        <typedef name="m1_Alias"  type="boolean"/>
+        <typedef name="m1_Alias1" type="boolean"/>
         <typedef name="m1_Alias2" type="nonBasic" nonBasicTypeName="aBoolAlias"/>
         <typedef name="m1_Alias3" type="nonBasic" nonBasicTypeName="::aBoolAlias"/>
         <typedef name="m1_Alias4" type="nonBasic" nonBasicTypeName="m1_Alias"/>
@@ -766,10 +773,10 @@
         </struct>
 
         <module name="Module1Nested1">
-            <const name="M1_N1_CONSTANT"   type="int32" value="100"/>
-            <const name="M1_N1_CONSTANT2"  type="int32" value="INT_CONSTANT"/>
-            <const name="M1_N1_CONSTANT3"  type="int32" value="::INT_CONSTANT"/>
-            <const name="M1_N1_CONSTANT4"  type="int32" value="M1_CONSTANT"/>
+            <const name="M1_N1_CONSTANT1"  type="int32" value="100"/>
+            <const name="M1_N1_CONSTANT2"  type="int32" value="INT_CONSTANT1"/>
+            <const name="M1_N1_CONSTANT3"  type="int32" value="::INT_CONSTANT1"/>
+            <const name="M1_N1_CONSTANT4"  type="int32" value="M1_CONSTANT1"/>
             <const name="M1_N1_CONSTANT5"  type="int32" value="Module1::M1_CONSTANT"/>
             <const name="M1_N1_CONSTANT6"  type="int32" value="::Module1::M1_CONSTANT"/>
             <const name="M1_N1_CONSTANT7"  type="int32" value="M1_N1_CONSTANT"/>
@@ -826,9 +833,9 @@
         </struct>
 
 
-        <const name="MIN_DELAY" type="float32" value="0.001"/>
-        <const name="MAX_SPEED" type="float32" value="32" unit="m/s"/>
-        <const name="MAX_POIMTS" type="float32" value="100"/>
+        <const name="MIN_DELAY"  type="float32" value="0.001"/>
+        <const name="MAX_SPEED"  type="float32" value="32" unit="m/s"/>
+        <const name="MAX_POINTS" type="float32" value="100"/>
 
         <struct name="Point">
             <member name="x" type="int32"/>
@@ -854,6 +861,9 @@
             </operation>
             
             <operation name="get_path" >
+                <arguments>
+                    <argument name="color" type="string" stringMaxLength="COLOR_MAX_LEN"/>
+                </arguments>
                 <return type="nonBasic" nonBasicTypeName="Point" sequenceMaxLength="10"/>
             </operation>
     
@@ -863,14 +873,14 @@
                     <exception type="Rejected"/>
                 </raises>
                 <arguments>
-                    <argument name="color"
-                            type="string" stringMaxLength="COLOR_MAX_LEN"/>
-                    <argument name="speed" max="MAX_SPEED" unit="m/s" default="1"
-                            type="float32"/>
-                    <argument name="path" direction="in" external="true"
-                            type="nonBasic" nonBasicTypeName="Point"/>
-                    <argument name="expected_completion" direction="inout" unit="s"
-                            type="float32"/>
+                    <argument name="color" type="string" stringMaxLength="COLOR_MAX_LEN"/>
+                    <argument name="speed" type="float32" 
+                            max="MAX_SPEED" unit="m/s" default="1"/>
+                    <argument name="path" type="nonBasic" nonBasicTypeName="Point"
+                            direction="in" external="true"/>
+                            
+                    <argument name="expected_completion" type="float32"  
+                            direction="inout" unit="s"/>
                 </arguments>
             </operation>
         </interface> 
@@ -879,8 +889,7 @@
         <interface name="ShapeCommandExtended" baseType="ShapeCommand">
             <operation name="pause_single_shape">
                 <arguments>
-                    <argument name="color" 
-                            type="string" mapKeyStringMaxLength="COLOR_MAX_LEN"/>
+                    <argument name="color" type="string" mapKeyStringMaxLength="COLOR_MAX_LEN"/>
                 </arguments>
             </operation>
         </interface>
@@ -905,7 +914,10 @@
                     type="float32"/>
         </struct> 
 
-        <typedef name="GetPathArguments" type="nonBasic" nonBasicTypeName="EmptyStruct"/>
+        <struct name="GetPathArguments">
+            <member name="color" 
+                    type="string"  stringMaxLength="COLOR_MAX_LEN"/>
+        </struct>
 
         <struct name="MoveArguments">
             <member name="color" 
