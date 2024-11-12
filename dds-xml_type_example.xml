@@ -5,13 +5,13 @@
        xsi:schemaLocation="http://www.omg.org/spec/DDS-XML ./dds-xml_type_definitions.xsd">
 
      <!-- Forward Declarations -->
-    <forward_dcl name="PlainEnum"      kind="enum" />
-    <forward_dcl name="PlainBitmask"   kind="bitmask" />
-    <forward_dcl name="PlainBitset"    kind="bitset" />
-    <forward_dcl name="PlainStruct"    kind="struct" />
-    <forward_dcl name="PlainUnion"     kind="union" />
-    <forward_dcl name="PlainException" kind="exception" />
-    <forward_dcl name="PlainInterface" kind="interface" />
+    <forward_dcl name="PlainEnum"      kind="enum"/>
+    <forward_dcl name="PlainBitmask"   kind="bitmask"/>
+    <forward_dcl name="PlainBitset"    kind="bitset"/>
+    <forward_dcl name="PlainStruct"    kind="struct"/>
+    <forward_dcl name="PlainUnion"     kind="union"/>
+    <forward_dcl name="PlainException" kind="exception"/>
+    <forward_dcl name="PlainInterface" kind="interface"/>
 
     <!-- Constants -->
     <const name="INT_CONSTANT"     type="int32"    value="32"/>
@@ -36,13 +36,13 @@
 
     <!-- Enumerations with builtin annotations -->
     <enum name="PlainEnum">
-        <enumerator name="ACE"   />
-        <enumerator name="KING"  />
+        <enumerator name="ACE"/>
+        <enumerator name="KING"/>
         <enumerator name="QUEEN"/>
     </enum>
     
     <enum name="emumWithBuiltinAnnotations" bitBound="16" ignoreLiteralNames="true">
-        <enumerator name="ACE"    value="1"  />
+        <enumerator name="ACE"    value="1"/>
         <enumerator name="KING"   value="12" defaultLiteral="true"/>
         <enumerator name="QUEEN"  value="INT16_CONSTANT11"/>
         <enumerator name="KNIGHT" value="::INT16_CONSTANT12"/>
@@ -129,9 +129,9 @@
         mapKeyType="uint32"/>
     
     <!-- Aliases with builtin Annotations -->
-    <typedef name="Angle" type="int32" min="0" max="MAX_DEGREES" unit="Degrees" />
+    <typedef name="Angle" type="int32" min="0" max="MAX_DEGREES" unit="Degrees"/>
     <typedef name="Temperature" type="float32" min="::ABSOLUTE_ZERO_TEMPERATURE" max="10000000"
-        unit="Celsius" default="100" external="true" />
+        unit="Celsius" default="100" external="true"/>
 
     <!-- Structures -->
     <struct name="PlainStruct">
@@ -318,10 +318,10 @@
         <member name="anIntMember"     type="int32"/>
         <member name="aFloatMember"    type="float32"/>
         <member name="aStringMember"   type="string"  stringMaxLength="32"/>
-        <member name="aSequenceMember" type="int32"   sequenceMaxLength="32" />
-        <member name="anArrayMember"   type="int32"   arrayDimensions="32, 4" />
+        <member name="aSequenceMember" type="int32"   sequenceMaxLength="32"/>
+        <member name="anArrayMember"   type="int32"   arrayDimensions="32, 4"/>
         <member name="aMapMember"      type="int32"   mapMaxLength="32" 
-            mapKeyType="string" mapKeyStringMaxLength="32" />
+            mapKeyType="string" mapKeyStringMaxLength="32"/>
         <member name="aComplexMember"  type="nonBasic" 
             nonBasicTypeName="PlainStruct2"/> 
         <member name="aComplexMemberSequence"  type="nonBasic" nonBasicTypeName="PlainStruct2"
@@ -341,19 +341,19 @@
         <operation name="resume"/>
         <operation name="set_speed">
             <raises>
-                <exception type="PlainException" />
+                <exception type="PlainException"/>
             </raises>
             <arguments>
                 <argument name="item_identfier" 
-                        type="int32"  />
+                        type="int32"/>
                 <argument name="speed" 
-                        type="float32" />
+                        type="float32"/>
             </arguments>
         </operation>
         <operation name="get_speed">
-            <return type="float32" />
+            <return type="float32"/>
             <arguments>
-                <argument name="item_identfier" type="int32"  />
+                <argument name="item_identfier" type="int32"/>
             </arguments>
         </operation>
     </interface>
@@ -367,19 +367,19 @@
         <operation name="resume"/>
         <operation name="set_speed">
             <raises>
-                <exception type="PlainException" />
+                <exception type="PlainException"/>
             </raises>
             <arguments>
                 <argument name="item_identfier" 
-                        type="int32"  />
+                        type="int32"/>
                 <argument name="speed" unit="m/s" max="MAX_SPEED"
-                        type="float32" />
+                        type="float32"/>
             </arguments>
         </operation>
         <operation name="get_speed">
-            <return type="float32" unit="m/s" max="MAX_SPEED" />
+            <return type="float32" unit="m/s" max="MAX_SPEED"/>
             <arguments>
-                <argument name="item_identfier" type="int32"  />
+                <argument name="item_identfier" type="int32"/>
             </arguments>
         </operation>
     </interface>
@@ -801,9 +801,9 @@
 
     </module>
 
-    <!-- ======= -->
-    <!-- EXAMPLE -->
-    <!-- ======= -->
+    <!-- ============== -->
+    <!-- SHAPES EXAMPLE -->
+    <!-- ============== -->
     <module name="ShapeExample">
 
         <const name="COLOR_MAX_LEN" value="32" 
@@ -811,24 +811,24 @@
 
         <struct name="ShapeType" extensibility="append">
             <member name="color" key="true"
-                    type="string" stringMaxLength="COLOR_MAX_LEN"  />
+                    type="string" stringMaxLength="COLOR_MAX_LEN"/>
             <member name="x" 
-                    type="int32" />
+                    type="int32"/>
             <member name="y" 
-                    type="int32" />
+                    type="int32"/>
             <member name="shapesize" 
-                    type="int32" />
+                    type="int32"/>
         </struct>
 
         <struct name="ShapeExtended" baseType="ShapeType">
             <member name="angle" min="0" max="360" unit="degree"
-                    type="int32"   />
+                    type="int32"/>
         </struct>
 
 
         <const name="MIN_DELAY" type="float32" value="0.001"/>
-        <const name="MAX_SPEED" type="float32" value="32" unit="m/s" />
-        <const name="MAX_POIMTS" type="float32" value="100" />
+        <const name="MAX_SPEED" type="float32" value="32" unit="m/s"/>
+        <const name="MAX_POIMTS" type="float32" value="100"/>
 
         <struct name="Point">
             <member name="x" type="int32"/>
@@ -849,7 +849,7 @@
             <operation name="start">
                 <arguments>
                     <argument name="delay" unit="sec"
-                            type="float32" />
+                            type="float32"/>
                 </arguments>
             </operation>
             
@@ -866,9 +866,9 @@
                     <argument name="color"
                             type="string" stringMaxLength="COLOR_MAX_LEN"/>
                     <argument name="speed" max="MAX_SPEED" unit="m/s" default="1"
-                            type="float32" />
+                            type="float32"/>
                     <argument name="path" direction="in" external="true"
-                            type="nonBasic" nonBasicTypeName="Point" />
+                            type="nonBasic" nonBasicTypeName="Point"/>
                     <argument name="expected_completion" direction="inout" unit="s"
                             type="float32"/>
                 </arguments>
@@ -880,7 +880,7 @@
             <operation name="pause_single_shape">
                 <arguments>
                     <argument name="color" 
-                            type="string" mapKeyStringMaxLength="COLOR_MAX_LEN" />
+                            type="string" mapKeyStringMaxLength="COLOR_MAX_LEN"/>
                 </arguments>
             </operation>
         </interface>
@@ -909,36 +909,36 @@
 
         <struct name="MoveArguments">
             <member name="color" 
-                    type="string"  stringMaxLength="COLOR_MAX_LEN" />
+                    type="string"  stringMaxLength="COLOR_MAX_LEN"/>
             <member name="speed"  max="MAX_SPEED" unit="m/s"
-                    type="float32" /> 
+                    type="float32"/> 
             <member name="path"
-                    type="nonBasic" nonBasicTypeName="Point" sequenceMaxLength="MAX_POIMTS" />
+                    type="nonBasic" nonBasicTypeName="Point" sequenceMaxLength="MAX_POIMTS"/>
             <member name="expected_completion"
-                    type="float32" />
+                    type="float32"/>
         </struct> 
 
         <union name="RobotComamndRequest">
             <discriminator type="nonBasic" nonBasicTypeName="RequestKind"/>
             <case>
-                <caseDiscriminator value="START" />
+                <caseDiscriminator value="START"/>
                 <member name="start_args"
-                        type="nonBasic" nonBasicTypeName="StartArguments" />
+                        type="nonBasic" nonBasicTypeName="StartArguments"/>
             </case>
             <case>
-                <caseDiscriminator value="STOP" />
+                <caseDiscriminator value="STOP"/>
                 <member name="stop_args"
-                        type="nonBasic" nonBasicTypeName="StopArguments" />            
+                        type="nonBasic" nonBasicTypeName="StopArguments"/>            
             </case>
             <case>
-                <caseDiscriminator value="GET_PATH" />
+                <caseDiscriminator value="GET_PATH"/>
                 <member name="get_path_args" 
-                        type="nonBasic" nonBasicTypeName="GerPathArguments" />   
+                        type="nonBasic" nonBasicTypeName="GerPathArguments"/>   
             </case>
             <case>
-                <caseDiscriminator value="MOVE" />
+                <caseDiscriminator value="MOVE"/>
                 <member name="move_args"
-                        type="nonBasic" nonBasicTypeName="MoveArguments" />            
+                        type="nonBasic" nonBasicTypeName="MoveArguments"/>            
             </case>               
         </union>
 
@@ -959,54 +959,54 @@
         </enum>
         
         <struct name="MoveReply_ReturnCode_OK">
-            <member name="expected_completion" type="float32" />            
+            <member name="expected_completion" type="float32"/>            
         </struct>
 
         <typedef name="MoveReply_ReturnCode_TooFast"
                 type="nonBasic" nonBasicTypeName="EmptyStruct"/>
 
         <struct name="MoveReply_ReturnCode_Rejected">
-            <member name="reason" type="string" />
+            <member name="reason" type="string"/>
         </struct>
 
         <union name="MoveReply">
             <discriminator type="nonBasic" nonBasicTypeName="MoveReply_ReturnCode"/>
             <case>
-                <caseDiscriminator value="OK" />
+                <caseDiscriminator value="OK"/>
                 <member name="ok_reply" 
-                        type="nonBasic" nonBasicTypeName="MoveReply_ReturnCode_OK" />
+                        type="nonBasic" nonBasicTypeName="MoveReply_ReturnCode_OK"/>
             </case> 
             <case>
-                <caseDiscriminator value="TOO_FAST" />
+                <caseDiscriminator value="TOO_FAST"/>
                 <member name="too_fast_reply"  
-                        type="nonBasic" nonBasicTypeName="MoveReply_ReturnCode_TooFast" />
+                        type="nonBasic" nonBasicTypeName="MoveReply_ReturnCode_TooFast"/>
             </case>
             <case>
-                <caseDiscriminator value="REJECTED" />
+                <caseDiscriminator value="REJECTED"/>
                 <member name="low_power_reply"
-                        type="nonBasic" nonBasicTypeName="MoveReply_ReturnCode_Rejected" />     
+                        type="nonBasic" nonBasicTypeName="MoveReply_ReturnCode_Rejected"/>     
             </case>
         </union>       
 
         <union name="ShapeComamndReply">
             <discriminator type="nonBasic" nonBasicTypeName="RequestKind"/>
             <case>
-                <caseDiscriminator value="START" />
+                <caseDiscriminator value="START"/>
                 <member name="start_reply"
-                        type="nonBasic" nonBasicTypeName="StartReply" />
+                        type="nonBasic" nonBasicTypeName="StartReply"/>
             </case>
             <case>
-                <caseDiscriminator value="STOP" />
+                <caseDiscriminator value="STOP"/>
                 <member name="stop_reply" 
-                        type="nonBasic" nonBasicTypeName="StopReply" />            
+                        type="nonBasic" nonBasicTypeName="StopReply"/>            
             </case>
             <case>
-                <caseDiscriminator value="GET_PATH" />
+                <caseDiscriminator value="GET_PATH"/>
                 <member name="get_path_reply"
                         type="nonBasic" nonBasicTypeName="GetPathReply"/>   
             </case>
             <case>
-                <caseDiscriminator value="MOVE" />
+                <caseDiscriminator value="MOVE"/>
                 <member name="move_reply" 
                         type="nonBasic" nonBasicTypeName="MoveReply"/>               
             </case>               
@@ -1015,26 +1015,26 @@
         <!-- Extended Command -->
         <struct name="PauseSingleShapeArguments">
             <member name="color" 
-                    type="string"  stringMaxLength="COLOR_MAX_LEN" />
+                    type="string"  stringMaxLength="COLOR_MAX_LEN"/>
         </struct> 
 
         <union name="ShapeCommandExtendedRequest">
-            <baseUnion type="ShapeCommandRequest" />
+            <baseUnion type="ShapeCommandRequest"/>
             <case>
-                <caseDiscriminator value="PAUSE_SINGLE_SHAPE" />
+                <caseDiscriminator value="PAUSE_SINGLE_SHAPE"/>
                 <member name="pause_single_shape_args" 
-                        type="nonBasic" nonBasicTypeName="PauseSingleShapeArguments" />
+                        type="nonBasic" nonBasicTypeName="PauseSingleShapeArguments"/>
             </case>
         </union>
 
         <typedef name="PauseSingleShapeReply" type="nonBasic" nonBasicTypeName="EmptyStruct"/>
 
         <union name="ShapeCommandExtendedReply">
-            <baseUnion type="ShapeCommandReply" />
+            <baseUnion type="ShapeCommandReply"/>
             <case>
-                <caseDiscriminator value="PAUSE_SINGLE_SHAPE" />
+                <caseDiscriminator value="PAUSE_SINGLE_SHAPE"/>
                 <member name="pause_single_shape_reply" 
-                        type="nonBasic" nonBasicTypeName="PauseSingleShapeReply" />
+                        type="nonBasic" nonBasicTypeName="PauseSingleShapeReply"/>
             </case>
         </union>
 

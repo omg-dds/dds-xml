@@ -166,6 +166,9 @@
                     <nanosec>0</nanosec>
                 </minimum_separation>
             </time_based_filter>
+            <properties inherit="true">
+                <property name="my_property_name">value</property>
+            </properties>
             <reader_data_lifecycle>
                 <autopurge_nowriter_samples_delay>
                     <sec>DURATION_INFINITE_SEC</sec>
