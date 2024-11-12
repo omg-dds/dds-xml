@@ -24,7 +24,7 @@
             <registered_name>ThusIsTheDatabusName</registered_name>
         </register_type>
         <topic name="Square" register_type_ref="ShapeTypeReg" />
-        <!-- DECIDE THE OPTIONS -->
+
         <topic name="CircleBase" register_type_ref="ShapeTypeReg" />
         <topic name="CircleExt" register_type_ref="ShapeTypeExtendeReg" />
         <topic name="TriangleBase" register_type_ref="ShapeTypeReg" >
@@ -39,12 +39,26 @@
             <datawriter_qos></datawriter_qos>
             <datareader_qos></datareader_qos>
         </topic>
+
+        <register_type name="MoveCommandResponse" type_ref="MoveCommandResponse" />
+        <register_type name="MoveCommand" type_ref="MoveCommand" />
+        <request_reply_service name="RobotCommandService"  
+            register_request_type_ref="MoveCommand" register_reply_type_ref="MoveCommandResponse">
+            <service_name>MyServiceRR</service_name>
+            <request_topic_name>NonDefaultRequestTopicName</request_topic_name>
+            <reply_topic_name>Request</reply_topic_name>
+            <requester>
+                <request_datawriter_qos></request_datawriter_qos>
+                <reply_datareader_qos></reply_datareader_qos>
+            </requester>
+            <replier>
+                <request_datareader_qos></request_datareader_qos>
+                <reply_datawriter_qos></reply_datawriter_qos>
+            </replier>
+        </request_reply_service>
+
+
         <register_interface name="RobotControl" interface_ref="RobotControlIf" />
-        <!-- Alternatives: 
-        <register_interface name="RobotControl" type_ref="RobotControlIf" />
-        <register_type name="RobotControl" type_ref="RobotControlIf" />
-        <register_interface_type name="RobotControl" interface_type_ref="RobotControlIf" />
-        -->
 
         <rpc_service name="FoodDispenserControl"  register_interface_ref="RobotControl">
             <service_name>MyService</service_name>
@@ -62,21 +76,7 @@
                 <reply_datawriter_qos></reply_datawriter_qos>
             </server>
         </rpc_service>
-        <!-- Alternative:
-        <rpc_service name="FoodDispenserControl"  register_interface_ref="RobotControl">
-            <service_name>MyServiceRR</service_name>
-            <request>
-                <topic_name/>
-                <datareader_qos/>
-                <datawriter_qos/>
-            </request>
-            <reply>
-                <topic_name/>
-                <datareader_qos/>
-                <datawriter_qos/>
-            </reply>
-        </rpc_service>
-        -->
+
 
         <register_type name="MoveCommandResponse" type_ref="MoveCommandResponse" />
         <register_type name="MoveCommand" type_ref="MoveCommand" />
