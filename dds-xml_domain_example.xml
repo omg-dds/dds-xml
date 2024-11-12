@@ -27,13 +27,15 @@
 
         <topic name="CircleBase" register_type_ref="ShapeTypeReg"/>
         <topic name="CircleExt" register_type_ref="ShapeTypeExtendeReg"/>
+
         <topic name="TriangleBase" register_type_ref="ShapeTypeReg" >
-            <topic_name>Triangle</topic_name> <!-- Currently: registered_name -->
+            <topic_name>Triangle</topic_name> <!-- Currently element is called: registered_name -->
             <datawriter_qos base_name="StandardProfileForThisSystem"/>
             <datareader_qos  base_name="StandardProfileForThisSystem2">
                 <deadline><period><sec>3</sec></period></deadline>
             </datareader_qos>
         </topic>
+
         <topic name="TriangleExtended" register_type_ref="ShapeTypeExtended">
             <topic_name>Triangle</topic_name>
             <datawriter_qos></datawriter_qos>
