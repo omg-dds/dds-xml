@@ -416,6 +416,7 @@
 
     <module name="OMG">
         <license_type name="RAND" link="https://www.omg.org/cgi-bin/doc?ipr/12-09-02.pdf"/>
+        <license_use name="RAND.ALMAS" license_type="OMG::RAND" link="https://www.omg.org/spec/ALMAS"/>
     </module>
 
     <license_use name="APACHE2.MYPACKAGE" license_type="APACHE-2.0" link="https://my.gitrepo.com/myPackge/myLicense.txt"/>
