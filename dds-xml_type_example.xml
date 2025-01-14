@@ -422,7 +422,7 @@
     <license_use name="RAND.OARIS"        license_type="OMG::RAND" link="https://www.omg.org/spec/OARIS"/>
 
     <!-- Constants -->
-    <const name="DOCUMENTED_CONSTANT1" type="int32" value="255" license_use="APACHE2.MYPACKAGE">
+    <const name="DOCUMENTED_CONSTANT1" type="int32" value="255" license="APACHE2.MYPACKAGE">
         <annotations>
             <doc>Description of the constant</doc>
             <verbatim language="C++" placement="before-declaration">
@@ -432,7 +432,7 @@
         </annotations>
     </const>
 
-    <const name="DOCUMENTED_CONSTANT3" type="float32" value="3.1416" unit="meter" license_use="::APACHE2.MYPACKAGE">
+    <const name="DOCUMENTED_CONSTANT3" type="float32" value="3.1416" unit="meter" license="::APACHE2.MYPACKAGE">
         <annotations>
             <doc format="html">
             <![CDATA[ 
@@ -451,7 +451,7 @@
         </annotations>
     </const>
 
-    <const name="ANNOTATED_CONSTANT" type="float32" value="3.1416" unit="meter" license_use="OMG::RAND.OARIS">
+    <const name="ANNOTATED_CONSTANT" type="float32" value="3.1416" unit="meter" license="OMG::RAND.OARIS">
         <annotations>
             <doc>Description of the constant</doc>
             <custom type="SimpleAnnotation"/>
@@ -467,7 +467,7 @@
     </const>
 
     <!-- Enumerations -->
-    <enum name="AnnotatedEnum" bitBound="16" license_use="::OMG::RAND.OARIS">
+    <enum name="AnnotatedEnum" bitBound="16" license="::OMG::RAND.OARIS">
         <annotations>
             <doc>Documentation on the type</doc>
             <doc format="markdown">
@@ -513,7 +513,7 @@
     </enum>
 
     <!-- Bitmasks -->
-    <bitmask name="AnnotatedBitmsak" bitBound="16" license_use="APACHE2.MYPACKAGE">
+    <bitmask name="AnnotatedBitmsak" bitBound="16" license="APACHE2.MYPACKAGE">
         <annotations>
             <doc>Documentation on the type</doc>
             <custom type="SimpleAnnotation"/>
@@ -543,7 +543,7 @@
 
 
     <!-- Bitset -->
-    <bitset name="AnnotatedBitset" license_use="APACHE2.MYPACKAGE">
+    <bitset name="AnnotatedBitset" license="APACHE2.MYPACKAGE">
         <annotations>
             <doc>Documentation on the type</doc>
             <custom type="SimpleAnnotation"/>
@@ -572,7 +572,7 @@
     </bitset>    
 
     <!-- Aliases -->
-    <typedef name="AnnotatedTypedef" type="float32" license_use="APACHE2.MYPACKAGE">
+    <typedef name="AnnotatedTypedef" type="float32" license="APACHE2.MYPACKAGE">
         <annotations>
             <doc>Documentation on the type</doc>
             <custom type="SimpleAnnotation"/>
@@ -587,7 +587,7 @@
     </typedef>
 
     <!-- Structures -->
-    <struct name="AnnotatedStruct" license_use="APACHE2.MYPACKAGE">
+    <struct name="AnnotatedStruct" license="APACHE2.MYPACKAGE">
         <annotations>
             <doc>
                 Some documentation
@@ -624,7 +624,7 @@
     </struct>
 
     <!-- Unions -->
-    <union name="AnnotatednUnion" license_use="APACHE2.MYPACKAGE">
+    <union name="AnnotatednUnion" license="APACHE2.MYPACKAGE">
         <annotations>
             <doc>Type documentation</doc>
             <custom type="SimpleAnnotation"/>
@@ -660,7 +660,7 @@
     </union>
 
     <!-- Exceptions -->
-    <exception name="AnnotatedException" baseType="Generic" license_use="APACHE2.MYPACKAGE">
+    <exception name="AnnotatedException" baseType="Generic" license="APACHE2.MYPACKAGE">
         <annotations>
             <doc></doc>
             <custom type="SimpleAnnotation"/>
@@ -673,7 +673,7 @@
         <member name="message" type="string" sequenceMaxLength="32"/>
     </exception>
 
-    <interface name="AnnotatedInterface" service="DDS" license_use="APACHE2.MYPACKAGE"  >
+    <interface name="AnnotatedInterface" service="DDS" license="APACHE2.MYPACKAGE"  >
         <annotations>
             <doc>Interface documentation</doc>
             <custom type="SimpleAnnotation"/>
