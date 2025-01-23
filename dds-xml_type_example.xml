@@ -494,7 +494,7 @@
             </custom>
             <verbatim language="C++" placement="before-declaration">
                 // Put this in the C++ code
-            </verbatim>            
+            </verbatim>
         </annotations>
         <enumerator name="ACE" value="1"/>
         <enumerator name="KING" value="13"/>
@@ -508,7 +508,7 @@
                 </custom>
                 <verbatim language="C++" placement="before-declaration">
                     // Put this in the C++ code
-                </verbatim>                
+                </verbatim>
             </annotations>
         </enumerator>
     </enum>
@@ -635,12 +635,7 @@
             </custom>
         </annotations>
 
-        <discriminator type="nonBasic" nonBasicTypeName="PlainEnum"> 
-            <annotations>
-                <doc>Discriminator documentation</doc>
-                <custom type="SimpleAnnotation"/>                
-            </annotations>
-        </discriminator>
+        <discriminator type="nonBasic" nonBasicTypeName="PlainEnum"/>
         <case>
             <caseDiscriminator value="ACE"/>
             <member type="float64" name="unionValue1">
