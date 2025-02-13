@@ -367,7 +367,7 @@
             <xs:element name="annotations" type="typeAnnotationList"/>
         </xs:sequence>
         <xs:attribute name="name" type="identifierName" use="required"/>
-        <xs:attribute name="license_use" type="licenseUseIdentifierRef"/>
+        <xs:attribute name="license" type="licenseUseIdentifierRef"/>
     </xs:complexType>
 
     <xs:complexType name="commonMemberDecl">
@@ -572,10 +572,6 @@
     </xs:complexType>
 
     <xs:complexType name="discriminatorDecl">
-        <xs:sequence>
-            <xs:element name="annotations" type="memberAnnotationList" minOccurs="0" maxOccurs="1"/>
-        </xs:sequence>
-
         <xs:attribute name="type" type="discriminatorTypeKind" use="required"/>
         <xs:attribute name="nonBasicTypeName" type="identifierName"/>
         <xs:attribute name="key" type="xs:boolean"
