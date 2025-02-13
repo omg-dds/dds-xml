@@ -609,7 +609,7 @@
         <member name="anInt"  type="int32" id="33" key="true"/>
         <member name="aFloat" type="float32" min="0" max="250" optional="true" unit="volt">
             <annotations>
-                <doc>Member documentation</doc>
+                <doc format="text">Member documentation</doc>
                 <verbatim language="C++" placement="before-declaration">
                     // Put this comment
                     // In the C++ code
