@@ -48,7 +48,7 @@
             register_request_type_ref="MoveCommand" register_reply_type_ref="MoveCommandResponse">
             <service_name>MyServiceRR</service_name>
             <request_topic_name>NonDefaultRequestTopicName</request_topic_name>
-            <reply_topic_name>Request</reply_topic_name>
+            <reply_topic_name>NonDefaultReplyTopicName</reply_topic_name>
             <requester>
                 <request_datawriter_qos></request_datawriter_qos>
                 <reply_datareader_qos></reply_datareader_qos>
