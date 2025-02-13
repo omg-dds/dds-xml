@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dds xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xmlns="http://www.omg.org/spec/DDS-XML"
+     xsi:schemaLocation="http://www.omg.org/spec/DDS-XML http://www.omg.org/spec/DDS-XML/20180501/dds-xml_dds_system_definitions.xsd">
+    
+    <types>
+        <const name="MAX_COLOR_LEN" type="int32" value="128" />
+        <struct name="ShapeType">
+            <member name="color" key="true" type="string"
+                    stringMaxLength="MAX_COLOR_LEN" />
+            <member name="x" type="int32" />
+            <member name="y" type="int32" />
+            <member name="shapesize" type="int32" />
+        </struct>
+    
+    </types>
+    <application_library name="MyApplications">                
+        <application name="SimpleShapesDemoApplication">
+            <domain_participant name="MyParticipant"
+                                domain_ref="ShapesDomainLibrary::ShapesDomain">
+                <register_type name="ShapeType" type_ref="ShapeType" />
+                <topic name="Square" register_type_ref="ShapeType" />
+                <topic name="Circle" register_type_ref="ShapeType" />
+                <topic name="Triangle" register_type_ref="ShapeType" />
+                <publisher name="MyPublisher">
+                    <data_writer name="MySquareWriter" topic_ref="Square" />
+                    <data_writer name="MyCircleWriter" topic_ref="Circle" />
+                    <data_writer name="MyTriangleWriter" topic_ref="Triangle" />
+                </publisher>
+                <subscriber name="MySubscriber">
+                    <data_reader name="MySquareRdr" topic_ref="Square" />
+                    <data_reader name="MyCircleRdr" topic_ref="Circle" />
+                    <data_reader name="MyTriangleRdr" topic_ref="Triangle" />
+                </subscriber>
+            </domain_participant>
+        </application>
+    </application_library>
+</dds>
