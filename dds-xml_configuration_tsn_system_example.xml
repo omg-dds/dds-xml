@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <dds xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xmlns="http://www.omg.org/spec/DDS-XML"
-     xsi:schemaLocation="http://www.omg.org/spec/DDS-XML ./dds-xml_system_definitions.xsd">
+     xmlns="https://www.omg.org/spec/DDS-XML"
+     xsi:schemaLocation="https://www.omg.org/spec/DDS-XML ./dds-xml_system_definitions.xsd">
     
     <node_library name="MyNodeLibrary">
         <node name="Host_1">

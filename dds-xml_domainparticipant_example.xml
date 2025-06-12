@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <domain_participant_library xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                            xmlns="http://www.omg.org/spec/DDS-XML"
-                            xsi:schemaLocation="http://www.omg.org/spec/DDS-XML ./dds-xml_domainparticipant_definitions.xsd"
+                            xmlns="https://www.omg.org/spec/DDS-XML"
+                            xsi:schemaLocation="https://www.omg.org/spec/DDS-XML ./dds-xml_domainparticipant_definitions.xsd"
                             name="MyDomainLibrary">
 
     <domain_participant name="HelloParticipant"  domain_id="32" domain_tag="IsolatedDomainTag">
