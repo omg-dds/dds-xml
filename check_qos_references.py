@@ -74,8 +74,10 @@ if missing:
                     if base_name in missing:
                         elem_line = t.sourceline if hasattr(t, 'sourceline') else '?'
                         tag_name = t.tag.split('}', 1)[-1] if '}' in t.tag else t.tag
+                        elem_name = t.attrib.get('name')
+                        name_str = f' name="{elem_name}"' if elem_name else ""
                         missing_refs.setdefault(base_name, []).append(
-                            f"    Referenced from: {xmlfile} <{tag_name}> (line {elem_line})"
+                            f"    Referenced from: {xmlfile} <{tag_name}{name_str}> (line {elem_line})"
                         )
         except Exception as e:
             print(f"Error parsing {xmlfile}: {e}")
