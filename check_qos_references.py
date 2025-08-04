@@ -1,5 +1,6 @@
 from lxml import etree as ET
 import glob
+from collections import namedtuple
 
 xml_files = glob.glob("*.xml")
 ns = {'dds': 'http://www.omg.org/spec/DDS-XML'}
@@ -13,85 +14,111 @@ elements_with_base_name = [
     'subscriber_qos'
 ]
 
-defined = set()
-library_profiles = dict()  # lib_name -> set(profile_names)
 
-# Collect all defined qos_profile names, with library context if present (do NOT include qos_snippet)
-for xmlfile in xml_files:
-    try:
-        tree = ET.parse(xmlfile)
-        root = tree.getroot()
-        for qlib in root.findall('.//dds:qos_library', ns):
-            lib_name = qlib.attrib.get('name')
-            lib_profiles = set()
-            for prof in qlib.findall('.//dds:qos_profile', ns):
-                prof_name = prof.attrib.get('name')
-                if lib_name and prof_name:
-                    defined.add(f"{lib_name}::{prof_name}")
-                    lib_profiles.add(prof_name)
-                elif prof_name:
-                    defined.add(prof_name)
-                    lib_profiles.add(prof_name)
-            if lib_name:
-                library_profiles[lib_name] = lib_profiles
-        # Also allow global <qos_profile> (not inside a library)
-        for prof in root.findall('.//dds:qos_profile', ns):
-            parent = prof.getparent() if hasattr(prof, "getparent") else None
-            if parent is None or parent.tag != f"{{{ns['dds']}}}qos_library":
-                prof_name = prof.attrib.get('name')
-                if prof_name:
-                    defined.add(prof_name)
-    except Exception as e:
-        print(f"Error parsing {xmlfile}: {e}")
+def get_profile_names(xml_files):
+    """Extract profile name, considering library context."""
+    #
+    defined = set()
+    library_profiles = dict()  # lib_name -> set(profile_names)
+    #
+    for xmlfile in xml_files:
+        try:
+            tree = ET.parse(xmlfile)
+            root = tree.getroot()
+            # Check if the root is a qos_library
+            if root.tag == f"{{{ns['dds']}}}qos_library":
+                qlib_elements = [root] + root.findall('.//dds:qos_library', ns)
+            else:
+                qlib_elements = root.findall('.//dds:qos_library', ns)
+            for qlib in qlib_elements:
+                lib_name = qlib.attrib.get('name')
+                lib_profiles = set()
+                # Only direct children qos_profile
+                for prof in qlib.findall('dds:qos_profile', ns):
+                    prof_name = prof.attrib.get('name')
+                    if lib_name and prof_name:
+                        defined.add(f"{lib_name}::{prof_name}")
+                        lib_profiles.add(prof_name)
+                    elif prof_name:
+                        defined.add(prof_name)
+                        lib_profiles.add(prof_name)
+                if lib_name:
+                    library_profiles[lib_name] = lib_profiles
+            # Also allow global <qos_profile> (not inside a library)
+            for prof in root.findall('.//dds:qos_profile', ns):
+                parent = prof.getparent() if hasattr(prof, "getparent") else None
+                if parent is None or parent.tag != f"{{{ns['dds']}}}qos_library":
+                    prof_name = prof.attrib.get('name')
+                    if prof_name:
+                        defined.add(prof_name)
+        except Exception as e:
+            print(f"Error parsing {xmlfile}: {e}")
+    #
+    return defined, library_profiles
 
-# Collect all referenced base_name values from selected elements in all XML files, and where they were referenced from
-references = []  # list of (base_name, xmlfile, tag_name, elem_line, elem_name, lib_name)
-for xmlfile in xml_files:
-    try:
-        tree = ET.parse(xmlfile)
-        root = tree.getroot()
-        # Find all qos_library elements and their descendants
-        for qlib in root.findall('.//dds:qos_library', ns):
-            lib_name = qlib.attrib.get('name')
+# Collect all defined qos_profile names, with library context if present 
+defined, library_profiles = get_profile_names(xml_files)
+
+print("Defined profiles:", sorted(defined))
+print("Library profiles:", {k: sorted(v) for k, v in library_profiles.items()})
+
+# Named tuple to store references
+Reference = namedtuple('Reference', ['base_name', 'xmlfile', 'tag_name', 'elem_line', 'elem_name', 'lib_name'])
+
+def get_profile_references(xml_files, elements_with_base_name):
+    """Extract the Qos profiles referenced using the base_profile="..." attribute."""
+    # Collect all referenced base_name values from selected elements in all XML files, and where they were referenced from
+    references = []  # list of (base_name, xmlfile, tag_name, elem_line, elem_name, lib_name)
+    for xmlfile in xml_files:
+        try:
+            tree = ET.parse(xmlfile)
+            root = tree.getroot()
             for tag in elements_with_base_name:
-                for t in qlib.findall(f'.//dds:{tag}', ns):
+                for t in root.findall(f'.//dds:{tag}', ns):
                     base_name = t.attrib.get('base_name')
                     if base_name:
+                        # Find the closest ancestor qos_library for this element
+                        lib_name = None
+                        parent = t.getparent()
+                        while parent is not None:
+                            if parent.tag == f"{{{ns['dds']}}}qos_library":
+                                lib_name = parent.attrib.get('name')
+                                break
+                            parent = parent.getparent()
                         elem_line = t.sourceline if hasattr(t, 'sourceline') else '?'
                         tag_name = t.tag.split('}', 1)[-1] if '}' in t.tag else t.tag
                         elem_name = t.attrib.get('name')
-                        references.append((base_name, xmlfile, tag_name, elem_line, elem_name, lib_name))
-        # Also check for global elements (not inside a qos_library)
-        for tag in elements_with_base_name:
-            for t in root.findall(f'.//dds:{tag}', ns):
-                # Skip if already found in a library above
-                if t.getroottree().getpath(t).count('qos_library') > 0:
-                    continue
-                base_name = t.attrib.get('base_name')
-                if base_name:
-                    elem_line = t.sourceline if hasattr(t, 'sourceline') else '?'
-                    tag_name = t.tag.split('}', 1)[-1] if '}' in t.tag else t.tag
-                    elem_name = t.attrib.get('name')
-                    references.append((base_name, xmlfile, tag_name, elem_line, elem_name, None))
-    except Exception as e:
-        print(f"Error parsing {xmlfile}: {e}")
+                        references.append(Reference(base_name, xmlfile, tag_name, elem_line, elem_name, lib_name))
+        except Exception as e:
+            print(f"Error parsing {xmlfile}: {e}")
+    #
+    return references
+
+# Collect all referenced base_name values from selected elements in all XML files
+references = get_profile_references(xml_files, elements_with_base_name)
+print("References found:")
+print("References:", [(ref.base_name, ref.lib_name) for ref in references])
 
 # Helper to check if a base_name is defined, considering local library context
 def is_defined(base_name, lib_name):
+    # Qualified reference (with ::)
+    if "::" in base_name:
+        return base_name in defined
+    # Unqualified reference: check in same library
+    if lib_name and lib_name in library_profiles and base_name in library_profiles[lib_name]:
+        return True
+    # Also allow global profiles (not in any library)
     if base_name in defined:
         return True
-    if lib_name and "::" not in base_name:
-        if lib_name in library_profiles and base_name in library_profiles[lib_name]:
-            return True
     return False
 
 # Find missing references
 missing_refs = {}
-for base_name, xmlfile, tag_name, elem_line, elem_name, lib_name in references:
-    if not is_defined(base_name, lib_name):
-        name_str = f' name="{elem_name}"' if elem_name else ""
-        missing_refs.setdefault(base_name, []).append(
-            f"    Referenced from: {xmlfile} <{tag_name}{name_str}> (line {elem_line})"
+for ref in references:
+    if not is_defined(ref.base_name, ref.lib_name):
+        name_str = f' name="{ref.elem_name}"' if ref.elem_name else ""
+        missing_refs.setdefault(ref.base_name, []).append(
+            f"    Referenced from: {ref.xmlfile} <{ref.tag_name}{name_str}> (line {ref.elem_line})"
         )
 
 if missing_refs:
@@ -107,3 +134,4 @@ if missing_refs:
             print(f"    Did you mean: {', '.join(suggestions)}?")
 else:
     print("All base_name references resolve to a defined qos_profile.")
+
