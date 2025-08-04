@@ -9,7 +9,7 @@ ns = {'dds': 'http://www.omg.org/spec/DDS-XML'}
 
 # Collect all defined types from all XML files, including module context
 defined = set()
-type_tags = ['struct', 'enum', 'union', 'bitset', 'bitmask']  # Add more if needed
+type_tags = ['struct', 'enum', 'union', 'bitset', 'bitmask', 'typedef', 'exception']  # Add more if needed
 
 for xmlfile in xml_files:
     try:
@@ -29,8 +29,12 @@ for xmlfile in xml_files:
                 parent = t.find("..")
                 if parent is None or parent.tag != f"{{{ns['dds']}}}module":
                     defined.add(t.attrib['name'])
+    except ET.ParseError as e:
+        print(f"Exception (defined) file: {xmlfile}: {e}")
+        if hasattr(e, 'position'):
+            print(f"  Error at line {e.position[0]}, column {e.position[1]}")
     except Exception as e:
-        print(f"Error parsing {xmlfile}: {e}")
+        print(f"Exception2 (defined) file: {xmlfile}: {e}")
 
 # Collect all referenced type_ref values from all XML files
 referenced = set()
@@ -40,8 +44,12 @@ for xmlfile in xml_files:
         root = tree.getroot()
         for t in root.findall('.//*[@type_ref]', ns):
             referenced.add(t.attrib['type_ref'])
+        for t in root.findall('.//*[@nonBasicTypeName]', ns):
+            referenced.add(t.attrib['nonBasicTypeName'])
+        for t in root.findall('.//*[@baseType]', ns):
+            referenced.add(t.attrib['baseType'])
     except Exception as e:
-        print(f"Error parsing {xmlfile}: {e}")
+        print(f"Exception2 (referenced) file: {xmlfile}: {e}")
 
 # Show referenced types that are not defined anywhere
 missing = referenced - defined
