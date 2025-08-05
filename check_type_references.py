@@ -8,7 +8,8 @@ xml_files = glob.glob("*.xml")
 # Namespace handling
 ns = {'dds': 'http://www.omg.org/spec/DDS-XML'}
 
-type_tags = ['struct', 'enum', 'union', 'bitset', 'bitmask', 'typedef', 'exception']
+type_tags = ['struct', 'enum', 'union', 'bitset', 'bitmask', 'typedef', 'exception', 'interface']
+referencing_tags = type_tags + ['register_type', 'register_interface']
 
 Reference = namedtuple('Reference', ['referenced_type', 'xmlfile', 'tag_name', 'elem_line', 'elem_name', 'module_path'])
 
@@ -64,7 +65,7 @@ def find_type_references(xml_files):
         try:
             tree = ET.parse(xmlfile)
             root = tree.getroot()
-            for tag in type_tags:
+            for tag in referencing_tags:
                 for t in root.findall(f'.//dds:{tag}', ns):
                     # Find module path for this element
                     module_path = []
@@ -75,7 +76,7 @@ def find_type_references(xml_files):
                             if module_name:
                                 module_path.insert(0, module_name)
                         parent = parent.getparent()
-                    for attr in ['type_ref', 'nonBasicTypeName', 'baseType']:
+                    for attr in ['type_ref', 'nonBasicTypeName', 'baseType', 'interface_ref']:
                         type_ref = t.attrib.get(attr)
                         if type_ref:
                             elem_line = t.sourceline if hasattr(t, 'sourceline') else '?'
