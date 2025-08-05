@@ -102,13 +102,14 @@ referenced_types = find_type_references(xml_files)
 
 # Helper to check if a type reference is defined, considering module context
 def is_defined(ref, defined):
-    # Qualified reference (with ::)
-    if "::" in ref.referenced_type:
-        return ref.referenced_type in defined
-    # Unqualified reference: try to resolve in module path, then global
-    # Try longest to shortest module path
+    ref_name = ref.referenced_type.strip()
+    # Absolute reference: must match from the root
+    if ref_name.startswith("::"):
+        candidate = ref_name[2:]
+        return candidate in defined
+    # Relative reference: try from innermost to outermost scope
     for i in range(len(ref.module_path), -1, -1):
-        candidate = '::'.join(ref.module_path[:i] + [ref.referenced_type]) if ref.module_path[:i] else ref.referenced_type
+        candidate = '::'.join(ref.module_path[:i] + [ref_name]) if ref.module_path[:i] else ref_name
         if candidate in defined:
             return True
     return False
