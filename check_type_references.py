@@ -1,5 +1,6 @@
-import xml.etree.ElementTree as ET
+from lxml import etree as ET
 import glob
+from collections import namedtuple
 
 # Find all XML files in the current directory
 xml_files = glob.glob("*.xml")
@@ -53,8 +54,11 @@ def get_type_names(xml_files):
             print(f"Exception2 (defined) file: {xmlfile}: {e}")
     return defined_types
 
+# Named tuple to store references
+Reference = namedtuple('Reference', ['referenced_type', 'xmlfile', 'tag_name', 'elem_line', 'elem_name'])
+
 def find_type_references(xml_files):
-    referenced_types = set()
+    refs= []
     for xmlfile in xml_files:
         try:
             tree = ET.parse(xmlfile)
@@ -64,14 +68,17 @@ def find_type_references(xml_files):
                     for attr in ['type_ref', 'nonBasicTypeName', 'baseType']:
                         type_ref = t.attrib.get(attr)
                         if type_ref:
-                            referenced_types.add(type_ref)
+                            elem_line = t.sourceline if hasattr(t, 'sourceline') else '?'
+                            tag_name = t.tag.split('}', 1)[-1] if '}' in t.tag else t.tag
+                            elem_name = t.attrib.get('name')
+                            refs.append(Reference(referenced_type=type_ref, xmlfile=xmlfile, tag_name=tag_name, elem_line=elem_line, elem_name=elem_name))
         except ET.ParseError as e:
             print(f"Exception (referenced) file: {xmlfile}: {e}")
             if hasattr(e, 'position'):
                 print(f"  Error at line {e.position[0]}, column {e.position[1]}")
         except Exception as e:
             print(f"Exception2 (referenced) file: {xmlfile}: {e}")
-    return referenced_types
+    return refs
 
 defined_types = get_type_names(xml_files)
 print("Defined types:")
@@ -84,6 +91,31 @@ print("Referenced types:")
 for rt in sorted(referenced_types):
     print(f"  {rt}")
 print("End of Referenced types:")
+
+# Helper to check if a type reference is defined, considering module context
+def is_defined(referenced_type, module_name, defined):
+    # Qualified reference (with ::)
+    if "::" in referenced_type:
+        return referenced_type in defined
+    # Unqualified reference: check in same library
+    if lib_name and lib_name in library_profiles and base_name in library_profiles[lib_name]:
+        return True
+    # Also allow global profiles (not in any library)
+    if base_name in defined:
+        return True
+    return False
+
+def find_missing_refs(references, defined, library_profiles):
+    missing = {}
+    for ref in references:
+        if not is_defined(ref.base_name, ref.lib_name, defined, library_profiles):
+            name_str = f' name="{ref.elem_name}"' if ref.elem_name else ""
+            missing.setdefault(ref.base_name, []).append(
+                f"    Referenced from: {ref.xmlfile} <{ref.tag_name}{name_str}> (line {ref.elem_line})"
+            )
+
+    return missing
+exit(0)
 
 # Show referenced types that are not defined anywhere
 missing = referenced_types - defined_types
