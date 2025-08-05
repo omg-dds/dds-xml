@@ -8,8 +8,9 @@ xml_files = glob.glob("*.xml")
 # Namespace handling
 ns = {'dds': 'http://www.omg.org/spec/DDS-XML'}
 
-# Collect all defined types from all XML files, including module context
-type_tags = ['struct', 'enum', 'union', 'bitset', 'bitmask', 'typedef', 'exception']  # Add more if needed
+type_tags = ['struct', 'enum', 'union', 'bitset', 'bitmask', 'typedef', 'exception']
+
+Reference = namedtuple('Reference', ['referenced_type', 'xmlfile', 'tag_name', 'elem_line', 'elem_name', 'module_path'])
 
 def collect_types_in_module(module_elem, module_path, defined_types):
     for tag in type_tags:
@@ -30,10 +31,13 @@ def get_type_names(xml_files):
         try:
             tree = ET.parse(xmlfile)
             root = tree.getroot()
-            # Top-level modules
+            # Top-level modules (including root as module)
+            if root.tag == f"{{{ns['dds']}}}module":
+                module_name = root.attrib.get('name')
+                if module_name:
+                    collect_types_in_module(root, [module_name], defined_types)
             for module in root.findall('.//dds:module', ns):
-                parent = module.find("..")
-                # Only process top-level modules (not nested)
+                parent = module.getparent()
                 if parent is None or parent.tag != f"{{{ns['dds']}}}module":
                     module_name = module.attrib.get('name')
                     if module_name:
@@ -41,7 +45,7 @@ def get_type_names(xml_files):
             # Also collect global types (not inside any module)
             for tag in type_tags:
                 for t in root.findall(f'.//dds:{tag}', ns):
-                    parent = t.find("..")
+                    parent = t.getparent()
                     if parent is None or parent.tag != f"{{{ns['dds']}}}module":
                         type_name = t.attrib.get('name')
                         if type_name:
@@ -54,24 +58,37 @@ def get_type_names(xml_files):
             print(f"Exception2 (defined) file: {xmlfile}: {e}")
     return defined_types
 
-# Named tuple to store references
-Reference = namedtuple('Reference', ['referenced_type', 'xmlfile', 'tag_name', 'elem_line', 'elem_name'])
-
 def find_type_references(xml_files):
-    refs= []
+    refs = []
     for xmlfile in xml_files:
         try:
             tree = ET.parse(xmlfile)
             root = tree.getroot()
             for tag in type_tags:
                 for t in root.findall(f'.//dds:{tag}', ns):
+                    # Find module path for this element
+                    module_path = []
+                    parent = t.getparent()
+                    while parent is not None:
+                        if parent.tag == f"{{{ns['dds']}}}module":
+                            module_name = parent.attrib.get('name')
+                            if module_name:
+                                module_path.insert(0, module_name)
+                        parent = parent.getparent()
                     for attr in ['type_ref', 'nonBasicTypeName', 'baseType']:
                         type_ref = t.attrib.get(attr)
                         if type_ref:
                             elem_line = t.sourceline if hasattr(t, 'sourceline') else '?'
                             tag_name = t.tag.split('}', 1)[-1] if '}' in t.tag else t.tag
                             elem_name = t.attrib.get('name')
-                            refs.append(Reference(referenced_type=type_ref, xmlfile=xmlfile, tag_name=tag_name, elem_line=elem_line, elem_name=elem_name))
+                            refs.append(Reference(
+                                referenced_type=type_ref,
+                                xmlfile=xmlfile,
+                                tag_name=tag_name,
+                                elem_line=elem_line,
+                                elem_name=elem_name,
+                                module_path=module_path
+                            ))
         except ET.ParseError as e:
             print(f"Exception (referenced) file: {xmlfile}: {e}")
             if hasattr(e, 'position'):
@@ -81,48 +98,35 @@ def find_type_references(xml_files):
     return refs
 
 defined_types = get_type_names(xml_files)
-print("Defined types:")
-for dt in sorted(defined_types):
-    print(f"  {dt}")
-print("End of Defined types:")
-
 referenced_types = find_type_references(xml_files)
-print("Referenced types:")
-for rt in sorted(referenced_types):
-    print(f"  {rt}")
-print("End of Referenced types:")
 
 # Helper to check if a type reference is defined, considering module context
-def is_defined(referenced_type, module_name, defined):
+def is_defined(ref, defined):
     # Qualified reference (with ::)
-    if "::" in referenced_type:
-        return referenced_type in defined
-    # Unqualified reference: check in same library
-    if lib_name and lib_name in library_profiles and base_name in library_profiles[lib_name]:
-        return True
-    # Also allow global profiles (not in any library)
-    if base_name in defined:
-        return True
+    if "::" in ref.referenced_type:
+        return ref.referenced_type in defined
+    # Unqualified reference: try to resolve in module path, then global
+    # Try longest to shortest module path
+    for i in range(len(ref.module_path), -1, -1):
+        candidate = '::'.join(ref.module_path[:i] + [ref.referenced_type]) if ref.module_path[:i] else ref.referenced_type
+        if candidate in defined:
+            return True
     return False
 
-def find_missing_refs(references, defined, library_profiles):
-    missing = {}
-    for ref in references:
-        if not is_defined(ref.base_name, ref.lib_name, defined, library_profiles):
-            name_str = f' name="{ref.elem_name}"' if ref.elem_name else ""
-            missing.setdefault(ref.base_name, []).append(
-                f"    Referenced from: {ref.xmlfile} <{ref.tag_name}{name_str}> (line {ref.elem_line})"
-            )
+# Find and print missing references with file and line number
+missing_refs = {}
+for ref in referenced_types:
+    if not is_defined(ref, defined_types):
+        name_str = f' name="{ref.elem_name}"' if ref.elem_name else ""
+        missing_refs.setdefault(ref.referenced_type, []).append(
+            f"    Referenced from: {ref.xmlfile} <{ref.tag_name}{name_str}> (line {ref.elem_line})"
+        )
 
-    return missing
-exit(0)
-
-# Show referenced types that are not defined anywhere
-missing = referenced_types - defined_types
-
-if missing:
+if missing_refs:
     print("Missing type definitions for type_ref(s):")
-    for m in sorted(missing):
+    for m in sorted(missing_refs):
         print(f"  {m}")
+        for ref_line in missing_refs[m]:
+            print(ref_line)
 else:
     print("All type_ref values are defined in the loaded XML files.")
