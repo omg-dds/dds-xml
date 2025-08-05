@@ -38,8 +38,8 @@
         <xs:attribute name="name" type="elementName" use="required" />
     </xs:complexType>
     <xs:complexType name="deploymentScenario">
-        <xs:choice maxOccurs="unbounded">
-            <xs:element name="deployment" maxOccurs="unbounded" type="deployment" />
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="deployment" type="deployment" />
         </xs:choice>
         <xs:attribute name="name" type="elementName" use="required" />
         <xs:attribute name="base_name" type="elementNameReference" use="optional" />
@@ -48,7 +48,7 @@
     <!-- Deployment Library Definition -->
     <xs:complexType name="deploymentLibrary">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
-            <xs:element name="deployment_scenario" maxOccurs="unbounded" type="deploymentScenario" />
+            <xs:element name="deployment_scenario" type="deploymentScenario" />
         </xs:choice>
         <xs:attribute name="name" type="elementName" use="required" />
     </xs:complexType>

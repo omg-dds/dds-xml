@@ -446,10 +446,18 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="docFormatKind">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="plain"/>
+            <xs:enumeration value="markdown"/>
+            <xs:enumeration value="html"/>
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:complexType name="docDecl">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute name="format" type="xs:string"/>
+                <xs:attribute name="format" type="docFormatKind" default="plain"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -487,17 +495,17 @@
 
     <xs:complexType name="typeAnnotationList">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
-            <xs:element name="doc" type="docDecl" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="verbatim" type="verbatimDecl" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="custom" type="appliedAnnotation" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="doc" type="docDecl" />
+            <xs:element name="verbatim" type="verbatimDecl" />
+            <xs:element name="custom" type="appliedAnnotation" />
         </xs:choice>
     </xs:complexType>
 
     <xs:complexType name="memberAnnotationList">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
-            <xs:element name="doc" type="docDecl" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="verbatim" type="verbatimDecl" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="custom" type="appliedAnnotation" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="doc" type="docDecl" />
+            <xs:element name="verbatim" type="verbatimDecl" />
+            <xs:element name="custom" type="appliedAnnotation" />
         </xs:choice>
     </xs:complexType>
 
@@ -529,7 +537,7 @@
                         minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
 
-        <xs:attribute name="type" type="identifierName" use="required"/>
+        <xs:attribute name="annotation_ref" type="identifierName" use="required"/>
     </xs:complexType>
 
     <!-- ================================================================== -->
@@ -547,11 +555,9 @@
     <xs:complexType name="structDecl">
         <xs:complexContent>
             <xs:extension base="commonTypeDecl">
-                <xs:choice maxOccurs="unbounded">
-                    <xs:element name="member" type="structMemberDecl"
-                                minOccurs="1"/>
-                    <xs:element name="const" type="constDecl"
-                                minOccurs="0"/>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                    <xs:element name="member" type="structMemberDecl" />
+                    <xs:element name="const" type="constDecl" />
                 </xs:choice>
 
                 <xs:attributeGroup ref="structTypeAttributes"/>
@@ -733,7 +739,7 @@
     <!-- Interfaces -->
     <!-- ================================================================== -->
 
-    <xs:complexType name="operationReturnAndEceptionMemberDecl">
+    <xs:complexType name="operationReturnAndExceptionMemberDecl">
         <xs:attributeGroup ref="typenameAttributeGroup"/>
         <xs:attributeGroup ref="collectionSizeAttributeGroup"/>
         <xs:attributeGroup ref="rangeAndUnitsAttributeGroup"/>
@@ -741,7 +747,7 @@
 
     <xs:complexType name="operationReturnDecl">
         <xs:complexContent>
-            <xs:extension base="operationReturnAndEceptionMemberDecl">
+            <xs:extension base="operationReturnAndExceptionMemberDecl">
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -776,12 +782,12 @@
     </xs:complexType>
 
     <xs:complexType name="raisedExceptionDecl">
-        <xs:attribute name="type" type="identifierName" use="required"/>
+        <xs:attribute name="exceptionType" type="identifierName" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="raisesDecl">
         <xs:sequence>
-            <xs:element name="exception" type="raisedExceptionDecl" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="exception_ref" type="raisedExceptionDecl" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -810,7 +816,7 @@
     <xs:complexType name="interfaceDecl">
         <xs:complexContent>
             <xs:extension base="commonTypeDecl">
-                <xs:choice maxOccurs="unbounded">
+                <xs:choice minOccurs="1" maxOccurs="unbounded">
                     <xs:element name="operation" type="operationDecl" 
                         minOccurs="0"  maxOccurs="unbounded"/>
                     <xs:element name="const" type="constDecl"
@@ -828,28 +834,19 @@
 
     <xs:group name="moduleElements">
         <xs:sequence>
-            <xs:choice maxOccurs="unbounded">
-                <xs:element name="include" type="includeDecl"
-                            minOccurs="0"/>
-                <xs:element name="forward_dcl" type="forwardDecl"
-                            minOccurs="0"/>
+            <xs:choice minOccurs="1" maxOccurs="unbounded">
+                <xs:element name="include" type="includeDecl"/>
+                <xs:element name="forward_dcl" type="forwardDecl"/>
                 <xs:element name="const" type="constDecl" minOccurs="0"/>
-                <xs:element name="module" type="moduleDecl"
-                            minOccurs="0"/>
-                <xs:element name="struct" type="structDecl"
-                            minOccurs="0"/>
+                <xs:element name="module" type="moduleDecl"/>
+                <xs:element name="struct" type="structDecl"/>
                 <xs:element name="union" type="unionDecl" minOccurs="0"/>
-                <xs:element name="annotation" type="annotationTypeDecl"
-                            minOccurs="0"/>
-                <xs:element name="typedef" type="typedefDecl"
-                            minOccurs="0"/>
+                <xs:element name="annotation" type="annotationTypeDecl"/>
+                <xs:element name="typedef" type="typedefDecl"/>
                 <xs:element name="enum" type="enumDecl" minOccurs="0"/>
-                <xs:element name="bitmask" type="bitmaskDecl"
-                            minOccurs="0"/>
-                <xs:element name="bitset" type="bitsetDecl"
-                            minOccurs="0"/>                            
-                <xs:element name="exception" type="exceptionTypeDecl"
-                            minOccurs="0"/>
+                <xs:element name="bitmask" type="bitmaskDecl"/>
+                <xs:element name="bitset" type="bitsetDecl"/>                            
+                <xs:element name="exception" type="exceptionTypeDecl"/>
                 <xs:element name="interface" type="interfaceDecl" 
                             minOccurs="0"/>
                 <xs:element name="license_type" type="licenseDefinitionDecl" 

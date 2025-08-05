@@ -909,19 +909,13 @@
         <xs:sequence>
             <xs:element name="qos_snippets" type="appliedQosSnippetSeq"
                 minOccurs="0" maxOccurs="1" />
-            <xs:choice maxOccurs="unbounded">
-                <xs:element name="datareader_qos" type="datareaderQosSnippet"
-                    minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="datawriter_qos" type="datawriterQosSnippet"
-                    minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="topic_qos" type="topicQosSnippet"
-                    minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="domain_participant_qos" type="domainparticipantQosSnippet"
-                    minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="publisher_qos" type="publisherQosSnippet"
-                    minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="subscriber_qos" type="subscriberQosSnippet"
-                    minOccurs="0" maxOccurs="unbounded" />
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="datareader_qos" type="datareaderQosSnippet" />
+                <xs:element name="datawriter_qos" type="datawriterQosSnippet" />
+                <xs:element name="topic_qos" type="topicQosSnippet" />
+                <xs:element name="domain_participant_qos" type="domainparticipantQosSnippet" />
+                <xs:element name="publisher_qos" type="publisherQosSnippet" />
+                <xs:element name="subscriber_qos" type="subscriberQosSnippet" />
             </xs:choice>
         </xs:sequence>
 
@@ -932,19 +926,13 @@
         <xs:sequence>
             <xs:element name="qos_snippets" type="appliedQosSnippetSeq"
                 minOccurs="0" maxOccurs="1" />
-            <xs:choice maxOccurs="unbounded">
-                <xs:element name="datareader_qos" type="datareaderQosProfileElement"
-                    minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="datawriter_qos" type="datawriterQosProfileElement"
-                    minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="topic_qos" type="topicQosProfileElement"
-                    minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="domain_participant_qos" type="domainparticipantQosProfileElement"
-                    minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="publisher_qos" type="publisherQosProfileElement"
-                    minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="subscriber_qos" type="subscriberQosProfileElement"
-                    minOccurs="0" maxOccurs="unbounded" />
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="datareader_qos" type="datareaderQosProfileElement" />
+                <xs:element name="datawriter_qos" type="datawriterQosProfileElement" />
+                <xs:element name="topic_qos" type="topicQosProfileElement" />
+                <xs:element name="domain_participant_qos" type="domainparticipantQosProfileElement" />
+                <xs:element name="publisher_qos" type="publisherQosProfileElement" />
+                <xs:element name="subscriber_qos" type="subscriberQosProfileElement" />
             </xs:choice>
         </xs:sequence>
 
@@ -954,23 +942,15 @@
 
     <xs:complexType name="qosLibrary">
         <xs:sequence>
-            <xs:choice maxOccurs="unbounded">
-                <xs:element name="qos_snippet" type="qosSnippet"
-                    minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="qos_profile" type="qosProfile"
-                    minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="datareader_qos" type="datareaderQosProfile"
-                    minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="datawriter_qos" type="datawriterQosProfile"
-                    minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="topic_qos" type="topicQosProfile"
-                    minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="domain_participant_qos" type="domainparticipantQosProfile"
-                    minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="publisher_qos" type="publisherQosProfile"
-                    minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="subscriber_qos" type="subscriberQosProfile"
-                    minOccurs="0" maxOccurs="unbounded" />
+            <xs:choice minOccurs="1" maxOccurs="unbounded">
+                <xs:element name="qos_snippet" type="qosSnippet" />
+                <xs:element name="qos_profile" type="qosProfile" />
+                <xs:element name="datareader_qos" type="datareaderQosProfile" />
+                <xs:element name="datawriter_qos" type="datawriterQosProfile" />
+                <xs:element name="topic_qos" type="topicQosProfile" />
+                <xs:element name="domain_participant_qos" type="domainparticipantQosProfile"/>
+                <xs:element name="publisher_qos" type="publisherQosProfile" />
+                <xs:element name="subscriber_qos" type="subscriberQosProfile" />
             </xs:choice>
         </xs:sequence>
 

@@ -5,97 +5,312 @@
                 xsi:schemaLocation="http://www.omg.org/spec/DDS-XML ./dds-xml_domain_definitions.xsd"
                 name="MyDomainLibrary">
 
-    <domain name="ShapesDomain" domain_id="32">
-        <register_type name="ShapeType" type_ref="ShapeType"/>
-
-        <topic name="Pentagon" register_type_ref="ShapeType"/>
-        <topic name="Hexagon" register_type_ref="ShapeType"/>
-        <topic name="Heptagon" register_type_ref="ShapeType"/>
-        <topic name="Octagon" register_type_ref="ShapeType"/>
-        <topic name="Nonagon" register_type_ref="ShapeType"/>
-        <topic name="Decagon" register_type_ref="ShapeType"/>
-        <topic name="Hendecagon" register_type_ref="ShapeType"/>
-        <topic name="Dodecagon" register_type_ref="ShapeType"/>
-
+    <domain name="ShapesDomain" domain_id="32" domain_tag="ShapesDomainTag">
+        <register_type name="ShapeType" type_ref="ShapesExample::ShapeType"/>
+        
+        <topic name="Square"   register_type_ref="ShapeType"/>
+        <topic name="Circle"   register_type_ref="ShapeType"/>
+        <topic name="Triangle" register_type_ref="ShapeType"/>
     </domain>
 
-    <domain name="AnotherShapesDomain" domain_id="101" domain_tag="MyDomainTag">
-        <register_type name="ShapeTypeReg" type_ref="ShapeType" >
-            <registered_name>ThusIsTheDatabusName</registered_name>
-        </register_type>
-        <topic name="Square" register_type_ref="ShapeTypeReg"/>
+    <domain name="ShapesDomain_TypeEvolution">
+        <register_type name="ShapeType" type_ref="ShapesExample::ShapeType"/>
+        <register_type name="ShapeTypeExtended" type_ref="ShapesExample::ShapeTypeExtended">
+            <registered_name>ShapeTypeExt</registered_name>
+        </register_type>    
+        <topic name="Square" register_type_ref="ShapeType"/>
+        <topic name="SquareExt" register_type_ref="ShapeTypeExt">
+            <topic_name>Square</topic_name>  <!-- Was <registered_name> in XTYPES 1.3 -->
+        </topic>
+        <topic name="Circle" register_type_ref="ShapeType"/>
+        <topic name="CircleExt" register_type_ref="ShapeTypeExt">
+            <topic_name>Circle</topic_name>
+        </topic>
+        <topic name="Triangle" register_type_ref="ShapeType"/>
+        <topic name="TriangleExt" register_type_ref="ShapeTypeExt">
+            <topic_name>Triangle</topic_name>
+        </topic>
+    </domain>
 
-        <topic name="CircleBase" register_type_ref="ShapeTypeReg"/>
-        <topic name="CircleExt" register_type_ref="ShapeTypeExtendeReg"/>
+    <domain name="ShapesDomainWithServices" base_name="ShapesDomain">
+        <!-- RPC services -->
+        <register_interface name="ShapesControlInterface" interface_ref="ShapesExample::ControlIf"/>
+        <register_interface name="ShapesQueryInterface" interface_ref="ShapesExample::ShapeQueryIf"/>
+        <register_interface name="CommandLogQueryInterface" interface_ref="QueryExample::LogQueryIf"/>
+    
+        <rpc_service name="ShapesControlService"   register_interface_ref="ShapesControlInterface"/>
+        <rpc_service name="ShapesQueryService"     register_interface_ref="ShapesQueryInterface"/>
+        <rpc_service name="CommandLogQueryService" register_interface_ref="CommandLogQueryInterface"/>
 
-        <topic name="TriangleBase" register_type_ref="ShapeTypeReg" >
-            <topic_name>Triangle</topic_name> <!-- Currently element is called: registered_name -->
-            <datawriter_qos base_name="StandardProfileForThisSystem"/>
-            <datareader_qos  base_name="StandardProfileForThisSystem2">
-                <deadline><period><sec>3</sec></period></deadline>
+        <!-- Request-Reply services -->
+        <register_type name="StartShapesRequest" type_ref="ShapesExample::StartRequest"/>
+        <register_type name="StartShapesReply"   type_ref="ShapesExample::StartReply"/>
+
+        <register_type name="StopShapesRequest" type_ref="ShapesExample::StopRequest"/>
+        <register_type name="StopShapesReply"   type_ref="ShapesExample::StopReply"/>
+
+        <register_type name="SetStateRequest" type_ref="ShapesExample::SetStateRequest"/>
+        <register_type name="SetStateReply"   type_ref="ShapesExample::SetStateReply"/>
+
+        <register_type name="StopSingleShapeRequest" type_ref="ShapesExample::StopSingleShapeRequest"/>
+        <register_type name="StopSingleShapeReply"   type_ref="ShapesExample::StopSingleShapeReply"/>
+
+        <register_type name="LogQueryRequest" type_ref="QueryExample::LogQueryRequest"/>
+        <register_type name="LogQueryReply"   type_ref="QueryExample::LogQueryReply"/>
+
+        <request_reply_service name="StartShapesService"  
+            register_request_type_ref="StartShapesRequest" register_reply_type_ref="StartShapesReply"/>
+
+        <request_reply_service name="StopShapesService"  
+            register_request_type_ref="StopShapesRequest" register_reply_type_ref="StopShapesReply"/>
+
+        <request_reply_service name="StopSingleShapeService"  
+            register_request_type_ref="StopSingleShapeRequest" register_reply_type_ref="StopSingleShapeReply"/>
+
+        <request_reply_service name="SetShapeStateService"  
+            register_request_type_ref="SetStateRequest" register_reply_type_ref="SetStateReply"/>
+
+        <request_reply_service name="CommandLogQueryService"
+            register_request_type_ref="LogQueryRequest" register_reply_type_ref="LogQueryReply"/>
+    </domain>   
+
+    <domain name="ShapesDomainWithQos" domain_id="32" domain_tag="ShapesDomainTag">
+        <register_type name="ShapeType" type_ref="ShapesExample::ShapeType"/>
+        
+        <topic name="Square"   register_type_ref="ShapeType">
+            <datawriter_qos base_name="MyQosLib::StreamProfile"/>
+            <datareader_qos base_name="MyQosLib::StreamProfile"/>
+        </topic>
+
+        <topic name="Circle"   register_type_ref="ShapeType">
+            <datawriter_qos base_name="MyQosLib::StreamProfile">
+                <ownership>
+                    <kind>EXCLUSIVE_OWNERSHIP_QOS</kind>
+                </ownership>
+            </datawriter_qos>
+            <datareader_qos  base_name="MyQosLib::StreamProfile">
+                <ownership>
+                    <kind>EXCLUSIVE_OWNERSHIP_QOS</kind>
+                </ownership>
             </datareader_qos>
         </topic>
 
-        <topic name="TriangleExtended" register_type_ref="ShapeTypeExtended">
+        <topic name="TriangleWithFilter" register_type_ref="ShapeType">
             <topic_name>Triangle</topic_name>
-            <datawriter_qos></datawriter_qos>
-            <datareader_qos></datareader_qos>
+            <datawriter_qos base_name="MyQosLib::StreamProfile">
+                <qos_snippets>
+                    <snippet snippet_ref="MyQosLib::ReliableKeepLast1"/>
+                </qos_snippets>
+                <durability>
+                    <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                </durability>
+            </datawriter_qos>
+
+            <!-- Configures content filter using Qos -->
+            <datareader_qos  base_name="MyQosLib::StreamProfile">
+                <qos_snippets>
+                    <snippet snippet_ref="MyQosLib::ReliableKeepLast1"/>
+                </qos_snippets>
+                <history>
+                    <kind>KEEP_LAST_HISTORY_QOS</kind>
+                    <depth>10</depth>
+                </history>
+                <durability>
+                    <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                </durability>
+                <properties>
+                    <property name="dds.content_filter.builtin.sql">
+                        <![CDATA[ x > 50 && y >= 100 ]]>
+                    </property>
+                </properties>
+            </datareader_qos>
         </topic>
+    </domain>
 
-        <register_type name="MoveCommandResponse" type_ref="MoveCommandResponse"/>
-        <register_type name="MoveCommand" type_ref="MoveCommand"/>
-        <request_reply_service name="RobotCommandService"  
-            register_request_type_ref="MoveCommand" register_reply_type_ref="MoveCommandResponse">
-            <service_name>MyServiceRR</service_name>
-            <request_topic_name>NonDefaultRequestTopicName</request_topic_name>
-            <reply_topic_name>NonDefaultReplyTopicName</reply_topic_name>
-            <requester>
-                <request_datawriter_qos></request_datawriter_qos>
-                <reply_datareader_qos></reply_datareader_qos>
-            </requester>
-            <replier>
-                <request_datareader_qos></request_datareader_qos>
-                <reply_datawriter_qos></reply_datawriter_qos>
-            </replier>
-        </request_reply_service>
+    <domain name="ShapesDomainWithServicesAndQos" base_name="ShapesDomainWithQos">
+        <!-- RPC services -->
+        <register_interface name="ShapesControlInterface" interface_ref="ShapesExample::ControlIf"/>
+        <register_interface name="ShapesQueryInterface" interface_ref="ShapesExample::ShapeQueryIf"/>
+        <register_interface name="CommandLogQueryInterface" interface_ref="QueryExample::LogQueryIf"/>
+    
+        <rpc_service name="ShapesControlService" register_interface_ref="ShapesControlInterface">
+            <request_datawriter_qos base_name="MyQosLib::CommandProfile">
+                <reliability>
+                    <kind>RELIABLE_RELIABILITY_QOS</kind>
+                    <max_blocking_time>
+                        <sec>2</sec>
+                    </max_blocking_time>
+                </reliability>
+            </request_datawriter_qos>
+            <reply_datareader_qos base_name="MyQosLib::CommandProfile"/>
+        </rpc_service> 
 
+        <rpc_service name="CommandLogQueryService" register_interface_ref="CommandLogQueryInterface">
+            <!-- Override Service Name  -->
+            <service_name>QueryShapeCommandLog</service_name>
 
-        <register_interface name="RobotControl" interface_ref="RobotControlIf"/>
+            <!-- Override default Topic names used -->
+            <request_topic_name>QueryShapeCommandLogRequestTopic/request_topic_name</request_topic_name>
+            <reply_topic_name>QueryShapeCommandLogReplyTopic</reply_topic_name>
 
-        <rpc_service name="FoodDispenserControl"  register_interface_ref="RobotControl">
-            <service_name>MyService</service_name>
-            <request_topic_name>Hello</request_topic_name>
-            <reply_topic_name>HelloReply</reply_topic_name>
-            <client>
-                <request_datawriter_qos base_name="MyQosLib::MyQosProfile">
-                    <qos_snippets></qos_snippets>
-                    <reliability><max_blocking_time><sec>10</sec></max_blocking_time></reliability>
-                </request_datawriter_qos>
-                <reply_datareader_qos></reply_datareader_qos>
-            </client>
-            <server>
-                <request_datareader_qos></request_datareader_qos>
-                <reply_datawriter_qos></reply_datawriter_qos>
-            </server>
+            <!-- Override default Qos used by client and server endpoints -->
+            <request_datawriter_qos base_name="MyQosLib::CommandProfile"/>
+            <reply_datareader_qos   base_name="MyQosLib::CommandProfile"/>
+            <request_datareader_qos base_name="MyQosLib::CommandProfile">
+                <liveliness>
+                    <kind>AUTOMATIC_LIVELINESS_QOS</kind>
+                    <lease_duration>
+                        <sec>10</sec>
+                    </lease_duration>
+                </liveliness>
+            </request_datareader_qos>
+            <reply_datawriter_qos base_name="MyQosLib::CommandProfile">
+                <liveliness>
+                    <kind>AUTOMATIC_LIVELINESS_QOS</kind>
+                    <lease_duration>
+                        <sec>10</sec>
+                    </lease_duration>
+                </liveliness>
+            </reply_datawriter_qos>
         </rpc_service>
 
+        <!-- Request-Reply services -->
+        <register_type name="StartShapesRequest" type_ref="ShapesExample::StartRequest"/>
+        <register_type name="StartShapesReply"   type_ref="ShapesExample::StartReply"/>
 
-        <register_type name="MoveCommandResponse" type_ref="MoveCommandResponse"/>
-        <register_type name="MoveCommand" type_ref="MoveCommand"/>
-        <request_reply_service name="FoodDispenserService"  
-            register_request_type_ref="MoveCommand" register_reply_type_ref="MoveCommandResponse">
-            <service_name>MyServiceRR</service_name>
-            <request_topic_name>NonDefaultRequestTopicName</request_topic_name>
-            <reply_topic_name>Request</reply_topic_name>
-            <requester>
-                <request_datawriter_qos></request_datawriter_qos>
-                <reply_datareader_qos></reply_datareader_qos>
-            </requester>
-            <replier>
-                <request_datareader_qos></request_datareader_qos>
-                <reply_datawriter_qos></reply_datawriter_qos>
-            </replier>
+        <register_type name="StopShapesRequest" type_ref="ShapesExample::StopRequest"/>
+        <register_type name="StopShapesReply"   type_ref="ShapesExample::StopReply"/>
+
+        <register_type name="SetStateRequest" type_ref="ShapesExample::SetStateRequest"/>
+        <register_type name="SetStateReply"   type_ref="ShapesExample::SetStateReply"/>
+
+        <register_type name="StopSingleShapeRequest" type_ref="ShapesExample::StopSingleShapeRequest"/>
+        <register_type name="StopSingleShapeReply"   type_ref="ShapesExample::StopSingleShapeReply"/>
+
+        <register_type name="LogQueryRequest" type_ref="QueryExample::LogQueryRequest"/>
+        <register_type name="LogQueryReply"   type_ref="QueryExample::LogQueryReply"/>
+
+        <request_reply_service name="StartShapesService"  
+            register_request_type_ref="StartShapesRequest" register_reply_type_ref="StartShapesReply">
+            <!-- Override Service Name  -->
+            <service_name>StopShapesServiceName</service_name>
+            <!-- Override  Qos used by request endpoint -->
+            <request_datawriter_qos base_name="MyQosLib::CommandProfile"/>
         </request_reply_service>
+
+        <request_reply_service name="StopShapesService"  
+            register_request_type_ref="StopShapesRequest" register_reply_type_ref="StopShapesReply">
+            <!-- Override Topic Names -->
+            <request_topic_name>GetShapePathRequestTopicName</request_topic_name>
+            <reply_topic_name>GetShapePathReplyTopicName</reply_topic_name>
+            <!-- Override  Qos used by request and reply endpoints -->
+            <request_datawriter_qos base_name="MyQosLib::CommandProfile"/>
+            <reply_datareader_qos base_name="MyQosLib::CommandProfile"/>
+         </request_reply_service>  
+
+        <request_reply_service name="StopSingleShapeService"  
+            register_request_type_ref="StopSingleShapeRequest" register_reply_type_ref="StopSingleShapeReply">
+            <!-- Override  Qos used by request and reply endpoints -->
+            <request_datawriter_qos base_name="MyQosLib::CommandProfile">
+                <reliability>
+                    <kind>RELIABLE_RELIABILITY_QOS</kind>
+                    <max_blocking_time>
+                        <sec>2</sec>
+                    </max_blocking_time>
+                </reliability>
+            </request_datawriter_qos>
+            <reply_datareader_qos base_name="MyQosLib::CommandProfile">
+                <liveliness>
+                    <kind>AUTOMATIC_LIVELINESS_QOS</kind>
+                    <lease_duration>
+                        <sec>10</sec>
+                    </lease_duration>
+                </liveliness>
+            </reply_datareader_qos>
+        </request_reply_service>
+
+        <request_reply_service name="SetShapeStateService"  
+            register_request_type_ref="SetStateRequest" register_reply_type_ref="SetStateReply">
+            <!-- Override  Qos used by request and reply endpoints -->
+            <request_datawriter_qos base_name="MyQosLib::CommandProfile">
+                <reliability>
+                    <kind>RELIABLE_RELIABILITY_QOS</kind>
+                    <max_blocking_time>
+                        <sec>2</sec>
+                    </max_blocking_time>
+                </reliability>
+            </request_datawriter_qos>
+            
+            <request_datareader_qos base_name="MyQosLib::CommandProfile"/>
+
+            <reply_datawriter_qos base_name="MyQosLib::CommandProfile">
+                <reliability>
+                    <kind>RELIABLE_RELIABILITY_QOS</kind>
+                    <max_blocking_time>
+                        <sec>2</sec>
+                    </max_blocking_time>
+                </reliability>
+            </reply_datawriter_qos>
+            <reply_datareader_qos base_name="MyQosLib::CommandProfile">
+                <qos_snippets>
+                    <snippet snippet_ref="MyQosLib::ReliableKeepLast1"/>
+                </qos_snippets>
+            </reply_datareader_qos>
+        </request_reply_service>
+
+        <request_reply_service name="GetCommandLogService"
+            register_request_type_ref="LogQueryRequest" register_reply_type_ref="LogQueryReply">
+
+            <!-- Override  Qos used by request and reply endpoints -->
+            <request_datareader_qos base_name="MyQosLib::CommandProfile">
+                <liveliness>
+                    <kind>AUTOMATIC_LIVELINESS_QOS</kind>
+                    <lease_duration>
+                        <sec>10</sec>
+                    </lease_duration>
+                </liveliness>
+            </request_datareader_qos>
+            
+            <reply_datawriter_qos base_name="MyQosLib::CommandProfile">
+                <liveliness>
+                    <kind>AUTOMATIC_LIVELINESS_QOS</kind>
+                    <lease_duration>
+                        <sec>10</sec>
+                    </lease_duration>
+                </liveliness>
+            </reply_datawriter_qos>
+        </request_reply_service>
+    </domain> 
+
+    <domain name="ShapesDomainWithInteractionRoles" base_name="ShapesDomainWithServicesAndQos">
+
+        <!-- Produce all shapes and reply to path queries -->
+        <interaction_role name="ShapeProducer_IR">
+            <publishes_topic topic_ref="Square"/>
+            <publishes_topic topic_ref="Circle"/>
+            <publishes_topic topic_ref="Triangle"/>
+            <provides_service service_ref="ShapesQueryService"/>
+        </interaction_role>
+
+        <!-- Allow a shape-producing app to be controlled using RPC -->
+        <interaction_role name="ShapeControlViaRPC_IR">
+            <provides_service service_ref="ShapesControlService"/>
+        </interaction_role>
+
+        <!-- Allow a shape-producing app to be controlled using Request/Reply Services -->
+        <interaction_role name="ShapeControlViaRequestReply_IR">
+            <provides_service service_ref="StartShapesService"/>
+            <provides_service service_ref="StopShapesService"/>
+            <provides_service service_ref="StopSingleShapeService"/>
+            <provides_service service_ref="SetShapeStateService"/>
+        </interaction_role>
+
+        <!-- Report the command history via RPC and Request/Reply -->
+        <interaction_role name="ControllerIntrospection_IR">
+            <provides_service service_ref="CommandLogQueryService"/>
+            <provides_service service_ref="GetCommandLogService"/>
+        </interaction_role>
+
     </domain>
 
 </domain_library>

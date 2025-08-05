@@ -7,7 +7,7 @@
 
     <application name="AnApplication">
         <domain_participant name="HelloParticipant" domain_id="32" >
-            <register_type name="HelloWorld" type_ref="HelloWorld" />
+            <register_type name="HelloWorld" type_ref="HelloExample::HelloType" />
             <topic register_type_ref="HelloWorld" name="HelloMessage" />
             <publisher name="HelloPublisher">
                 <data_writer topic_ref="HelloMessage" name="HelloWriter" />
@@ -41,7 +41,7 @@
                 <data_reader name="MySquareReader" topic_ref="Square" />
                 <data_reader name="MyCircleWriter" topic_ref="Circle" />
                 <data_reader name="MyTriangleWriter" topic_ref="Triangle" />
-                <subscriber_qos base_name="SomeQosLibrary::SomeQosProfile">
+                <subscriber_qos base_name="MyQosLib::StreamProfile">
                     <entity_factory>
                         <autoenable_created_entities>false</autoenable_created_entities>
                     </entity_factory>

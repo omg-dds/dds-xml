@@ -5,123 +5,153 @@
                             xsi:schemaLocation="http://www.omg.org/spec/DDS-XML ./dds-xml_domainparticipant_definitions.xsd"
                             name="MyDomainLibrary">
 
-    <domain_participant name="HelloParticipant"  domain_id="32" domain_tag="IsolatedDomainTag">
-        <register_type name="HelloWorld" type_ref="HelloWorld" />
-    
+    <domain_participant name="Listener"  domain_id="0" domain_tag="HelloDomainTag">
         <domain_participant_qos/>
+        <register_type name="HelloWorldType" type_ref="HelloExample::HelloType" />
 
-        <topic name="HelloMessage" register_type_ref="HelloWorld"/>
-
-        <topic name="HelloMessage2" register_type_ref="HelloWorld">
-            <topic_name>TopicName</topic_name>
-            <topic_qos/>
-            <datareader_qos/>
-            <datawriter_qos/>
-        </topic>
-
-        <register_type name="MoveCommand"         type_ref="MoveCommand" />
-        <register_type name="MoveCommandResponse" type_ref="MoveCommandResponse" />
-    
-        <request_reply_service name="FoodDispenser"  register_request_type_ref="MoveCommand" register_reply_type_ref="MoveCommandResponse">
-            <service_name>FoodDispenserSvc</service_name>
-            <request_topic_name>FoodDispenserControlSvcRequest</request_topic_name>
-            <reply_topic_name>FoodDispenserControlSvcReply</reply_topic_name>
-            <requester>
-                <request_datawriter_qos/>
-                <reply_datareader_qos/>                
-            </requester>
-            <replier>
-                <reply_datawriter_qos/>
-                <request_datareader_qos/>                
-            </replier>
-        </request_reply_service>
-
-        <register_interface name="RobotControl" interface_ref="RobotControl" />
-
-        <rpc_service name="FoodDispenserControl"  register_interface_ref="RobotControl">
-            <service_name>FoodDispenserControlSvc</service_name>
-            <request_topic_name>FoodDispenserControlSvcCall</request_topic_name>
-            <reply_topic_name>FoodDispenserControlSvcReturn</reply_topic_name>
-            <client>
-                <request_datawriter_qos/>
-                <reply_datareader_qos/>
-            </client>
-            <server>
-                <reply_datawriter_qos/>
-                <request_datareader_qos/>
-            </server>
-        </rpc_service>
-    
-        <publisher name="HelloPublisher">
-            <data_writer topic_ref="HelloMessage" name="HelloWriter"  >
-                <datawriter_qos/>
-            </data_writer>
-        </publisher>
-
+        <topic name="HelloMessage" register_type_ref="HelloWorldType"/>
         <subscriber name="HelloSubscriber">
-            <data_reader name="HelloMessage" topic_ref="HelloReader">
-                <datareader_qos/>
-                <query_condition name="MyQueryCondition" kind="builtin.sql"></query_condition>
-                <content_filter name="MyCFT" kind="builtin.sql">
-                    <expression><![CDATA[ x > 5 && y < 2 ]]></expression>
-                </content_filter>
-                <status_condition>
-                    <status>DATA_AVAILABLE</status>
-                </status_condition>
-                <read_condition name="MyReadCondition">
-                    <instance_state>ALIVE</instance_state>
-                </read_condition>
-            </data_reader>
-            <data_reader name="HelloReaderWithFilterViaQos" topic_ref="HelloReader">
+            <data_reader name="HelloReader" topic_ref="HelloMessage">
                 <datareader_qos>
-                    <properties>
-                        <property name="dds.content_filter.builtin.sql">
-                            <![CDATA[  X=x > 5 && y < 2  ]]>
-                        </property>
-                    </properties>
+                    <durability>
+                        <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                    </durability>
+                    <reliability>
+                        <kind>RELIABLE_RELIABILITY_QOS</kind>
+                    </reliability>
                 </datareader_qos>
             </data_reader>
         </subscriber>
-
-        <requester name="MoveRequester" request_reply_service_ref="FoodDispenserService"/>
-
-        <requester name="MoveRequester2" request_reply_service_ref="FoodDispenserService"
-            publisher_ref="HelloPublisher" subscriber_ref="HelloSubscriber" >
-            <request_datawriter_qos/>
-            <reply_datareader_qos/>
-        </requester>
-        
-        <replier name="MoveReplier" request_reply_service_ref="FoodDispenserService"/>
-
-        <replier name="MoveReplier2" request_reply_service_ref="FoodDispenserService"
-            publisher_ref="HelloPublisher" subscriber_ref="HelloSubscriber" >
-            <request_datareader_qos/>
-            <reply_datawriter_qos/>
-        </replier>
     </domain_participant>
 
-    <domain_participant name="ShapesParticipant"
-                        domain_ref="ADomainLibrary::ShapeDomain"
-                        domain_id="3">
-        <publisher name="MyPublisher">
-            <data_writer name="MySquareWriter" topic_ref="Square" />
-            <data_writer name="MyCircleWriter" topic_ref="Circle" />
-            <data_writer name="MyTriangleWriter" topic_ref="Triangle">
+    <domain_participant name="Greeter"  domain_id="0" domain_tag="HelloDomainTag">
+        <domain_participant_qos/>
+        <register_type name="HelloWorldType" type_ref="HelloExample::HelloType" />
+
+        <topic name="HelloMessage" register_type_ref="HelloWorldType"/>
+        <publisher name="HelloPublisher">
+            <data_writer name="HelloWriter" topic_ref="HelloMessage">
                 <datawriter_qos>
-                    <!-- Alternative 
-                    <partitions>
-                        <partition name="Partition1"/>
-                        <partition name="Partition2"/>
-                    </partitions>
-                    -->
-                    <partition>
-                        <name>
-                            <element>Partition1</element>
-                            <element>Partition2</element>
-                        </name>
-                    </partition>                    
+                    <durability>
+                        <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                    </durability>
+                    <reliability>
+                        <kind>RELIABLE_RELIABILITY_QOS</kind>
+                    </reliability>
+                    <history>
+                        <kind>KEEP_LAST_HISTORY_QOS</kind>
+                        <depth>1</depth>
+                    </history>
                 </datawriter_qos>
             </data_writer>
+        </publisher>
+    </domain_participant>
+
+    <!-- Participant for Shapes with Pub-Sub -->
+    <domain_participant name="ShapesApp_PS" domain_id="32" domain_tag="ShapesDomainTag">
+        <register_type name="ShapeType" type_ref="ShapesExample::ShapeType"></register_type>
+        <topic name="Square"   register_type_ref="ShapeType"/>
+        <topic name="Circle"   register_type_ref="ShapeType"/>
+        <topic name="Triangle" register_type_ref="ShapeType"/>
+
+        <publisher name="MyPublisher">
+            <data_writer name="MySquareWriter"   topic_ref="Square" />
+            <data_writer name="MyCircleWriter"   topic_ref="Circle" />
+        </publisher>
+
+        <subscriber name="MySubscriber">
+            <data_reader name="MyTriangleReader" topic_ref="Triangle" />
+        </subscriber>
+    </domain_participant>
+
+    <!-- Same as ShapesApp_PS referencing the domain definitions -->
+    <domain_participant name="ShapesApp_PS_DD" domain_ref="MyDomainLibrary::ShapesDomain">
+        <publisher name="ShapesPublisher">
+            <data_writer name="MySquareWriter" topic_ref="Square"/>
+            <data_writer name="MyCircleWriter" topic_ref="Circle"/>
+        </publisher>
+        <subscriber name="MySubscriber">
+            <data_reader name="MyCircleReader" topic_ref="Circle" />
+            <data_reader name="MyTriangleReader" topic_ref="Triangle" />
+        </subscriber>
+    </domain_participant>
+
+    <!-- Participant for Shapes with RPC Services -->
+    <domain_participant name="ShapesController_RPC" domain_id="32" domain_tag="ShapesDomainTag">
+        <register_interface name="ShapesControlInterface" interface_ref="ShapesExample::ControlIf"/>
+        <register_interface name="CommandLogQueryInterface" interface_ref="QueryExample::LogQueryIf"/>
+    
+        <rpc_service name="ShapesControlService" register_interface_ref="ShapesControlInterface"/>
+        <rpc_service name="CommandLogQueryService" register_interface_ref="CommandLogQueryInterface"/>
+
+        <client name="ControlClient" rpc_service_ref="ShapesControlService"/>
+        <server name="CommandLogServer" rpc_service_ref="CommandLogQueryService"/>
+    </domain_participant>
+    
+    <!-- Same as ShapesController_RPC referencing the domain definitions -->
+    <domain_participant name="ShapesController_RPC_DD" domain_ref="MyDomainLibrary::ShapesDomainWithServices">
+        <client name="ControlClient" rpc_service_ref="ShapesControlService"/>
+        <server name="CommandLogServer" rpc_service_ref="CommandLogQueryService"/>
+    </domain_participant>
+
+    <!-- Participant for Shapes with Request-Reply Services -->
+    <domain_participant name="ShapesController_RR" domain_id="32" domain_tag="ShapesDomainTag">
+        <register_type name="StartShapesRequest" type_ref="ShapesExample::StartRequest"/>
+        <register_type name="StartShapesReply"   type_ref="ShapesExample::StartReply"/>
+
+        <register_type name="StopShapesRequest" type_ref="ShapesExample::StopRequest"/>
+        <register_type name="StopShapesReply"   type_ref="ShapesExample::StopReply"/>
+
+        <register_type name="SetStateRequest" type_ref="ShapesExample::SetStateRequest"/>
+        <register_type name="SetStateReply"   type_ref="ShapesExample::SetStateReply"/>
+
+        <register_type name="StopSingleShapeRequest" type_ref="ShapesExample::StopSingleShapeRequest"/>
+        <register_type name="StopSingleShapeReply"   type_ref="ShapesExample::StopSingleShapeReply"/>
+
+        <register_type name="LogQueryRequest" type_ref="QueryExample::LogQueryRequest"/>
+        <register_type name="LogQueryReply"   type_ref="QueryExample::LogQueryReply"/>
+
+        <request_reply_service name="StartShapesService"  
+            register_request_type_ref="StartShapesRequest" register_reply_type_ref="StartShapesReply"/>
+
+        <request_reply_service name="StopShapesService"  
+            register_request_type_ref="StopShapesRequest" register_reply_type_ref="StopShapesReply"/>
+
+        <request_reply_service name="StopSingleShapeService"  
+            register_request_type_ref="StopSingleShapeRequest" register_reply_type_ref="StopSingleShapeReply"/>
+
+        <request_reply_service name="SetShapeStateService"  
+            register_request_type_ref="SetStateRequest" register_reply_type_ref="SetStateReply"/>
+
+        <request_reply_service name="CommandLogQueryService"
+            register_request_type_ref="LogQueryRequest" register_reply_type_ref="LogQueryReply"/>
+
+        <requester name="StartRequester" request_reply_service_ref="StartShapesService"/>
+        <requester name="StopRequester" request_reply_service_ref="StopShapesService"/>
+        <requester name="SetStateRequester" request_reply_service_ref="SetShapeStateService"/>
+        <requester name="StopSingleShapeRequester" request_reply_service_ref="StopSingleShapeService"/>
+
+        <replier name="QueryReplier" request_reply_service_ref="CommandLogQueryService"/>
+    </domain_participant>
+
+    <!-- Same as ShapesController_RR referencing the domain definitions -->
+    <domain_participant name="ShapesController_RR_DD" domain_ref="MyDomainLibrary::ShapesDomainWithServices">
+        <requester name="StartRequester" request_reply_service_ref="StartShapesService"/>
+        <requester name="StopRequester" request_reply_service_ref="StopShapesService"/>
+        <requester name="SetStateRequester" request_reply_service_ref="SetShapeStateService"/>
+        <requester name="StopSingleShapeRequester" request_reply_service_ref="StopSingleShapeService"/>
+
+        <replier name="QueryReplier" request_reply_service_ref="CommandLogQueryService"/>
+   </domain_participant>
+
+    <!-- Participant for Shapes with Pub-Sub and Qos -->
+    <domain_participant name="ShapesApp_PS_QOS" base_name="ShapesParticipant_PS">
+        <register_type name="ShapeType" type_ref="ShapesExample::ShapeType"></register_type>
+        <topic name="Square"   register_type_ref="ShapeType"/>
+        <topic name="Circle"   register_type_ref="ShapeType"/>
+        <topic name="Triangle" register_type_ref="ShapeType"/>
+
+        <publisher name="MyPublisher">
             <publisher_qos>
                 <partition>
                     <name>
@@ -133,32 +163,433 @@
                     <autoenable_created_entities>false</autoenable_created_entities>
                 </entity_factory>
             </publisher_qos>
+
+            <data_writer name="MySquareWriter" topic_ref="Square">
+                <datawriter_qos base_name="MyQosLib::StreamProfile"/>
+            </data_writer>
+            <data_writer name="MyCircleWriter" topic_ref="Circle">
+                <datawriter_qos base_name="MyQosLib::StreamProfile">
+                    <ownership>
+                        <kind>EXCLUSIVE_OWNERSHIP_QOS</kind>
+                    </ownership>
+                    <ownership_strength>
+                        <value>10</value>
+                    </ownership_strength>
+                </datawriter_qos>
+            </data_writer>
         </publisher>
-        
-        <subscriber name="MyPublisher">
-            <data_reader name="MySquareWriter" topic_ref="Square" />
-            <data_reader name="MyCircleWriter" topic_ref="Circle" />
-            <data_reader name="MyTriangleWriter" topic_ref="Triangle" />
-            <subscriber_qos/>
+
+        <subscriber name="MySubscriber">
+            <!-- Configures content filter using <content_filter> element -->
+            <data_reader name="MyCircleReader" topic_ref="Circle">
+                <datareader_qos base_name="MyQosLib::StreamProfile">
+                    <ownership>
+                        <kind>EXCLUSIVE_OWNERSHIP_QOS</kind>
+                    </ownership>
+                </datareader_qos>
+                <query_condition name="MyQueryCondition" kind="builtin.sql"></query_condition>
+                <content_filter name="MyCFT" kind="builtin.sql">
+                    <expression><![CDATA[ x > 50 && y < 100 ]]></expression>
+                </content_filter>
+                <status_condition>
+                    <status>DATA_AVAILABLE</status>
+                </status_condition>
+                <read_condition name="MyReadCondition">
+                    <instance_state>ALIVE</instance_state>
+                </read_condition>
+            </data_reader>
+
+            <!-- Configures content filter using Qos -->
+            <data_reader name="MyTriangleReader" topic_ref="Triangle">
+                <datareader_qos base_name="MyQosLib::StreamProfile">
+                    <qos_snippets>
+                        <snippet snippet_ref="MyQosLib::ReliableKeepLast1"/>
+                    </qos_snippets>
+                    <history>
+                        <kind>KEEP_LAST_HISTORY_QOS</kind>
+                        <depth>10</depth>
+                    </history>
+                    <durability>
+                        <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                    </durability>
+                    <properties>
+                        <property name="dds.content_filter.builtin.sql">
+                            <![CDATA[ x > 50 && y >= 100 ]]>
+                        </property>
+                    </properties>
+                </datareader_qos>
+            </data_reader>
+        </subscriber>
+    </domain_participant>
+
+    <!-- Same as ShapesApp_PS_QOS referencing the domain definitions -->
+    <domain_participant name="ShapesApp_PS_QOS_DD" domain_ref="MyDomainLibrary::ShapesDomainWithQos">
+        <publisher name="MyPublisher">
+            <publisher_qos>
+                <partition>
+                    <name>
+                        <element>Partition1</element>
+                        <element>Partition2</element>
+                    </name>
+                </partition>
+                <entity_factory>
+                    <autoenable_created_entities>false</autoenable_created_entities>
+                </entity_factory>
+            </publisher_qos>
+
+            <data_writer name="MySquareWriter" topic_ref="Square"/>
+            <data_writer name="MyCircleWriter" topic_ref="Circle">
+                <datawriter_qos>
+                    <ownership_strength>
+                        <value>10</value>
+                    </ownership_strength>
+                </datawriter_qos>
+            </data_writer>
+        </publisher>
+
+        <subscriber name="MySubscriber">
+            <data_reader name="MyCircleReader" topic_ref="Circle">
+                <query_condition name="MyQueryCondition" kind="builtin.sql"></query_condition>
+                <content_filter name="MyCFT" kind="builtin.sql">
+                    <expression><![CDATA[ x > 50 && y < 100 ]]></expression>
+                </content_filter>
+                <status_condition>
+                    <status>DATA_AVAILABLE</status>
+                </status_condition>
+                <read_condition name="MyReadCondition">
+                    <instance_state>ALIVE</instance_state>
+                </read_condition>
+            </data_reader>
+
+            <data_reader name="MyTriangleReader" topic_ref="TriangleWithFilter"/>
+        </subscriber>
+    </domain_participant>
+
+    <!-- Participant for Shapes with RPC Services and Qos -->
+    <domain_participant name="ShapesController_RPC_QOS" domain_id="32" domain_tag="ShapesDomainTag">
+        <register_interface name="ShapesControlInterface" interface_ref="ShapesExample::ControlIf"/>
+        <register_interface name="CommandLogQueryInterface" interface_ref="QueryExample::LogQueryIf"/>
+    
+        <rpc_service name="ShapesControlService" register_interface_ref="ShapesControlInterface"/>
+        <rpc_service name="CommandLogQueryService" register_interface_ref="CommandLogQueryInterface">
+            <!-- Override Service Name  -->
+            <service_name>QueryShapeCommandLog</service_name>
+
+            <!-- Override default Topic names used -->
+            <request_topic_name>QueryShapeCommandLogRequestTopic/request_topic_name</request_topic_name>
+            <reply_topic_name>QueryShapeCommandLogReplyTopic</reply_topic_name>
+        </rpc_service>
+
+        <client name="ControlClient" rpc_service_ref="ShapesControlService">
+            <request_datawriter_qos base_name="MyQosLib::CommandProfile">
+                <reliability>
+                    <kind>RELIABLE_RELIABILITY_QOS</kind>
+                    <max_blocking_time>
+                        <sec>2</sec>
+                    </max_blocking_time>
+                </reliability>
+            </request_datawriter_qos>
+            <reply_datareader_qos base_name="MyQosLib::CommandProfile"/>
+        </client>
+        <server name="CommandLogServer" rpc_service_ref="CommandLogQueryService">
+            <request_datareader_qos base_name="MyQosLib::CommandProfile">
+                <liveliness>
+                    <kind>AUTOMATIC_LIVELINESS_QOS</kind>
+                    <lease_duration>
+                        <sec>10</sec>
+                    </lease_duration>
+                </liveliness>
+            </request_datareader_qos>
+
+            <reply_datawriter_qos base_name="MyQosLib::CommandProfile">
+                <liveliness>
+                    <kind>AUTOMATIC_LIVELINESS_QOS</kind>
+                    <lease_duration>
+                        <sec>10</sec>
+                    </lease_duration>
+                </liveliness>
+            </reply_datawriter_qos>
+        </server>
+    </domain_participant>
+
+    <!-- Same as ShapesController_RPC_QOS referencing the domain definitions -->
+    <domain_participant name="ShapesController_RPC_QOS_DD" domain_ref="MyDomainLibrary::ShapesDomainWithServicesAndQos">
+        <client name="ControlClient" rpc_service_ref="ShapesControlService"/>
+        <server name="CommandLogServer" rpc_service_ref="CommandLogQueryService"/>
+    </domain_participant>
+
+    <!-- Participant for Shapes with Request-Reply Services and Qos -->
+    <domain_participant name="ShapesController_RR_QOS" domain_id="32" domain_tag="ShapesDomainTag">
+        <register_type name="StartShapesRequest" type_ref="ShapesExample::StartRequest"/>
+        <register_type name="StartShapesReply"   type_ref="ShapesExample::StartReply"/>
+
+        <register_type name="StopShapesRequest" type_ref="ShapesExample::StopRequest"/>
+        <register_type name="StopShapesReply"   type_ref="ShapesExample::StopReply"/>
+
+        <register_type name="SetStateRequest" type_ref="ShapesExample::SetStateRequest"/>
+        <register_type name="SetStateReply"   type_ref="ShapesExample::SetStateReply"/>
+
+        <register_type name="StopSingleShapeRequest" type_ref="ShapesExample::StopSingleShapeRequest"/>
+        <register_type name="StopSingleShapeReply"   type_ref="ShapesExample::StopSingleShapeReply"/>
+
+        <register_type name="LogQueryRequest" type_ref="QueryExample::LogQueryRequest"/>
+        <register_type name="LogQueryReply" type_ref="QueryExample::LogQueryReply"/>
+
+        <request_reply_service name="StartShapesService"  
+            register_request_type_ref="StartShapesRequest" register_reply_type_ref="StartShapesReply">
+            <!-- Override Service Name  -->
+            <service_name>StopShapesServiceName</service_name>
+        </request_reply_service>
+
+        <request_reply_service name="StopShapesService"  
+            register_request_type_ref="StopShapesRequest" register_reply_type_ref="StopShapesReply">
+            <!-- Override Topic Names -->
+            <request_topic_name>GetShapePathRequestTopicName</request_topic_name>
+            <reply_topic_name>GetShapePathReplyTopicName</reply_topic_name>
+         </request_reply_service>  
+
+        <request_reply_service name="StopSingleShapeService"  
+            register_request_type_ref="StopSingleShapeRequest" register_reply_type_ref="StopSingleShapeReply"/>
+
+        <!-- Default Qos can be specified with the service defition -->
+        <request_reply_service name="SetShapeStateService"  
+            register_request_type_ref="SetStateRequest" register_reply_type_ref="SetStateReply">
+            <!-- Override  Qos used by request and reply endpoints -->
+            <request_datawriter_qos base_name="MyQosLib::CommandProfile">
+                <reliability>
+                    <kind>RELIABLE_RELIABILITY_QOS</kind>
+                    <max_blocking_time>
+                        <sec>2</sec>
+                    </max_blocking_time>
+                </reliability>
+            </request_datawriter_qos>
+            
+            <request_datareader_qos base_name="MyQosLib::CommandProfile"/>
+
+            <reply_datawriter_qos base_name="MyQosLib::CommandProfile">
+                <reliability>
+                    <kind>RELIABLE_RELIABILITY_QOS</kind>
+                    <max_blocking_time>
+                        <sec>2</sec>
+                    </max_blocking_time>
+                </reliability>
+            </reply_datawriter_qos>
+            <reply_datareader_qos base_name="MyQosLib::CommandProfile">
+                <qos_snippets>
+                    <snippet snippet_ref="MyQosLib::ReliableKeepLast1"/>
+                </qos_snippets>
+            </reply_datareader_qos>
+        </request_reply_service>
+
+        <request_reply_service name="CommandLogQueryService"
+            register_request_type_ref="LogQueryRequest" register_reply_type_ref="LogQueryReply"/>
+
+        <requester name="StartRequester" request_reply_service_ref="StartShapesService">
+            <request_datawriter_qos base_name="MyQosLib::CommandProfile"/>
+        </requester>
+
+        <requester name="StopRequester" request_reply_service_ref="StopShapesService">
+            <request_datawriter_qos base_name="MyQosLib::CommandProfile"/>
+            <reply_datareader_qos base_name="MyQosLib::CommandProfile"/>
+        </requester>
+
+        <requester name="StopSingleShapeRequester" request_reply_service_ref="StopSingleShapeService">
+            <request_datawriter_qos base_name="MyQosLib::CommandProfile">
+                <reliability>
+                    <kind>RELIABLE_RELIABILITY_QOS</kind>
+                    <max_blocking_time>
+                        <sec>2</sec>
+                    </max_blocking_time>
+                </reliability>
+            </request_datawriter_qos>
+            <reply_datareader_qos base_name="MyQosLib::CommandProfile">
+                <liveliness>
+                    <kind>AUTOMATIC_LIVELINESS_QOS</kind>
+                    <lease_duration>
+                        <sec>10</sec>
+                    </lease_duration>
+                </liveliness>
+            </reply_datareader_qos>
+        </requester>
+
+        <requester name="SetStateRequester" request_reply_service_ref="SetShapeStateService">
+            <!-- Overrides default in service definition -->
+            <request_datawriter_qos base_name="MyQosLib::CommandProfile">
+                <reliability>
+                    <kind>RELIABLE_RELIABILITY_QOS</kind>
+                    <max_blocking_time>
+                        <sec>2</sec>
+                    </max_blocking_time>
+                </reliability>
+            </request_datawriter_qos>
+        </requester>    
+
+        <replier name="QueryReplier" request_reply_service_ref="CommandLogQueryService">
+            <request_datareader_qos base_name="MyQosLib::CommandProfile">
+                <liveliness>
+                    <kind>AUTOMATIC_LIVELINESS_QOS</kind>
+                    <lease_duration>
+                        <sec>10</sec>
+                    </lease_duration>
+                </liveliness>
+            </request_datareader_qos>
+            
+            <reply_datawriter_qos base_name="MyQosLib::CommandProfile">
+                <liveliness>
+                    <kind>AUTOMATIC_LIVELINESS_QOS</kind>
+                    <lease_duration>
+                        <sec>10</sec>
+                    </lease_duration>
+                </liveliness>
+            </reply_datawriter_qos>
+        </replier>  
+    </domain_participant>
+
+    <!-- Same as ShapesController_RR_QOS referencing the domain definitions -->
+    <domain_participant name="ShapesController_RR_QOS_DD" domain_ref="ShapesDomainWithServicesAndQos">
+        <requester name="StartRequester" request_reply_service_ref="StartShapesService"/>
+        <requester name="StopRequester" request_reply_service_ref="StopShapesService"/>
+        <requester name="StopSingleShapeRequester" request_reply_service_ref="StopSingleShapeService"/>
+
+        <requester name="SetStateRequester" request_reply_service_ref="SetShapeStateService">
+            <!-- Overrides default in service definition -->
+            <request_datawriter_qos base_name="MyQosLib::CommandProfile">
+                <reliability>
+                    <kind>RELIABLE_RELIABILITY_QOS</kind>
+                    <max_blocking_time>
+                        <sec>5</sec>
+                    </max_blocking_time>
+                </reliability>
+            </request_datawriter_qos>
+        </requester>    
+
+        <replier name="QueryReplier" request_reply_service_ref="CommandLogQueryService"/>  
+    </domain_participant>
+
+    <!-- Participant for Shapes combining Pub-Sub and Services (RPC and R/R) -->
+    <domain_participant name="ShapesApp_PS_RPC_RR" domain_id="32" domain_tag="ShapesDomainTag">
+
+        <register_type name="ShapeType" type_ref="ShapesExample::ShapeType"/>
+        <topic name="Square"   register_type_ref="ShapeType"/>
+        <publisher name="MyPublisher">
+            <data_writer name="MySquareWriter"   topic_ref="Square"/>
+        </publisher>
+
+        <register_type name="ShapeTypeExtended" type_ref="ShapesExample::ShapeTypeExtended"/>
+        <topic name="Circle"   register_type_ref="ShapeTypeExtended"/>
+        <subscriber name="MySubscriber">
+            <data_reader name="MyCircleReader"   topic_ref="Circle"/>
         </subscriber>
 
-        <client name="RobotControlClient" rpc_service_ref="FoodDispenserControl"/>
+        <register_interface name="ShapesControlInterface" interface_ref="ShapesExample::ControlIf"/>
+        <rpc_service name="ShapesControlService" register_interface_ref="ShapesControlInterface"/>
+        <server name="ControlServer" rpc_service_ref="ShapesControlService"/>
 
-        <client name="RobotControlClient2" rpc_service_ref="FoodDispenserControl" 
-            publisher_ref="HelloPublisher" subscriber_ref="HelloSubscriber">
+        <register_interface name="CommandLogQueryInterface" interface_ref="QueryExample::LogQueryIf"/>
+        <rpc_service name="CommandLogQueryService" register_interface_ref="CommandLogQueryInterface"/>
+        <client name="CommandLogClient" rpc_service_ref="CommandLogQueryService"/>
 
-            <request_datawriter_qos/>
-            <reply_datareader_qos/>
-        </client>
+        <register_type name="StopSingleShapeRequest" type_ref="ShapesExample::StopSingleShapeRequest"/>
+        <register_type name="StopSingleShapeReply"   type_ref="ShapesExample::StopSingleShapeReply"/>
+        <request_reply_service name="StopSingleShapeService"  
+            register_request_type_ref="StopSingleShapeRequest" register_reply_type_ref="StopSingleShapeReply"/>
+        <requester name="StopSingleShapeRequester" request_reply_service_ref="StopSingleShapeService"/>
 
-        <server name="RobotControlServer" rpc_service_ref="FoodDispenserControl"/>
+        <register_type name="LogQueryRequest" type_ref="QueryExample::LogQueryRequest"/>
+        <register_type name="LogQueryReply" type_ref="QueryExample::LogQueryReply"/>
+        <request_reply_service name="CommandLogQueryService"
+            register_request_type_ref="LogQueryRequest" register_reply_type_ref="LogQueryReply"/>
+        <replier name="QueryReplier" request_reply_service_ref="CommandLogQueryService"/>
+    </domain_participant>
 
-        <server name="RobotControlServer2" rpc_service_ref="FoodDispenserControl"
-            publisher_ref="HelloPublisher" subscriber_ref="HelloSubscriber">
+    <!-- =========================================== -->
+    <!-- Participant defined using Interaction Roles -->
+    <!-- =========================================== -->
 
-            <request_datareader_qos/>
-            <reply_datawriter_qos/>
-        </server>
+    <!-- Participant publishing Shapes using Interaction Roles -->
+    <domain_participant name="BasicShapesProducer" domain_id="32" domain_tag="ShapesDomainTag">
+        <register_type name="ShapeType" type_ref="ShapesExample::ShapeType"/>
+        <topic name="Square"   register_type_ref="ShapeType"/>
+        <topic name="Circle"   register_type_ref="ShapeType"/>
+        <topic name="Triangle" register_type_ref="ShapeType"/>
+
+        <register_interface name="ShapesQueryInterface" interface_ref="ShapesExample::ShapeQueryIf"/>
+        <rpc_service name="ShapesQueryService" register_interface_ref="ShapesQueryInterface"/>
+
+        <interaction_role name="ShapeProducer_IR">
+            <publishes_topic topic_ref="Square"/>
+            <publishes_topic topic_ref="Circle"/>
+            <publishes_topic topic_ref="Triangle"/>
+            <provides_service service_ref="ShapesQueryService"/>
+        </interaction_role>
+
+        <interaction_role_use name="shape_publisher" direction="DECLARED" interaction_role_ref="ShapeProducer_IR"/>
+    </domain_participant>
+
+    <!-- Participant publishing Shapes using Interaction Roles and Qos -->
+    <domain_participant name="BasicShapesProducer_QOS" domain_id="32" domain_tag="ShapesDomainTag">
+        <register_type name="ShapeType" type_ref="ShapesExample::ShapeType"/>
+        <topic name="Square"   register_type_ref="ShapeType"/>
+        <topic name="Circle"   register_type_ref="ShapeType"/>
+        <topic name="Triangle" register_type_ref="ShapeType"/>
+
+        <register_interface name="ShapesQueryInterface" interface_ref="ShapesExample::ShapeQueryIf"/>
+        <rpc_service name="ShapesQueryService" register_interface_ref="ShapesQueryInterface"/>
+
+        <interaction_role name="ShapeProducer_IR">
+            <publishes_topic topic_ref="Square"/>
+            <publishes_topic topic_ref="Circle"/>
+            <publishes_topic topic_ref="Triangle"/>
+            <provides_service service_ref="ShapesQueryService"/>
+        </interaction_role>
+
+        <interaction_role_use name="shape_publisher" direction="DECLARED" interaction_role_ref="ShapeProducer_IR">
+            <topic_binding topic_ref="Square">
+                <datawriter_qos base_name="MyQosLib::ReliableKeepLast6"/>
+            </topic_binding>
+            <topic_binding topic_ref="Circle">
+                <datawriter_qos base_name="MyQosLib::ReliableKeepLast6"/>
+            </topic_binding>
+            <topic_binding topic_ref="Triangle">
+                <datawriter_qos base_name="MyQosLib::ReliableKeepLast6">
+                    <history><depth>10</depth></history>
+                </datawriter_qos>
+            </topic_binding>
+            <service_binding service_ref="ShapesQueryService">
+                <request_datareader_qos base_name="MyQosLib::ReliableKeepLast6"/>
+                <reply_datawriter_qos   base_name="MyQosLib::ReliableKeepLast6"/>
+            </service_binding>
+        </interaction_role_use>
+    </domain_participant>    
+
+    <!-- Participant publishing Shapes using Interaction Roles referencing the domain definitions -->
+    <domain_participant name="BasicShapesProducer_DD" domain_ref="ShapesDomainWithInteractionRoles">
+        <interaction_role_use name="shape_publisher" direction="DECLARED" interaction_role_ref="ShapeProducer_IR"/>
+    </domain_participant>
+    
+    <!-- Participant publishing Shapes and offering state control using IR in the domain definition -->
+    <domain_participant name="AdvancedShapesProducer" domain_ref="ShapesDomainWithInteractionRoles">
+        <interaction_role_use name="shape_publisher"  direction="DECLARED" interaction_role_ref="ShapeProducer_IR"/>
+        <interaction_role_use name="rpc_control"   direction="DECLARED" interaction_role_ref="ShapeControlViaRPC_IR"/>
+        <interaction_role_use name="rr_control"    direction="DECLARED" interaction_role_ref="ShapeControlViaRequestReply_IR"/>
+    </domain_participant>
+
+    <!-- Participant controlling Shapes via RPC and Request-reply using IR in the domain definition -->
+    <domain_participant name="ShapesController" domain_ref="ShapesDomainWithInteractionRoles">
+        <interaction_role_use name="rpc_control"  direction="REVERSED" interaction_role_ref="ShapeControlViaRPC_IR"/>
+        <interaction_role_use name="rr_control"   direction="REVERSED" interaction_role_ref="ShapeControlViaRequestReply_IR"/>
+        <interaction_role_use name="inspect" direction="DECLARED" interaction_role_ref="ControllerIntrospection_IR"/>
+    </domain_participant>
+
+    <!-- Participant publishing Shapes and offering state control using IR in the domain definition  -->
+    <domain_participant name="ShapesObserver" domain_ref="ShapesDomainWithInteractionRoles">
+        <interaction_role_use name="shape_subscriber" direction="REVERSED" interaction_role_ref="ShapeProducer_IR"/>
+    </domain_participant>
+    
+    <!-- Participant monitoring the system using IR in the domain definition  -->
+    <domain_participant name="SystemMonitor" domain_ref="ShapesDomainWithInteractionRoles">
+        <interaction_role_use name="monitor_shapes" direction="REVERSED" interaction_role_ref="ShapeProducer_IR"/>
+        <interaction_role_use name="monitor_controllers" direction="REVERSED" interaction_role_ref="ControllerIntrospection_IR"/>
     </domain_participant>
 
 </domain_participant_library>

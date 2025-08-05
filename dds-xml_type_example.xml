@@ -122,14 +122,14 @@
         sequenceMaxLength="32"/>
     <typedef name="StringSeqAlias2" type="string" stringMaxLength="INT_CONSTANT"
         sequenceMaxLength="::INT_CONSTANT"/>
-    <typedef name="ComplexAlias" type="nonBasic" nonBasicTypeName="PlainEnum1"/>
-    <typedef name="ComplexAliasSequence" type="nonBasic" nonBasicTypeName="::PlainEnum1"
+    <typedef name="ComplexAlias" type="nonBasic" nonBasicTypeName="PlainEnum"/>
+    <typedef name="ComplexAliasSequence" type="nonBasic" nonBasicTypeName="::PlainEnum"
         sequenceMaxLength="32"/>
     <typedef name="MapAlias"     type="string" 
         mapKeyType="string" mapKeyStringMaxLength="32"/>
     <typedef name="MapAlias2"     type="string" 
         mapKeyType="nonBasic" mapKeyNonBasicTypeName="anIntAlias"/>
-    <typedef name="ComplexMapAlias"  type="nonBasic" nonBasicTypeName="PlainEnum1"
+    <typedef name="ComplexMapAlias"  type="nonBasic" nonBasicTypeName="PlainEnum"
         mapKeyType="uint32"/>
     
     <!-- Aliases with builtin Annotations -->
@@ -351,7 +351,7 @@
         <operation name="resume"/>
         <operation name="set_speed">
             <raises>
-                <exception type="PlainException"/>
+                <exception_ref exceptionType="PlainException"/>
             </raises>
             <arguments>
                 <argument name="item_identfier" type="int32"/>
@@ -375,7 +375,7 @@
         <operation name="resume"/>
         <operation name="set_speed">
             <raises>
-                <exception type="PlainException"/>
+                <exception_ref exceptionType="PlainException"/>
             </raises>
             <arguments>
                 <argument name="item_identfier" type="int32"/>
@@ -406,7 +406,7 @@
     <annotation name="DocumentedAnnotation">
         <doc>Documentation on the type</doc>
         <parameter name="intParam" type="int32"  default="32">
-            <doc>Decumentation on the parameter</doc>
+            <doc>Documentation on the parameter</doc>
         </parameter>
     </annotation>
 
@@ -429,7 +429,7 @@
             <verbatim language="C++" placement="before-declaration">
                 // Put this in the C++ code
             </verbatim>
-            <custom type="SimpleAnnotation"/>
+            <custom annotation_ref="SimpleAnnotation"/>
         </annotations>
     </const>
 
@@ -446,7 +446,7 @@
             </ul>
             ]]>
             </doc>
-            <custom type="ComplexAnnotation">
+            <custom annotation_ref="ComplexAnnotation">
                 <parameter name="strParam" value="Hello"/>
             </custom>
         </annotations>
@@ -455,8 +455,8 @@
     <const name="ANNOTATED_CONSTANT" type="float32" value="3.1416" unit="meter" license="OMG::RAND.OARIS">
         <annotations>
             <doc>Description of the constant</doc>
-            <custom type="SimpleAnnotation"/>
-            <custom type="AnnotationWithParams">
+            <custom annotation_ref="SimpleAnnotation"/>
+            <custom annotation_ref="AnnotationWithParams">
                 <parameter name="intParam" value="55"/>
                 <parameter name="strParam" value="Hello World"/>
                 <parameter name="aliasParam" value="INT_CONSTANT"/>
@@ -487,8 +487,8 @@
                 </ul>
                 ]]>
             </doc>
-            <custom type="SimpleAnnotation"/>
-            <custom type="AnnotationWithParams">
+            <custom annotation_ref="SimpleAnnotation"/>
+            <custom annotation_ref="AnnotationWithParams">
                 <parameter name="intParam" value="32"/>
                 <parameter name="strParam" value="Hello"/>
             </custom>
@@ -501,8 +501,8 @@
         <enumerator name="QUEEN" value="12">
             <annotations>
                 <doc>Documentation on the enumerator</doc>
-                <custom type="SimpleAnnotation"/>
-                <custom type="AnnotationWithParams">
+                <custom annotation_ref="SimpleAnnotation"/>
+                <custom annotation_ref="AnnotationWithParams">
                     <parameter name="intParam" value="32"/>
                     <parameter name="strParam" value="Hello"/>
                 </custom>
@@ -517,8 +517,8 @@
     <bitmask name="AnnotatedBitmsak" bitBound="16" license="APACHE2.MYPACKAGE">
         <annotations>
             <doc>Documentation on the type</doc>
-            <custom type="SimpleAnnotation"/>
-            <custom type="AnnotationWithParams">
+            <custom annotation_ref="SimpleAnnotation"/>
+            <custom annotation_ref="AnnotationWithParams">
                 <parameter name="intParam" value="32"/>
                 <parameter name="strParam" value="Hello"/>
             </custom>
@@ -530,8 +530,8 @@
         <flag  name="flg3" position="3">
             <annotations>
                 <doc>Documentation on the flag</doc>
-                <custom type="SimpleAnnotation"/>
-                <custom type="ComplexAnnotation">
+                <custom annotation_ref="SimpleAnnotation"/>
+                <custom annotation_ref="ComplexAnnotation">
                     <parameter name="intParam" value="32"/>
                     <parameter name="strParam" value="Hello"/>
                 </custom>
@@ -547,8 +547,8 @@
     <bitset name="AnnotatedBitset" license="APACHE2.MYPACKAGE">
         <annotations>
             <doc>Documentation on the type</doc>
-            <custom type="SimpleAnnotation"/>
-            <custom type="ComplexAnnotation">
+            <custom annotation_ref="SimpleAnnotation"/>
+            <custom annotation_ref="ComplexAnnotation">
                 <parameter name="intParam" value="32"/>
                 <parameter name="strParam" value="Hello"/>
             </custom>
@@ -560,8 +560,8 @@
         <bitfield  name="bf1" bitSize="6">
             <annotations>
                 <doc>Documentation on the flag</doc>
-                <custom type="SimpleAnnotation"/>
-                <custom type="ComplexAnnotation">
+                <custom annotation_ref="SimpleAnnotation"/>
+                <custom annotation_ref="ComplexAnnotation">
                     <parameter name="intParam" value="32"/>
                     <parameter name="strParam" value="Hello"/>
                 </custom>
@@ -576,8 +576,8 @@
     <typedef name="AnnotatedTypedef" type="float32" license="APACHE2.MYPACKAGE">
         <annotations>
             <doc>Documentation on the type</doc>
-            <custom type="SimpleAnnotation"/>
-            <custom type="ComplexAnnotation">
+            <custom annotation_ref="SimpleAnnotation"/>
+            <custom annotation_ref="ComplexAnnotation">
                 <parameter name="intParam" value="32"/>
                 <parameter name="strParam" value="Hello"/>
             </custom>
@@ -594,11 +594,11 @@
                 Some documentation
                 Multiple lines are allowed
             </doc>
-            <custom type="Annotation1"/>
+            <custom annotation_ref="Annotation1"/>
             <doc format="markdown">More markdown documentation</doc>
             <doc format="html">HTML documentation</doc>
-            <custom type="SimpleAnnotation"/>
-            <custom type="ComplexAnnotation">
+            <custom annotation_ref="SimpleAnnotation"/>
+            <custom annotation_ref="ComplexAnnotation">
                 <parameter name="intParam" value="32"/>
                 <parameter name="strParam" value="Hello"/>
             </custom>
@@ -610,13 +610,13 @@
         <member name="anInt"  type="int32" id="33" key="true"/>
         <member name="aFloat" type="float32" min="0" max="250" optional="true" unit="volt">
             <annotations>
-                <doc format="text">Member documentation</doc>
+                <doc format="plain">Member documentation</doc>
                 <verbatim language="C++" placement="before-declaration">
                     // Put this comment
                     // In the C++ code
                 </verbatim>
-                <custom type="SimpleAnnotation"/>
-                <custom type="ComplexAnnotation">
+                <custom annotation_ref="SimpleAnnotation"/>
+                <custom annotation_ref="ComplexAnnotation">
                     <parameter name="intParam" value="32"/>
                     <parameter name="strParam" value="Hello"/>
                 </custom>
@@ -628,8 +628,8 @@
     <union name="AnnotatednUnion" license="APACHE2.MYPACKAGE">
         <annotations>
             <doc>Type documentation</doc>
-            <custom type="SimpleAnnotation"/>
-            <custom type="ComplexAnnotation">
+            <custom annotation_ref="SimpleAnnotation"/>
+            <custom annotation_ref="ComplexAnnotation">
                 <parameter name="intParam" value="32"/>
                 <parameter name="strParam" value="Hello"/>
             </custom>
@@ -641,8 +641,8 @@
             <member type="float64" name="unionValue1">
                 <annotations>
                     <doc>Member Documentation</doc>
-                    <custom type="SimpleAnnotation"/>
-                    <custom type="ComplexAnnotation">
+                    <custom annotation_ref="SimpleAnnotation"/>
+                    <custom annotation_ref="ComplexAnnotation">
                         <parameter name="intParam" value="32"/>
                         <parameter name="strParam" value="Hello"/>
                     </custom>
@@ -656,14 +656,16 @@
     </union>
 
     <!-- Exceptions -->
-    <exception name="AnnotatedException" baseType="Generic" license="APACHE2.MYPACKAGE">
+    <exception name="AnnotatedException" baseType="PlainException" license="APACHE2.MYPACKAGE">
         <annotations>
             <doc></doc>
-            <custom type="SimpleAnnotation"/>
+            <custom annotation_ref="SimpleAnnotation"/>
             <verbatim></verbatim>
         </annotations>
         <member name="hello" type="boolean">
-            <annotations></annotations>
+            <annotations>
+                <doc>Member documentation</doc>
+            </annotations>
         </member>
         <member name="level" type="float32"/>
         <member name="message" type="string" sequenceMaxLength="32"/>
@@ -672,8 +674,8 @@
     <interface name="AnnotatedInterface" service="DDS" license="APACHE2.MYPACKAGE"  >
         <annotations>
             <doc>Interface documentation</doc>
-            <custom type="SimpleAnnotation"/>
-            <custom type="ComplexAnnotation">
+            <custom annotation_ref="SimpleAnnotation"/>
+            <custom annotation_ref="ComplexAnnotation">
                 <parameter name="intParam" value="32"/>
                 <parameter name="strParam" value="Hello"/>
             </custom>  
@@ -686,8 +688,8 @@
         <operation name="my_operation1">
             <annotations>
                 <doc>Operation documentation</doc>
-                <custom type="SimpleAnnotation"/>
-                <custom type="ComplexAnnotation">
+                <custom annotation_ref="SimpleAnnotation"/>
+                <custom annotation_ref="ComplexAnnotation">
                     <parameter name="intParam" value="32"/>
                     <parameter name="strParam" value="Hello"/>
                 </custom> 
@@ -703,8 +705,8 @@
                 <argument name="argument1" type="float32">
                     <annotations>
                         <doc>Argument documentation</doc>
-                        <custom type="SimpleAnnotation"/>
-                        <custom type="ComplexAnnotation">
+                        <custom annotation_ref="SimpleAnnotation"/>
+                        <custom annotation_ref="ComplexAnnotation">
                             <parameter name="intParam" value="32"/>
                             <parameter name="strParam" value="Hello"/>
                         </custom> 
@@ -719,7 +721,7 @@
 
         <operation name="another_operation" >
             <!-- No <annotations> on raises, exception and return -->
-            <raises><exception type="PlainException"/></raises>
+            <raises><exception_ref exceptionType="PlainException"/></raises>
             <return type="int64"/>
         </operation>
     </interface> 
@@ -729,8 +731,8 @@
          autoid="hash" defaultNested="true" >
         <annotations>
             <doc>Module documentation</doc>
-            <custom type="SimpleAnnotation"/>
-            <custom type="ComplexAnnotation">
+            <custom annotation_ref="SimpleAnnotation"/>
+            <custom annotation_ref="ComplexAnnotation">
                 <parameter name="intParam" value="32"/>
                 <parameter name="strParam" value="Hello"/>
             </custom> 
@@ -758,9 +760,9 @@
         <typedef name="m1_Alias1" type="boolean"/>
         <typedef name="m1_Alias2" type="nonBasic" nonBasicTypeName="aBoolAlias"/>
         <typedef name="m1_Alias3" type="nonBasic" nonBasicTypeName="::aBoolAlias"/>
-        <typedef name="m1_Alias4" type="nonBasic" nonBasicTypeName="m1_Alias"/>
-        <typedef name="m1_Alias5" type="nonBasic" nonBasicTypeName="Module1::m1_Alias"/>
-        <typedef name="m1_Alias6" type="nonBasic" nonBasicTypeName="::Module1::m1_Alias"/>
+        <typedef name="m1_Alias4" type="nonBasic" nonBasicTypeName="m1_Alias1"/>
+        <typedef name="m1_Alias5" type="nonBasic" nonBasicTypeName="Module1::m1_Alias1"/>
+        <typedef name="m1_Alias6" type="nonBasic" nonBasicTypeName="::Module1::m1_Alias1"/>
         <typedef name="m1_Alias7" type="nonBasic" nonBasicTypeName="::aBoolAlias"/>
 
 
@@ -784,9 +786,9 @@
             <typedef name="m1_n1_Alias"   type="boolean"/>
             <typedef name="m1_n1_Alias2"  type="nonBasic" nonBasicTypeName="aBoolAlias"/>
             <typedef name="m1_n1_Alias3"  type="nonBasic" nonBasicTypeName="::aBoolAlias"/>
-            <typedef name="m1_n1_Alias4"  type="nonBasic" nonBasicTypeName="m1_Alias"/>
-            <typedef name="m1_n1_Alias5"  type="nonBasic" nonBasicTypeName="Module1::m1_Alias"/>
-            <typedef name="m1_n1_Alias6"  type="nonBasic" nonBasicTypeName="::Module1::m1_Alias"/>
+            <typedef name="m1_n1_Alias4"  type="nonBasic" nonBasicTypeName="m1_Alias1"/>
+            <typedef name="m1_n1_Alias5"  type="nonBasic" nonBasicTypeName="Module1::m1_Alias1"/>
+            <typedef name="m1_n1_Alias6"  type="nonBasic" nonBasicTypeName="::Module1::m1_Alias1"/>
             <typedef name="m1_n1_Alias7"  type="nonBasic" nonBasicTypeName="m1_n1_Alias"/>
             <typedef name="m1_n1_Alias8"  type="nonBasic" nonBasicTypeName="Module1Nested1::m1_n1_Alias"/>
             <typedef name="m1_n1_Alias9"  type="nonBasic" nonBasicTypeName="Module1::Module1Nested1::m1_n1_Alias"/>
@@ -805,9 +807,51 @@
     </module>
 
     <!-- ============== -->
+    <!-- HELLO EXAMPLE -->
+    <!-- ============== -->
+    <module name="HelloExample">
+        <const name="HELLO_MAX_LEN" value="64" type="int32"/>
+
+        <struct name="HelloType">
+            <member name="sender" key="true" type="string" stringMaxLength="HELLO_MAX_LEN"/>
+            <member name="greeting" type="string" stringMaxLength="HELLO_MAX_LEN"/>
+            <member name="count" type="int32"/>
+        </struct>
+    </module>
+
+    <module name="QueryExample">
+        <!-- Log Query Service: RPC Style -->
+        <interface name="LogQueryIf">
+            <annotations>
+                <doc>Get the most recent commands matching a pattern.</doc>
+            </annotations>
+            <operation name="get_log">
+                <arguments>
+                    <argument name="pattern" type="string" stringMaxLength="100"/>
+                    <argument name="maxMessages" type="int32"/>
+                </arguments>
+                <return type="string" sequenceMaxLength="LENGTH_UNLIMITED"/>
+            </operation>
+        </interface>  
+
+        <!-- Log Query Service: Request/Reply style -->
+        <struct name="LogQueryRequest">
+            <annotations>
+                <doc>Get the most recent log messages matching a pattern.</doc>
+            </annotations>
+            <member name="pattern" type="string" stringMaxLength="100"/>
+            <member name="maxMessages" type="int32"/>
+        </struct>
+
+        <struct name="LogQueryReply">
+            <member name="messages" type="string" sequenceMaxLength="LENGTH_UNLIMITED"/>
+        </struct>
+    </module>
+
+    <!-- ============== -->
     <!-- SHAPES EXAMPLE -->
     <!-- ============== -->
-    <module name="ShapeExample">
+    <module name="ShapesExample">
 
         <const name="COLOR_MAX_LEN" value="32" 
                 type="int32"/>
@@ -823,30 +867,40 @@
                     type="int32"/>
         </struct>
 
-        <struct name="ShapeExtended" baseType="ShapeType">
+        <struct name="ShapeTypeExtended" baseType="ShapeType">
             <member name="angle" min="0" max="360" unit="degree"
                     type="int32"/>
         </struct>
 
 
         <const name="MIN_DELAY"  type="float32" value="0.001"/>
-        <const name="MAX_SPEED"  type="float32" value="32" unit="m/s"/>
+        <const name="MAX_SPEED"  type="float32" value="32" unit="pixels/s"/>
         <const name="MAX_POINTS" type="float32" value="100"/>
 
-        <struct name="Point">
+        <struct name="Position">
             <member name="x" type="int32"/>
             <member name="y" type="int32"/>
+        </struct>
+
+        <struct name="Velocity">
+            <member name="vx" type="float32" max="MAX_SPEED" unit="pixels/s"/>
+            <member name="vy" type="float32" max="MAX_SPEED" unit="pixels/s"/>
         </struct>
 
         <!-- Shape Service: RPC Style -->
         <!-- ======================== -->
 
-        <exception name="TooFast"/>
         <exception name="Rejected">
             <member name="reason" type="string"/>
         </exception>
+        <exception name="InvalidColor"/>
+        <exception name="OutOfBounds"/>
+        <exception name="TooFast"/>
 
-        <interface name="ShapeCommand" service="DDS">
+        <interface name="ControlIf" service="DDS">
+            <annotations>
+                <doc>Control the motion of shapes</doc>
+            </annotations>
             <operation name="stop"/>
             
             <operation name="start">
@@ -855,196 +909,141 @@
                             type="float32"/>
                 </arguments>
             </operation>
-            
-            <operation name="get_path" >
-                <arguments>
-                    <argument name="color" type="string" stringMaxLength="COLOR_MAX_LEN"/>
-                </arguments>
-                <return type="nonBasic" nonBasicTypeName="Point" sequenceMaxLength="10"/>
-            </operation>
-    
-            <operation name="move" extensibility="mutable">
+
+            <operation name="set_state" extensibility="mutable">
+                <annotations>
+                    <doc format="markdown">
+                        Sets the position, direction, and speed of a shape 
+                        identified by its color:    
+                        - The shape will jump to the new position immediately 
+                          and continue moving from there. 
+                        - The position is the center of the shape.
+                        - The velocity is the speed and direction of the shape.
+
+                        *Returns*:
+                        - `true`: If the shape was successfully updated.
+                        - an exception if the shape could not be updated.
+
+                        *Exceptions*:
+                        - `InvalidColor`: The color is not currently being published.
+                        - `OutOfBounds`: The position is out of bounds.
+                        - `TooFast`: The speed is too fast.
+                    </doc>
+                </annotations>
                 <raises>
-                    <exception type="TooFast"/>
-                    <exception type="Rejected"/>
+                    <exception_ref exceptionType="InvalidColor"/>
+                    <exception_ref exceptionType="OutOfBounds"/>
+                    <exception_ref exceptionType="TooFast"/>
                 </raises>
                 <arguments>
-                    <argument name="color" type="string" stringMaxLength="COLOR_MAX_LEN"/>
-                    <argument name="speed" type="float32" 
-                            max="MAX_SPEED" unit="m/s" default="1"/>
-                    <argument name="path" type="nonBasic" nonBasicTypeName="Point"
-                            direction="in" external="true"/>
-                            
-                    <argument name="expected_completion" type="float32"  
-                            direction="inout" unit="s"/>
-                </arguments>
+                    <argument name="color"    type="string" stringMaxLength="COLOR_MAX_LEN"/>
+                    <argument name="position" type="nonBasic" nonBasicTypeName="Position"/>
+                    <argument name="velocity" type="nonBasic" nonBasicTypeName="Velocity"/>
+                </arguments> 
+                <return type="boolean" />
             </operation>
         </interface> 
-    
-        <!-- Extended Command -->
-        <interface name="ShapeCommandExtended" baseType="ShapeCommand">
-            <operation name="pause_single_shape">
+
+        <!-- Interface extended via inheritance -->
+        <interface name="ControlExtendedIf" baseType="ControlIf">
+            <annotations>
+                <doc>Extends ControlIf adding method to stop a single shape.</doc>
+            </annotations>
+            <operation name="stop_single_shape">
                 <arguments>
                     <argument name="color" type="string" mapKeyStringMaxLength="COLOR_MAX_LEN"/>
                 </arguments>
+                <return type="boolean" />
             </operation>
         </interface>
+
+        <interface name="ShapeQueryIf" service="DDS">
+            <annotations>
+                <doc>Query information about shapes</doc>
+            </annotations>
+
+            <operation name="get_path" extensibility="mutable">
+                <annotations>
+                    <doc format="markdown">
+                        Gets the current path of a shape identified by its color.
+                    </doc>
+                </annotations>
+                <arguments>
+                    <argument name="color" type="string" stringMaxLength="COLOR_MAX_LEN"/>
+                    <argument name="max_points" type="int32"/>
+                </arguments>
+                <return type="nonBasic" nonBasicTypeName="Position" sequenceMaxLength="MAX_POINTS"/>
+            </operation>
+        </interface> 
 
         <!-- ShapeCommand Service: Request/Reply style -->
         <!-- ========================================= -->
 
-        <!-- Request Types -->
-        <enum name="ShapeCommandKind">
-            <enumerator name="START"/>
-            <enumerator name="STOP"/>
-            <enumerator name="GET_PATH"/>
-            <enumerator name="MOVE"/>
-        </enum>
+        <struct name="StopRequest"/>
+        <struct name="StopReply"/>
 
-        <struct name="EmptyStruct"/>
-     
-        <typedef name="StopArguments"    type="nonBasic" nonBasicTypeName="EmptyStruct"/>
-    
-        <struct name="StartArguments">
+        <struct name="StartRequest">    
             <member name="delay" min="MIN_DELAY"
                     type="float32"/>
-        </struct> 
+        </struct>
+        <struct name="StartReply"/>
 
-        <struct name="GetPathArguments">
+        <struct name="SetStateRequest" extensibility="mutable">
+            <annotations>
+                <doc format="markdown">
+                    Sets the position, direction, and speed of a shape 
+                    identified by its color:    
+                    - The shape will jump to the new position immediately 
+                        and continue moving from there. 
+                    - The position is the center of the shape.
+                    - The velocity is the speed and direction of the shape.
+
+                    *Returns*:
+                    - `true`: If the shape was successfully updated.
+                    - an exception if the shape could not be updated.
+
+                    *Exceptions*:
+                    - `InvalidColor`: The color is not currently being published.
+                    - `OutOfBounds`: The position is out of bounds.
+                    - `TooFast`: The speed is too fast.
+                </doc>
+            </annotations>
             <member name="color" 
                     type="string"  stringMaxLength="COLOR_MAX_LEN"/>
-        </struct>
-
-        <struct name="MoveArguments">
-            <member name="color" 
-                    type="string"  stringMaxLength="COLOR_MAX_LEN"/>
-            <member name="speed"  max="MAX_SPEED" unit="m/s"
-                    type="float32"/> 
-            <member name="path"
-                    type="nonBasic" nonBasicTypeName="Point" sequenceMaxLength="MAX_POIMTS"/>
-            <member name="expected_completion"
-                    type="float32"/>
+            <member name="position" 
+                    type="nonBasic" nonBasicTypeName="Position"/>
+            <member name="velocity" 
+                    type="nonBasic" nonBasicTypeName="Velocity"/>
         </struct> 
 
-        <union name="RobotComamndRequest">
-            <discriminator type="nonBasic" nonBasicTypeName="RequestKind"/>
-            <case>
-                <caseDiscriminator value="START"/>
-                <member name="start_args"
-                        type="nonBasic" nonBasicTypeName="StartArguments"/>
-            </case>
-            <case>
-                <caseDiscriminator value="STOP"/>
-                <member name="stop_args"
-                        type="nonBasic" nonBasicTypeName="StopArguments"/>            
-            </case>
-            <case>
-                <caseDiscriminator value="GET_PATH"/>
-                <member name="get_path_args" 
-                        type="nonBasic" nonBasicTypeName="GerPathArguments"/>   
-            </case>
-            <case>
-                <caseDiscriminator value="MOVE"/>
-                <member name="move_args"
-                        type="nonBasic" nonBasicTypeName="MoveArguments"/>            
-            </case>               
-        </union>
-
-        <!-- Reply Types -->
-        <typedef name="StopReply" type="nonBasic" nonBasicTypeName="EmptyStruct"/>
-    
-        <typedef name="StartReply" type="nonBasic" nonBasicTypeName="EmptyStruct"/>
-
-        <struct name="GetPathReply">
-            <member name="path" 
-                    type="nonBasic" nonBasicTypeName="Point" sequenceMaxLength="MAX_POINTS"/>
-        </struct>
-
-        <enum name="MoveReply_ReturnCode">
+        <enum name="SetStateRequest_ReturnCode">
             <enumerator name="OK"/>
-            <enumerator name="TOO_FAST"/>
             <enumerator name="REJECTED"/>
+            <enumerator name="INVALID_COLOR"/>
+            <enumerator name="OUT_OF_BOUNDS"/>
+            <enumerator name="TOO_FAST"/>
         </enum>
+
+        <!--  Set State using Request/Reply -->
+        <union name="SetStateReply">
+            <discriminator type="nonBasic" nonBasicTypeName="SetRequest_ReturnCode"/>
+            <case>
+                <caseDiscriminator value="REJECTED" />
+                <member name="exception_reply"  
+                        type="nonBasic" nonBasicTypeName="EmptyStruct"/>
+            </case>
+        </union>   
         
-        <struct name="MoveReply_ReturnCode_OK">
-            <member name="expected_completion" type="float32"/>            
-        </struct>
-
-        <typedef name="MoveReply_ReturnCode_TooFast"
-                type="nonBasic" nonBasicTypeName="EmptyStruct"/>
-
-        <struct name="MoveReply_ReturnCode_Rejected">
-            <member name="reason" type="string"/>
-        </struct>
-
-        <union name="MoveReply">
-            <discriminator type="nonBasic" nonBasicTypeName="MoveReply_ReturnCode"/>
-            <case>
-                <caseDiscriminator value="OK"/>
-                <member name="ok_reply" 
-                        type="nonBasic" nonBasicTypeName="MoveReply_ReturnCode_OK"/>
-            </case> 
-            <case>
-                <caseDiscriminator value="TOO_FAST"/>
-                <member name="too_fast_reply"  
-                        type="nonBasic" nonBasicTypeName="MoveReply_ReturnCode_TooFast"/>
-            </case>
-            <case>
-                <caseDiscriminator value="REJECTED"/>
-                <member name="low_power_reply"
-                        type="nonBasic" nonBasicTypeName="MoveReply_ReturnCode_Rejected"/>     
-            </case>
-        </union>       
-
-        <union name="ShapeComamndReply">
-            <discriminator type="nonBasic" nonBasicTypeName="RequestKind"/>
-            <case>
-                <caseDiscriminator value="START"/>
-                <member name="start_reply"
-                        type="nonBasic" nonBasicTypeName="StartReply"/>
-            </case>
-            <case>
-                <caseDiscriminator value="STOP"/>
-                <member name="stop_reply" 
-                        type="nonBasic" nonBasicTypeName="StopReply"/>            
-            </case>
-            <case>
-                <caseDiscriminator value="GET_PATH"/>
-                <member name="get_path_reply"
-                        type="nonBasic" nonBasicTypeName="GetPathReply"/>   
-            </case>
-            <case>
-                <caseDiscriminator value="MOVE"/>
-                <member name="move_reply" 
-                        type="nonBasic" nonBasicTypeName="MoveReply"/>               
-            </case>               
-        </union>
-
-        <!-- Extended Command -->
-        <struct name="PauseSingleShapeArguments">
+        <!-- Additional Request/Reply service to stop a single shape -->
+        <struct name="StopSingleShapeRequest" baseType="StopRequest">
+            <annotations>
+                <doc>Request to stop a single shape.</doc>
+            </annotations>
             <member name="color" 
                     type="string"  stringMaxLength="COLOR_MAX_LEN"/>
         </struct> 
-
-        <union name="ShapeCommandExtendedRequest">
-            <baseUnion type="ShapeCommandRequest"/>
-            <case>
-                <caseDiscriminator value="PAUSE_SINGLE_SHAPE"/>
-                <member name="pause_single_shape_args" 
-                        type="nonBasic" nonBasicTypeName="PauseSingleShapeArguments"/>
-            </case>
-        </union>
-
-        <typedef name="PauseSingleShapeReply" type="nonBasic" nonBasicTypeName="EmptyStruct"/>
-
-        <union name="ShapeCommandExtendedReply">
-            <baseUnion type="ShapeCommandReply"/>
-            <case>
-                <caseDiscriminator value="PAUSE_SINGLE_SHAPE"/>
-                <member name="pause_single_shape_reply" 
-                        type="nonBasic" nonBasicTypeName="PauseSingleShapeReply"/>
-            </case>
-        </union>
-
+        <struct name="StopSingleShapeReply">
+            <member name="result" type="boolean"/>
+        </struct>
     </module>
 </types>

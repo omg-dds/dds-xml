@@ -17,8 +17,8 @@
                         type="domainParticipantLibrary" />
             <xs:element name="application_library" 
                         type="applicationLibrary" />
-            <xs:element name="node_library" type="nodeLibrary" minOccurs="0" maxOccurs="unbounded" />
-            <xs:element name="deployment_library" type="deploymentLibrary" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="node_library" type="nodeLibrary" />
+            <xs:element name="deployment_library" type="deploymentLibrary" />
         </xs:choice>
     </xs:complexType>
 

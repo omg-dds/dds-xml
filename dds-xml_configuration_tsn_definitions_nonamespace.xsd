@@ -137,8 +137,8 @@
     </xs:complexType>
     <xs:complexType name="tsnConfiguration">
         <xs:sequence>
-            <xs:choice maxOccurs="unbounded">
-                <xs:element name="tsn_talker" type="tsnTalker" />
+            <xs:choice minOccurs="1" maxOccurs="unbounded">
+                <xs:element name="tsn_talker"   type="tsnTalker" />
                 <xs:element name="tsn_listener" type="tsnListener" />
             </xs:choice>
         </xs:sequence>

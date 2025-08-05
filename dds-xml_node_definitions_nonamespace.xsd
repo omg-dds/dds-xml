@@ -32,9 +32,9 @@
 
     <!-- Node definitions -->
     <xs:complexType name="deploymentNode">
-        <xs:choice maxOccurs="unbounded">
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
             <xs:element name="hostname" type="xs:string" />
-            <xs:choice minOccurs="0">
+            <xs:choice minOccurs="0" maxOccurs="1">
                 <xs:element name="ipv4_address" type="ipv4Address"/>
                 <xs:element name="ipv6_address" type="ipv6Address"/>
             </xs:choice>

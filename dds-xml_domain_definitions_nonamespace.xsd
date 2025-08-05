@@ -24,8 +24,7 @@
 
     <xs:complexType name="registerType">
         <xs:choice minOccurs="0" maxOccurs="1">
-            <xs:element name="registered_name" minOccurs="0"
-                        type="identifierName" />
+            <xs:element name="registered_name" type="identifierName" />
         </xs:choice>
 
         <xs:attribute name="name" type="elementName" use="required" />
@@ -36,8 +35,7 @@
 
     <xs:complexType name="registerInterface">
         <xs:choice minOccurs="0" maxOccurs="1">
-            <xs:element name="registered_name" minOccurs="0"
-                        type="identifierName" />
+            <xs:element name="registered_name" type="identifierName" />
         </xs:choice>
 
         <xs:attribute name="name" type="elementName" use="required" />
@@ -76,47 +74,75 @@
         </xs:all>
     </xs:complexType>
 
-    <xs:complexType name="rpcService">
+    <xs:complexType name="commonServiceDefn">
         <xs:all>
             <xs:element name="service_name"           type="topicOrServiceName"   minOccurs="0" />
             <xs:element name="request_topic_name"     type="topicOrServiceName"   minOccurs="0" />
             <xs:element name="reply_topic_name"       type="topicOrServiceName"   minOccurs="0" />
-            <xs:element name="client" type="requesterOrClientConfig" minOccurs="0" />
-            <xs:element name="server" type="serverOrReplierConfig" minOccurs="0" />
-        </xs:all>
-        <xs:attribute name="name" type="elementName" use="required" />
-        <xs:attribute name="register_interface_ref" type="elementNameReference"
-                      use="required" />
+            <xs:element name="request_datawriter_qos" type="datawriterQosInline"  minOccurs="0" />
+            <xs:element name="request_datareader_qos" type="datareaderQosInline"  minOccurs="0" />
+            <xs:element name="reply_datawriter_qos"   type="datawriterQosInline"  minOccurs="0" />
+            <xs:element name="reply_datareader_qos"   type="datareaderQosInline"  minOccurs="0" />
+         </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="rpcService">
+        <xs:complexContent>
+            <xs:extension base="commonServiceDefn">
+                <xs:attribute name="name" type="elementName" use="required" />
+                <xs:attribute name="register_interface_ref" type="elementNameReference"
+                            use="required" />            
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="requestReplyService">
-        <xs:all>
-            <xs:element name="service_name"           type="topicOrServiceName"   minOccurs="0" />
-            <xs:element name="request_topic_name"     type="topicOrServiceName"   minOccurs="0" />
-            <xs:element name="reply_topic_name"       type="topicOrServiceName"   minOccurs="0" />
-            <xs:element name="requester" type="requesterOrClientConfig" minOccurs="0" />
-            <xs:element name="replier" type="serverOrReplierConfig" minOccurs="0" />    
-        </xs:all>
+        <xs:complexContent>
+            <xs:extension base="commonServiceDefn">
+                <xs:attribute name="name" type="elementName" use="required" />
+                <xs:attribute name="register_request_type_ref" type="elementNameReference"
+                            use="required" />
+                <xs:attribute name="register_reply_type_ref"   type="elementNameReference"
+                            use="required" />          
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
 
-        <xs:attribute name="name" type="elementName" use="required" />
-        <xs:attribute name="register_request_type_ref" type="elementNameReference"
-                      use="required" />
-        <xs:attribute name="register_reply_type_ref"   type="elementNameReference"
+    <!-- Interface Block -->
+    <xs:complexType name="serviceRef">
+        <xs:attribute name="service_ref" type="elementNameReference"
                       use="required" />
     </xs:complexType>
 
-    <!-- Domain -->
+    <xs:complexType name="topicRef">
+        <xs:attribute name="topic_ref" type="elementNameReference"
+                      use="required" />
+    </xs:complexType>
 
-    <xs:complexType name="domain">
+    <xs:complexType name="serviceProfile">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
-            <xs:element name="register_type" type="registerType" />
-            <xs:element name="register_interface" type="registerInterface" />
-            <xs:element name="topic" type="topic" />
-            <xs:element name="rpc_service" type="rpcService" />
-            <xs:element name="request_reply_service" type="requestReplyService" />
+            <xs:element name="provides_service" type="serviceRef" />
+            <xs:element name="requires_service" type="serviceRef" />
+            <xs:element name="publishes_topic"     type="topicRef" />
+            <xs:element name="subscribes_topic"      type="topicRef" />
         </xs:choice>
 
         <xs:attribute name="name" type="elementName" use="required" />
+        <xs:attribute name="base_name" type="elementNameReference"/>
+    </xs:complexType>   
+        
+    <!-- Domain -->
+    <xs:complexType name="domain">
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="register_type"         type="registerType" />
+            <xs:element name="register_interface"    type="registerInterface" />
+            <xs:element name="topic"                 type="topic" />
+            <xs:element name="rpc_service"           type="rpcService" />
+            <xs:element name="request_reply_service" type="requestReplyService" />
+            <xs:element name="interaction_role"       type="serviceProfile" />
+        </xs:choice>
+
+        <xs:attribute name="name"       type="elementName" use="required" />
         <xs:attribute name="domain_id"  type="xs:nonNegativeInteger" />
         <xs:attribute name="domain_tag" type="xs:string" />
         <xs:attribute name="base_name"  type="elementNameReference"/>
@@ -129,7 +155,7 @@
 
     <xs:complexType name="domainLibrary">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
-            <xs:element name="domain" type="domain" minOccurs="1" />
+            <xs:element name="domain" type="domain" />
         </xs:choice>
 
         <xs:attribute name="name" type="elementName" use="required" />

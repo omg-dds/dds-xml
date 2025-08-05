@@ -15,9 +15,8 @@
     <xs:include schemaLocation="./dds-xml_domainparticipant_definitions_nonamespace.xsd" />
 
     <xs:complexType name="application">
-        <xs:choice maxOccurs="unbounded">
-            <xs:element name="domain_participant" maxOccurs="unbounded"
-                        type="domainParticipant" />
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="domain_participant" type="domainParticipant" />
         </xs:choice>
 
         <xs:attribute name="name" type="elementName" use="required" />
@@ -26,8 +25,7 @@
 
     <xs:complexType name="applicationLibrary">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
-            <xs:element name="application" maxOccurs="unbounded"
-                        type="application" />
+            <xs:element name="application" type="application" />
         </xs:choice>
 
         <xs:attribute name="name" type="elementName" use="required" />

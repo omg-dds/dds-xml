@@ -211,61 +211,97 @@
 
     <xs:complexType name="subscriber">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element name="data_reader"    minOccurs="0" maxOccurs="unbounded"
-                type="dataReader" />
-            <xs:element name="subscriber_qos" minOccurs="0" maxOccurs="1" 
-                type="subscriberQosInline" />
+            <xs:element name="data_reader"    type="dataReader" />
+            <xs:element name="subscriber_qos" type="subscriberQosInline" />
         </xs:choice>
         <xs:attribute name="name" type="elementName" use="required" />
     </xs:complexType>
 
     <xs:complexType name="publisher">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element name="data_writer"   minOccurs="0" maxOccurs="unbounded"
-                type="dataWriter" />
-            <xs:element name="publisher_qos" minOccurs="0" maxOccurs="1"
-                type="publisherQosInline" />
+            <xs:element name="data_writer"   type="dataWriter" />
+            <xs:element name="publisher_qos" type="publisherQosInline" />
         </xs:choice>
 
         <xs:attribute name="name" type="elementName" use="required" />
     </xs:complexType>
 
+    <xs:simpleType name="serviceProfileUseDirectionKind">
+        <xs:restriction base="xs:string">
+            <xs:whiteSpace value="collapse" />
+            <xs:enumeration value="DECLARED" />
+            <xs:enumeration value="REVERSED" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="topicBinding">
+        <xs:choice minOccurs="0" maxOccurs="1">
+            <xs:element name="datawriter_qos" type="datawriterQosInline"  minOccurs="0" />
+            <xs:element name="datareader_qos" type="datareaderQosInline"  minOccurs="0" />
+        </xs:choice>
+        <xs:attribute name="topic_ref" type="elementNameReference" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="serviceBinding">
+        <xs:choice minOccurs="0" maxOccurs="1">
+            <xs:sequence>
+                <xs:element name="request_datawriter_qos" type="datawriterQosInline"  minOccurs="1" />
+                <xs:element name="reply_datareader_qos"   type="datareaderQosInline"  minOccurs="0" />
+            </xs:sequence>
+            <xs:sequence>
+                <xs:element name="reply_datareader_qos" type="datareaderQosInline"  minOccurs="1" />
+                <xs:element name="request_datawriter_qos"   type="datawriterQosInline"  minOccurs="0" />
+            </xs:sequence>
+            <xs:sequence>
+                <xs:element name="request_datareader_qos" type="datareaderQosInline"  minOccurs="1" />
+                <xs:element name="reply_datawriter_qos"   type="datawriterQosInline"  minOccurs="0" />
+            </xs:sequence>            
+            <xs:sequence>
+                <xs:element name="reply_datawriter_qos" type="datawriterQosInline"  minOccurs="1" />
+                <xs:element name="request_datareader_qos"   type="datareaderQosInline"  minOccurs="0" />
+            </xs:sequence>
+        </xs:choice>
+        <xs:attribute name="service_ref" type="elementNameReference" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="serviceProfileUse">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="topic_binding"   type="topicBinding" />
+            <xs:element name="service_binding" type="serviceBinding" />
+        </xs:choice>
+        <xs:attribute name="name" type="elementName" use="required" />
+        <xs:attribute name="direction" type="serviceProfileUseDirectionKind" use="required" />
+        <xs:attribute name="interaction_role_ref" type="elementNameReference" use="required" />
+    </xs:complexType>
+
     <xs:complexType name="domainParticipant">
-        <xs:choice maxOccurs="unbounded"     minOccurs="0">
-            <xs:element name="domain_participant_qos" minOccurs="0" maxOccurs="1"
-                type="domainparticipantQosInline" />
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="domain_participant_qos" type="domainparticipantQosInline" />
 
-            <xs:element name="register_type" minOccurs="0" maxOccurs="unbounded"
-                type="registerType" />
-            <xs:element name="register_interface" 
-                type="registerInterface" />
+            <xs:element name="register_type"      type="registerType" />
+            <xs:element name="register_interface" type="registerInterface" />
 
-            <xs:element name="topic"         minOccurs="0" maxOccurs="unbounded"
-                type="topic" />
-            <xs:element name="rpc_service"   minOccurs="0" maxOccurs="unbounded"
-                type="rpcService" />
-            <xs:element name="request_reply_service" minOccurs="0" maxOccurs="unbounded"
-                type="requestReplyService" />
+            <xs:element name="topic"                 type="topic" />
+            <xs:element name="rpc_service"           type="rpcService" />
+            <xs:element name="request_reply_service" type="requestReplyService" />
 
-            <xs:element name="publisher"     minOccurs="0" maxOccurs="unbounded"
-                type="publisher" />
-            <xs:element name="subscriber"    minOccurs="0" maxOccurs="unbounded" 
-                type="subscriber" />
+            <xs:element name="interaction_role" type="serviceProfile" />
 
-            <xs:element name="requester"     minOccurs="0" maxOccurs="unbounded"
-                type="requester" />   
-            <xs:element name="replier"       minOccurs="0" maxOccurs="unbounded"
-                type="replier" />   
-            <xs:element name="client"        minOccurs="0" maxOccurs="unbounded"
-                type="client" /> 
-            <xs:element name="server"        minOccurs="0" maxOccurs="unbounded"
-                type="server" />                     
+            <xs:element name="publisher"     type="publisher" />
+            <xs:element name="subscriber"    type="subscriber" />
+
+            <xs:element name="requester"     type="requester" />   
+            <xs:element name="replier"       type="replier" />   
+            <xs:element name="client"        type="client" /> 
+            <xs:element name="server"        type="server" />   
+                
+            <xs:element name="interaction_role_use" type="serviceProfileUse" />
         </xs:choice>
 
-        <xs:attribute name="name" type="elementName" use="required" />
-        <xs:attribute name="base_name" type="elementNameReference" />
+        <xs:attribute name="name"       type="elementName" use="required" />
+        <xs:attribute name="base_name"  type="elementNameReference" />
         <xs:attribute name="domain_ref" type="elementNameReference" />
-        <xs:attribute name="domain_id" type="xs:nonNegativeInteger" />
+        <xs:attribute name="domain_id"  type="xs:nonNegativeInteger" />
         <xs:attribute name="domain_tag" type="xs:string" />
     </xs:complexType>
 
@@ -275,8 +311,7 @@
 
     <xs:complexType name="domainParticipantLibrary">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
-            <xs:element name="domain_participant" maxOccurs="unbounded"
-                type="domainParticipant" />
+            <xs:element name="domain_participant" type="domainParticipant" />
         </xs:choice>
         <xs:attribute name="name" type="elementName" use="required" />
     </xs:complexType>

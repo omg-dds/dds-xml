@@ -17,15 +17,15 @@
         </module>
     </types>
 
-    <qos_library name="MyQosLib">
-        <qos_snippet name="ReliableKeepLast6">
+    <qos_library name="MyAppQosLib">
+        <qos_snippet name="KeepLast1">
             <datawriter_qos>
                 <reliability>
                     <kind>RELIABLE_RELIABILITY_QOS</kind>
                 </reliability>
                 <history>
                     <kind>KEEP_LAST_HISTORY_QOS</kind>
-                    <depth>6</depth>
+                    <depth>1</depth>
                 </history>
             </datawriter_qos>
             <datareader_qos>
@@ -40,7 +40,7 @@
         </qos_snippet>
         <qos_profile name="MyQosShapeProfile">
             <qos_snippets>
-                <snippet snippet_ref="MyQosLib::ReliableKeepLast6" />
+                <snippet snippet_ref="MyAppQosLib::KeepLast1" />
             </qos_snippets>
             <datareader_qos>
                 <history>
@@ -55,8 +55,8 @@
         <domain name="MyShapeDomain" domain_id="1">
             <register_type name="Shape" type_ref="ShapesDemoTypes::ShapeType"/>
             <topic name="Square" register_type_ref="Shape">
-                <datawriter_qos base_name="MyQosLib::MyQosShapeProfile"/>
-                <datareader_qos base_name="MyQosLib::MyQosShapeProfile"/>
+                <datawriter_qos base_name="MyAppQosLib::MyQosShapeProfile"/>
+                <datareader_qos base_name="MyAppQosLib::MyQosShapeProfile"/>
             </topic>
             <topic name="Circle" register_type_ref="ShapesDemoTypes::ShapeType" />
             <topic name="Triangle" register_type_ref="ShapesDemoTypes::ShapeType" />

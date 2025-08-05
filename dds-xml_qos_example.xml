@@ -3,29 +3,59 @@
 <qos_library xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://www.omg.org/spec/DDS-XML"
     xsi:schemaLocation="http://www.omg.org/spec/DDS-XML ./dds-xml_qos_definitions.xsd"
-    name="DDSDefaultQoSLibrary">
+    name="MyQosLib">
 
-    <qos_snippet name="DDS_DefaultReliability">
+    <qos_snippet name="DefaultReliability">
         <!-- Entity Qos: datareader_qos, datawriter_qos, etc. appearing inside <qos_snippet>
              can optionally have a name attribute. But no base_name or topic_filer attributes
         -->
         <datawriter_qos>
             <reliability>
-                <kind>BEST_EFFORT_RELIABILITY_QOS</kind>
+                <kind>RELIABLE_RELIABILITY_QOS</kind>
                 <max_blocking_time>
                     <sec>0</sec>
                     <nanosec>100000000</nanosec>
                 </max_blocking_time>
             </reliability>
         </datawriter_qos>
-        <datareader_qos name="aName">
+        <datareader_qos>
             <reliability>
                 <kind>BEST_EFFORT_RELIABILITY_QOS</kind>
             </reliability>
         </datareader_qos>
     </qos_snippet>
 
-    <qos_snippet name="DDS_DefaultHistory">
+    <qos_snippet name="ReliableReliability">
+        <datawriter_qos>
+            <reliability>
+                <kind>RELIABLE_RELIABILITY_QOS</kind>
+                <max_blocking_time>
+                    <sec>0</sec>
+                    <nanosec>100000000</nanosec>
+                </max_blocking_time>
+            </reliability>
+        </datawriter_qos>
+        <datareader_qos>
+            <reliability>
+                <kind>RELIABLE_RELIABILITY_QOS</kind>
+            </reliability>
+        </datareader_qos>
+    </qos_snippet>
+
+    <qos_snippet name="ReliableKeepAllHistory">
+        <datawriter_qos>
+            <history>
+                <kind>KEEP_ALL_HISTORY_QOS</kind>
+            </history>
+        </datawriter_qos>
+        <datareader_qos name="OptionalName" >
+            <history>
+                <kind>KEEP_ALL_HISTORY_QOS</kind>
+            </history>
+        </datareader_qos>
+    </qos_snippet>
+
+    <qos_snippet name="HistoryKeepLast1">
         <datawriter_qos>
             <history>
                 <kind>KEEP_LAST_HISTORY_QOS</kind>
@@ -40,14 +70,18 @@
         </datareader_qos>
     </qos_snippet>
 
-    <qos_snippet name="DDS_DefaultOwnership">
+    <qos_snippet name="ReliableKeepAll">
+        <qos_snippets>
+            <snippet snippet_ref="ReliableReliability" />
+            <snippet snippet_ref="ReliableKeepAllHistory" />
+        </qos_snippets>
+    </qos_snippet>
+
+    <qos_snippet name="SharedOwnership">
         <datawriter_qos>
             <ownership>
                 <kind>SHARED_OWNERSHIP_QOS</kind>
             </ownership>
-            <ownership_strength>
-                <value>0</value>
-            </ownership_strength>
         </datawriter_qos>
         <datareader_qos>
             <ownership>
@@ -61,28 +95,105 @@
         </topic_qos>
     </qos_snippet>
 
-    <qos_snippet name="DDS_DefaultReliabilityHistoryDurability" >
+    <qos_snippet name="ExclusiveOwnership">
+        <datawriter_qos>
+            <ownership>
+                <kind>EXCLUSIVE_OWNERSHIP_QOS</kind>
+            </ownership>
+            <ownership_strength>
+                <value>0</value>
+            </ownership_strength>
+        </datawriter_qos>
+        <datareader_qos>
+            <ownership>
+                <kind>EXCLUSIVE_OWNERSHIP_QOS</kind>
+            </ownership>
+        </datareader_qos>
+        <topic_qos>
+            <ownership>
+                <kind>EXCLUSIVE_OWNERSHIP_QOS</kind>
+            </ownership>            
+        </topic_qos>
+    </qos_snippet>
+
+    <qos_snippet name="TransientKeepLast1" >
         <qos_snippets>
             <!-- TODO Need to figure out element/attribute names-->
-            <snippet snippet_ref="DDS_DefaultReliability" />
-            <snippet snippet_ref="DDS_DefaultHistory" />
+            <snippet snippet_ref="ReliableReliability" />
+            <snippet snippet_ref="HistoryKeepLast1" />
         </qos_snippets>
         <datawriter_qos>
             <durability>
-                <kind>VOLATILE_DURABILITY_QOS</kind>
+                <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
             </durability>
         </datawriter_qos>
         <datareader_qos>
             <durability>
-                <kind>VOLATILE_DURABILITY_QOS</kind>
+                <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
             </durability>        
         </datareader_qos>
     </qos_snippet>
 
-    <qos_profile name="MyCustomProfile" base_name="MyBaseProfile">
+    <qos_snippet name="CreateEntitiesDisabled">
+        <domain_participant_qos>
+            <entity_factory>
+                <autoenable_created_entities>false</autoenable_created_entities>
+            </entity_factory>
+        </domain_participant_qos>
+    </qos_snippet>
+
+    <qos_profile name="MyCustomProfile1">
+        <datawriter_qos>
+            <reliability>
+                <kind>RELIABLE_RELIABILITY_QOS</kind>
+                <max_blocking_time>
+                    <sec>1</sec>
+                    <nanosec>0</nanosec>
+                </max_blocking_time>
+            </reliability>
+        </datawriter_qos>
+        <datareader_qos>
+            <reliability>
+                <kind>RELIABLE_RELIABILITY_QOS</kind>
+            </reliability>
+        </datareader_qos>
+    </qos_profile>
+
+    <qos_profile name="MyCustomProfile2">
+        <datawriter_qos>
+            <reliability>
+                <kind>RELIABLE_RELIABILITY_QOS</kind>
+                <max_blocking_time>
+                    <sec>1</sec>
+                    <nanosec>0</nanosec>
+                </max_blocking_time>
+            </reliability>
+            <durability>
+                <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+            </durability>
+            <history>
+                <kind>KEEP_LAST_HISTORY_QOS</kind>
+                <depth>10</depth>
+            </history>
+        </datawriter_qos>
+        <datareader_qos>
+            <reliability>
+                <kind>RELIABLE_RELIABILITY_QOS</kind>
+            </reliability>
+                        <durability>
+                <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+            </durability>
+            <history>
+                <kind>KEEP_LAST_HISTORY_QOS</kind>
+                <depth>1</depth>
+            </history>
+        </datareader_qos>
+    </qos_profile>
+
+    <qos_profile name="MyCustomProfile3" base_name="MyQosLib::MyCustomProfile1">
         <qos_snippets>
-            <snippet snippet_ref="DDS_DefaultReliabilityHistoryDurability" />
-            <snippet snippet_ref="DDS_DefaultOwnership" />
+            <snippet snippet_ref="TransientKeepLast1" />
+            <snippet snippet_ref="SharedOwnership" />
         </qos_snippets>
         <domain_participant_qos>
             <properties inherit="true">
@@ -122,7 +233,8 @@
 
         <datareader_qos>
             <qos_snippets>
-                <snippet snippet_ref="StrictReliable" />
+                <snippet snippet_ref="ReliableKeepAll" />
+                <snippet snippet_ref="ExclusiveOwnership" />
             </qos_snippets>
             <reliability>
                 <kind>BEST_EFFORT_RELIABILITY_QOS</kind>
@@ -217,8 +329,8 @@
 
         <datawriter_qos>
             <qos_snippets>
-                <snippet snippet_ref="Snippet1" />
-                <snippet snippet_ref="Snippet2" />
+                <snippet snippet_ref="ReliableKeepAll" />
+                <snippet snippet_ref="ExclusiveOwnership" />
             </qos_snippets>
             <properties inherit="true">
                 <property name="my_property_name" propagate="true">ThePropertyValue</property>
@@ -306,14 +418,8 @@
 
         <domain_participant_qos>
             <qos_snippets>
-                <snippet snippet_ref="Snippet1" />
+                <snippet snippet_ref="CreateEntitiesDisabled" />
             </qos_snippets>
-            <user_data>
-                <value></value>
-            </user_data>
-            <entity_factory>
-                <autoenable_created_entities>true</autoenable_created_entities>
-            </entity_factory>
 
             <!-- New syntax -->
             <properties>
@@ -458,7 +564,7 @@
 
     </qos_profile>
 
-    <qos_profile name="CustomProfile" base_name="DDSDefaultQosProfile" >
+    <qos_profile name="MyCustomProfile4" base_name="MyCustomProfile1" >
         <!-- name, base_name, and topic_filter are optional inside <qos_profile> definition -->
         <domain_participant_qos>
             <user_data><value>0A0B0C</value></user_data>
@@ -471,7 +577,7 @@
             <ownership_strength><value>10</value></ownership_strength>
         </datawriter_qos>
 
-        <datawriter_qos name="writer_qos_option2" topic_filter="B*Topic" base_name="AnotherQosProfile">
+        <datawriter_qos name="writer_qos_option2" topic_filter="B*Topic" base_name="MyCustomProfile1">
             <properties>
                 <property name="Hello">World</property>
             </properties>
@@ -483,7 +589,7 @@
             <ownership><kind>EXCLUSIVE_OWNERSHIP_QOS</kind></ownership>
         </datareader_qos>
 
-        <datareader_qos  name="reader_qos_option2" topic_filter="B*Topic"  base_name="AnotherQosProfile"> 
+        <datareader_qos  name="reader_qos_option2" topic_filter="B*Topic"  base_name="MyCustomProfile1"> 
             <ownership><kind>SHARED_OWNERSHIP_QOS</kind></ownership>
         </datareader_qos>
     </qos_profile>
@@ -491,31 +597,125 @@
     <!-- Entity Qos: datareader_qos, datawriter_qos, etc. May be used as a profile as well
          in this case name is mandatory, base_name is optional, and thre is no topic_filter
     -->
-    <datareader_qos name="MyDataReaderQosProfile" base_name="MyBaseProfile">
+    <datareader_qos name="MyDataReaderQosProfile" base_name="MyCustomProfile1">
         <qos_snippets>
-            <snippet snippet_ref="DDS_DefaultReliabilityHistoryDurability" />
+            <snippet snippet_ref="HistoryKeepLast1"/>
         </qos_snippets>
         <reliability>
             <kind>BEST_EFFORT_RELIABILITY_QOS</kind>
         </reliability>
     </datareader_qos>
 
-    <datawriter_qos name="MyDataWriterQosProfile" base_name="MyBaseProfile">
+    <datawriter_qos name="MyDataWriterQosProfile" base_name="MyCustomProfile1">
         <qos_snippets>
-            <snippet snippet_ref="DDS_DefaultReliabilityHistoryDurability" />
+            <snippet snippet_ref="HistoryKeepLast1" />
         </qos_snippets>
         <reliability>
             <kind>BEST_EFFORT_RELIABILITY_QOS</kind>
         </reliability>
     </datawriter_qos>
 
-    <topic_qos name="MyTopicQosProfile" base_name="MyBaseProfile">
+    <topic_qos name="MyTopicQosProfile" base_name="MyCustomProfile1">
         <qos_snippets>
-            <snippet snippet_ref="DDS_DefaultReliabilityHistoryDurability" />
+            <snippet snippet_ref="HistoryKeepLast1" />
         </qos_snippets>
         <reliability>
             <kind>BEST_EFFORT_RELIABILITY_QOS</kind>
         </reliability>
     </topic_qos>
+
+    <!-- Profiles & Snippets used in the ShapeDemo PS example -->
+    <qos_snippet name="ReliableKeepLast1">
+        <datareader_qos>
+            <durability>
+                <kind>VOLATILE_DURABILITY_QOS</kind>
+            </durability>
+            <reliability>
+                <kind>RELIABLE_RELIABILITY_QOS</kind>
+            </reliability>
+            <history>
+                <kind>KEEP_LAST_HISTORY_QOS</kind>
+                <depth>1</depth>
+            </history>
+        </datareader_qos>
+        <datawriter_qos>    
+            <durability>
+                <kind>VOLATILE_DURABILITY_QOS</kind>
+            </durability>
+            <reliability>
+                <kind>RELIABLE_RELIABILITY_QOS</kind>
+            </reliability>
+            <history>
+                <kind>KEEP_LAST_HISTORY_QOS</kind>
+                <depth>1</depth>
+            </history>
+        </datawriter_qos>
+    </qos_snippet>
+
+    <qos_snippet name="TransientLocal">
+        <datareader_qos>
+            <durability>
+                <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+            </durability>
+        </datareader_qos>
+        <datawriter_qos>    
+            <durability>
+                <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+            </durability>
+        </datawriter_qos>
+    </qos_snippet>
+
+    <qos_snippet name="TransientLocalKeepLast1">
+         <qos_snippets>
+            <snippet snippet_ref="ReliableKeepLast1" />
+            <snippet snippet_ref="TransientLocal" />
+        </qos_snippets>
+    </qos_snippet>
+    
+
+    <qos_profile name="ReliableKeepLast6">
+        <qos_snippets>
+            <snippet snippet_ref="ReliableKeepLast1" />
+        </qos_snippets>
+        <datareader_qos>
+            <history>
+                <kind>KEEP_LAST_HISTORY_QOS</kind>
+                <depth>6</depth>
+            </history>
+        </datareader_qos>
+        <datawriter_qos>
+            <history>
+                <kind>KEEP_LAST_HISTORY_QOS</kind>
+                <depth>6</depth>
+            </history>
+        </datawriter_qos>
+    </qos_profile>
+
+    <qos_profile name="StreamProfile">
+        <datareader_qos>
+            <qos_snippets>
+                <snippet snippet_ref="TransientLocalKeepLast1" />
+            </qos_snippets>
+            <history>
+                <kind>KEEP_LAST_HISTORY_QOS</kind>
+                <depth>6</depth>
+            </history>
+        </datareader_qos>
+        <datawriter_qos>
+            <qos_snippets>
+                <snippet snippet_ref="TransientLocalKeepLast1" />
+            </qos_snippets>
+            <history>
+                <kind>KEEP_LAST_HISTORY_QOS</kind>
+                <depth>6</depth>
+            </history>
+        </datawriter_qos>
+    </qos_profile>
+
+    <qos_profile name="CommandProfile">
+        <qos_snippets>
+            <snippet snippet_ref="ReliableKeepAllHistory" />
+        </qos_snippets>
+    </qos_profile>
 
 </qos_library>
