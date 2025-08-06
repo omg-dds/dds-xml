@@ -99,12 +99,9 @@
 
     <xs:complexType name="readCondition">
         <xs:all>
-            <xs:element name="sample_state" type="sampleStateKind"
-                minOccurs="0" maxOccurs="1" />
-            <xs:element name="view_state" type="viewStateKind"
-                minOccurs="0" maxOccurs="1" />
-            <xs:element name="instance_state" type="instanceStateKind"
-                minOccurs="0" maxOccurs="1" />
+            <xs:element name="sample_state"   minOccurs="0" type="sampleStateKind"/>
+            <xs:element name="view_state"     minOccurs="0" type="viewStateKind"/>
+            <xs:element name="instance_state" minOccurs="0" type="instanceStateKind"/>
         </xs:all>
 
         <xs:attribute name="name" type="elementName" use="required" />
@@ -123,16 +120,11 @@
 
     <xs:complexType name="dataReader">
         <xs:all>
-                <xs:element name="datareader_qos" minOccurs="0"
-                    maxOccurs="1" type="datareaderQosInline" />
-                <xs:element name="content_filter" minOccurs="0"
-                    maxOccurs="1" type="filter" />
-                <xs:element name="status_condition" type="statusCondition"
-                    minOccurs="0" maxOccurs="1" />
-                <xs:element name="read_condition" type="readCondition"
-                    minOccurs="0" maxOccurs="1" />
-                <xs:element name="query_condition" type="filter"
-                    minOccurs="0" />
+                <xs:element name="datareader_qos"   minOccurs="0" type="datareaderQosInline"/>
+                <xs:element name="content_filter"   minOccurs="0" type="filter"/>
+                <xs:element name="status_condition" minOccurs="0" type="statusCondition" />
+                <xs:element name="read_condition"   minOccurs="0" type="readCondition"/>
+                <xs:element name="query_condition"  minOccurs="0" type="filter"/>
         </xs:all>
 
         <xs:attributeGroup ref="commonPubSubEndpointAttributeGroup"/>
@@ -226,7 +218,7 @@
         <xs:attribute name="name" type="elementName" use="required" />
     </xs:complexType>
 
-    <xs:simpleType name="serviceProfileUseDirectionKind">
+    <xs:simpleType name="interactionRoleUseDirectionKind">
         <xs:restriction base="xs:string">
             <xs:whiteSpace value="collapse" />
             <xs:enumeration value="DECLARED" />
@@ -264,13 +256,13 @@
         <xs:attribute name="service_ref" type="elementNameReference" use="required" />
     </xs:complexType>
 
-    <xs:complexType name="serviceProfileUse">
+    <xs:complexType name="interactionRoleUse">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:element name="topic_binding"   type="topicBinding" />
             <xs:element name="service_binding" type="serviceBinding" />
         </xs:choice>
         <xs:attribute name="name" type="elementName" use="required" />
-        <xs:attribute name="direction" type="serviceProfileUseDirectionKind" use="required" />
+        <xs:attribute name="direction" type="interactionRoleUseDirectionKind" use="required" />
         <xs:attribute name="interaction_role_ref" type="elementNameReference" use="required" />
     </xs:complexType>
 
@@ -285,7 +277,7 @@
             <xs:element name="rpc_service"           type="rpcService" />
             <xs:element name="request_reply_service" type="requestReplyService" />
 
-            <xs:element name="interaction_role" type="serviceProfile" />
+            <xs:element name="interaction_role" type="interactionRole" />
 
             <xs:element name="publisher"     type="publisher" />
             <xs:element name="subscriber"    type="subscriber" />
@@ -295,7 +287,7 @@
             <xs:element name="client"        type="client" /> 
             <xs:element name="server"        type="server" />   
                 
-            <xs:element name="interaction_role_use" type="serviceProfileUse" />
+            <xs:element name="interaction_role_use" type="interactionRoleUse" />
         </xs:choice>
 
         <xs:attribute name="name"       type="elementName" use="required" />

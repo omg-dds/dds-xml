@@ -119,7 +119,7 @@
                       use="required" />
     </xs:complexType>
 
-    <xs:complexType name="serviceProfile">
+    <xs:complexType name="interactionRole">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
             <xs:element name="provides_service" type="serviceRef" />
             <xs:element name="requires_service" type="serviceRef" />
@@ -139,7 +139,7 @@
             <xs:element name="topic"                 type="topic" />
             <xs:element name="rpc_service"           type="rpcService" />
             <xs:element name="request_reply_service" type="requestReplyService" />
-            <xs:element name="interaction_role"       type="serviceProfile" />
+            <xs:element name="interaction_role"      type="interactionRole" />
         </xs:choice>
 
         <xs:attribute name="name"       type="elementName" use="required" />
