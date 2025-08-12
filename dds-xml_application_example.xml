@@ -39,8 +39,8 @@
             </publisher>
             <subscriber name="MySubscriber">
                 <data_reader name="MySquareReader" topic_ref="Square" />
-                <data_reader name="MyCircleWriter" topic_ref="Circle" />
-                <data_reader name="MyTriangleWriter" topic_ref="Triangle" />
+                <data_reader name="MyCircleReader" topic_ref="Circle" />
+                <data_reader name="MyTriangleReader" topic_ref="Triangle" />
                 <subscriber_qos base_name="MyQosLib::StreamProfile">
                     <entity_factory>
                         <autoenable_created_entities>false</autoenable_created_entities>
