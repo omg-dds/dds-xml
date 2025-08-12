@@ -1,3 +1,8 @@
+#
+# Check for type references in XML files
+#  References beteen types and also when registering types and interfaces using 
+#       ['type_ref', 'nonBasicTypeName', 'baseType', 'interface_ref']:
+#
 from lxml import etree as ET
 import glob
 from collections import namedtuple
