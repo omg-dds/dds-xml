@@ -232,6 +232,7 @@
             <xs:element name="datareader_qos" type="datareaderQosInline"  minOccurs="0" />
         </xs:choice>
         <xs:attribute name="topic_ref" type="elementNameReference" use="required" />
+        <xs:attribute name="bind" type="xs:boolean" use="optional" default="true"/>
     </xs:complexType>
 
     <xs:complexType name="serviceBinding">
@@ -254,6 +255,7 @@
             </xs:sequence>
         </xs:choice>
         <xs:attribute name="service_ref" type="elementNameReference" use="required" />
+        <xs:attribute name="bind" type="xs:boolean" use="optional" default="true"/>
     </xs:complexType>
 
     <xs:complexType name="interactionRoleUse">
@@ -287,7 +289,7 @@
             <xs:element name="client"        type="client" /> 
             <xs:element name="server"        type="server" />   
                 
-            <xs:element name="interaction_role_use" type="interactionRoleUse" />
+            <xs:element name="interaction_role_binding" type="interactionRoleUse" />
         </xs:choice>
 
         <xs:attribute name="name"       type="elementName" use="required" />

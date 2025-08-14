@@ -523,7 +523,7 @@
             <provides_service service_ref="ShapesQueryService"/>
         </interaction_role>
 
-        <interaction_role_use name="shape_publisher" direction="DECLARED" interaction_role_ref="ShapeProducer_IR"/>
+        <interaction_role_binding name="shape_publisher" direction="DECLARED" interaction_role_ref="ShapeProducer_IR"/>
     </domain_participant>
 
     <!-- Participant publishing Shapes using Interaction Roles and Qos -->
@@ -539,18 +539,18 @@
         <interaction_role name="ShapeProducer_IR">
             <publishes_topic topic_ref="Square"/>
             <publishes_topic topic_ref="Circle"/>
-            <publishes_topic topic_ref="Triangle"/>
-            <provides_service service_ref="ShapesQueryService"/>
+            <publishes_topic topic_ref="Triangle" binding="OPTIONAL"/>
+            <provides_service service_ref="ShapesQueryService" />
         </interaction_role>
 
-        <interaction_role_use name="shape_publisher" direction="DECLARED" interaction_role_ref="ShapeProducer_IR">
+        <interaction_role_binding name="shape_publisher" direction="DECLARED" interaction_role_ref="ShapeProducer_IR">
             <topic_binding topic_ref="Square">
                 <datawriter_qos base_name="MyQosLib::ReliableKeepLast6"/>
             </topic_binding>
             <topic_binding topic_ref="Circle">
                 <datawriter_qos base_name="MyQosLib::ReliableKeepLast6"/>
             </topic_binding>
-            <topic_binding topic_ref="Triangle">
+            <topic_binding topic_ref="Triangle" bind="false">
                 <datawriter_qos base_name="MyQosLib::ReliableKeepLast6">
                     <history><depth>10</depth></history>
                 </datawriter_qos>
@@ -559,37 +559,40 @@
                 <request_datareader_qos base_name="MyQosLib::ReliableKeepLast6"/>
                 <reply_datawriter_qos   base_name="MyQosLib::ReliableKeepLast6"/>
             </service_binding>
-        </interaction_role_use>
+        </interaction_role_binding>
     </domain_participant>    
 
     <!-- Participant publishing Shapes using Interaction Roles referencing the domain definitions -->
     <domain_participant name="BasicShapesProducer_DD" domain_ref="ShapesDomainWithInteractionRoles">
-        <interaction_role_use name="shape_publisher" direction="DECLARED" interaction_role_ref="ShapeProducer_IR"/>
+        <interaction_role_binding name="shape_publisher" direction="DECLARED" interaction_role_ref="ShapeProducer_IR"/>
     </domain_participant>
     
     <!-- Participant publishing Shapes and offering state control using IR in the domain definition -->
     <domain_participant name="AdvancedShapesProducer" domain_ref="ShapesDomainWithInteractionRoles">
-        <interaction_role_use name="shape_publisher"  direction="DECLARED" interaction_role_ref="ShapeProducer_IR"/>
-        <interaction_role_use name="rpc_control"   direction="DECLARED" interaction_role_ref="ShapeControlViaRPC_IR"/>
-        <interaction_role_use name="rr_control"    direction="DECLARED" interaction_role_ref="ShapeControlViaRequestReply_IR"/>
+        <interaction_role_binding name="shape_publisher"  direction="DECLARED" interaction_role_ref="ShapeProducer_IR"/>
+        <interaction_role_binding name="rpc_control"   direction="DECLARED" interaction_role_ref="ShapeControlViaRPC_IR"/>
+        <interaction_role_binding name="rr_control"    direction="DECLARED" interaction_role_ref="ShapeControlViaRequestReply_IR">
+            <service_binding service_ref="StopSingleShapeService" bind="true"/>
+            <service_binding service_ref="SetShapeStateService" bind="false"/>
+        </interaction_role_binding>
     </domain_participant>
 
     <!-- Participant controlling Shapes via RPC and Request-reply using IR in the domain definition -->
     <domain_participant name="ShapesController" domain_ref="ShapesDomainWithInteractionRoles">
-        <interaction_role_use name="rpc_control"  direction="REVERSED" interaction_role_ref="ShapeControlViaRPC_IR"/>
-        <interaction_role_use name="rr_control"   direction="REVERSED" interaction_role_ref="ShapeControlViaRequestReply_IR"/>
-        <interaction_role_use name="inspect" direction="DECLARED" interaction_role_ref="ControllerIntrospection_IR"/>
+        <interaction_role_binding name="rpc_control"  direction="REVERSED" interaction_role_ref="ShapeControlViaRPC_IR"/>
+        <interaction_role_binding name="rr_control"   direction="REVERSED" interaction_role_ref="ShapeControlViaRequestReply_IR"/>
+        <interaction_role_binding name="inspect" direction="DECLARED" interaction_role_ref="ControllerIntrospection_IR"/>
     </domain_participant>
 
     <!-- Participant publishing Shapes and offering state control using IR in the domain definition  -->
     <domain_participant name="ShapesObserver" domain_ref="ShapesDomainWithInteractionRoles">
-        <interaction_role_use name="shape_subscriber" direction="REVERSED" interaction_role_ref="ShapeProducer_IR"/>
+        <interaction_role_binding name="shape_subscriber" direction="REVERSED" interaction_role_ref="ShapeProducer_IR"/>
     </domain_participant>
     
     <!-- Participant monitoring the system using IR in the domain definition  -->
     <domain_participant name="SystemMonitor" domain_ref="ShapesDomainWithInteractionRoles">
-        <interaction_role_use name="monitor_shapes" direction="REVERSED" interaction_role_ref="ShapeProducer_IR"/>
-        <interaction_role_use name="monitor_controllers" direction="REVERSED" interaction_role_ref="ControllerIntrospection_IR"/>
+        <interaction_role_binding name="monitor_shapes" direction="REVERSED" interaction_role_ref="ShapeProducer_IR"/>
+        <interaction_role_binding name="monitor_controllers" direction="REVERSED" interaction_role_ref="ControllerIntrospection_IR"/>
     </domain_participant>
 
 </domain_participant_library>

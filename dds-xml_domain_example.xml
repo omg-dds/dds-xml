@@ -288,7 +288,7 @@
         <interaction_role name="ShapeProducer_IR">
             <publishes_topic topic_ref="Square"/>
             <publishes_topic topic_ref="Circle"/>
-            <publishes_topic topic_ref="Triangle"/>
+            <publishes_topic topic_ref="Triangle" binding="OPTIONAL"/>
             <provides_service service_ref="ShapesQueryService"/>
         </interaction_role>
 
@@ -301,14 +301,21 @@
         <interaction_role name="ShapeControlViaRequestReply_IR">
             <provides_service service_ref="StartShapesService"/>
             <provides_service service_ref="StopShapesService"/>
-            <provides_service service_ref="StopSingleShapeService"/>
-            <provides_service service_ref="SetShapeStateService"/>
+            <provides_service service_ref="StopSingleShapeService" binding="OPTIONAL"/>
+            <provides_service service_ref="SetShapeStateService" binding="OPTIONAL"/>
         </interaction_role>
 
         <!-- Report the command history via RPC and Request/Reply -->
         <interaction_role name="ControllerIntrospection_IR">
             <provides_service service_ref="CommandLogQueryService"/>
             <provides_service service_ref="GetCommandLogService"/>
+        </interaction_role>
+
+        <interaction_role name="AllOptions">
+            <publishes_topic topic_ref="Square"/>
+            <subscribes_topic topic_ref="Circle" />
+            <provides_service service_ref="ShapesQueryService"/>
+            <requires_service service_ref="ShapesControlService" />
         </interaction_role>
 
     </domain>

@@ -354,8 +354,9 @@
                 <exception_ref exceptionType="PlainException"/>
             </raises>
             <arguments>
-                <argument name="item_identfier" type="int32"/>
-                <argument name="speed" type="float32"/>
+                <argument name="item_identfier" type="int32" direction="in"/>
+                <argument name="speed" type="float32" direction="inout"/>
+                <argument name="estimated_delay" type="float32" direction="out"/>
             </arguments>
         </operation>
         <operation name="get_speed">

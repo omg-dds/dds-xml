@@ -109,22 +109,33 @@
     </xs:complexType>
 
     <!-- Interface Block -->
-    <xs:complexType name="serviceRef">
+    <xs:simpleType name="bindingRequirementKind">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="MANDATORY"/>
+            <xs:enumeration value="OPTIONAL"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="interactionServiceRef">
         <xs:attribute name="service_ref" type="elementNameReference"
                       use="required" />
+        <xs:attribute name="binding" type="bindingRequirementKind" default="MANDATORY"
+                      use="optional" />
     </xs:complexType>
 
-    <xs:complexType name="topicRef">
+    <xs:complexType name="interactionTopicRef">
         <xs:attribute name="topic_ref" type="elementNameReference"
                       use="required" />
+        <xs:attribute name="binding" type="bindingRequirementKind" default="MANDATORY"
+                      use="optional" />
     </xs:complexType>
 
     <xs:complexType name="interactionRole">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
-            <xs:element name="provides_service" type="serviceRef" />
-            <xs:element name="requires_service" type="serviceRef" />
-            <xs:element name="publishes_topic"     type="topicRef" />
-            <xs:element name="subscribes_topic"      type="topicRef" />
+            <xs:element name="provides_service" type="interactionServiceRef" />
+            <xs:element name="requires_service" type="interactionServiceRef" />
+            <xs:element name="publishes_topic"  type="interactionTopicRef" />
+            <xs:element name="subscribes_topic" type="interactionTopicRef" />
         </xs:choice>
 
         <xs:attribute name="name" type="elementName" use="required" />
