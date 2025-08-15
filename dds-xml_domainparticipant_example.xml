@@ -5,7 +5,7 @@
                             xsi:schemaLocation="http://www.omg.org/spec/DDS-XML ./dds-xml_domainparticipant_definitions.xsd"
                             name="MyDomainLibrary">
 
-    <domain_participant name="Listener"  domain_id="0" domain_tag="HelloDomainTag">
+    <domain_participant name="Listener"  domain_id="0">
         <domain_participant_qos/>
         <register_type name="HelloWorldType" type_ref="HelloExample::HelloType" />
 
@@ -24,7 +24,7 @@
         </subscriber>
     </domain_participant>
 
-    <domain_participant name="Greeter"  domain_id="0" domain_tag="HelloDomainTag">
+    <domain_participant name="Greeter"  domain_id="0">
         <domain_participant_qos/>
         <register_type name="HelloWorldType" type_ref="HelloExample::HelloType" />
 
@@ -48,7 +48,7 @@
     </domain_participant>
 
     <!-- Participant for Shapes with Pub-Sub -->
-    <domain_participant name="ShapesApp_PS" domain_id="32" domain_tag="ShapesDomainTag">
+    <domain_participant name="ShapesApp_PS" domain_id="32">
         <register_type name="ShapeType" type_ref="ShapesExample::ShapeType"></register_type>
         <topic name="Square"   register_type_ref="ShapeType"/>
         <topic name="Circle"   register_type_ref="ShapeType"/>
@@ -77,7 +77,7 @@
     </domain_participant>
 
     <!-- Participant for Shapes with RPC Services -->
-    <domain_participant name="ShapesController_RPC" domain_id="32" domain_tag="ShapesDomainTag">
+    <domain_participant name="ShapesController_RPC" domain_id="32">
         <register_interface name="ShapesControlInterface" interface_ref="ShapesExample::ControlIf"/>
         <register_interface name="CommandLogQueryInterface" interface_ref="QueryExample::LogQueryIf"/>
     
@@ -95,7 +95,7 @@
     </domain_participant>
 
     <!-- Participant for Shapes with Request-Reply Services -->
-    <domain_participant name="ShapesController_RR" domain_id="32" domain_tag="ShapesDomainTag">
+    <domain_participant name="ShapesController_RR" domain_id="32">
         <register_type name="StartShapesRequest" type_ref="ShapesExample::StartRequest"/>
         <register_type name="StartShapesReply"   type_ref="ShapesExample::StartReply"/>
 
@@ -266,7 +266,7 @@
     </domain_participant>
 
     <!-- Participant for Shapes with RPC Services and Qos -->
-    <domain_participant name="ShapesController_RPC_QOS" domain_id="32" domain_tag="ShapesDomainTag">
+    <domain_participant name="ShapesController_RPC_QOS" domain_id="32">
         <register_interface name="ShapesControlInterface" interface_ref="ShapesExample::ControlIf"/>
         <register_interface name="CommandLogQueryInterface" interface_ref="QueryExample::LogQueryIf"/>
     
@@ -319,7 +319,7 @@
     </domain_participant>
 
     <!-- Participant for Shapes with Request-Reply Services and Qos -->
-    <domain_participant name="ShapesController_RR_QOS" domain_id="32" domain_tag="ShapesDomainTag">
+    <domain_participant name="ShapesController_RR_QOS" domain_id="32">
         <register_type name="StartShapesRequest" type_ref="ShapesExample::StartRequest"/>
         <register_type name="StartShapesReply"   type_ref="ShapesExample::StartReply"/>
 
@@ -467,7 +467,7 @@
     </domain_participant>
 
     <!-- Participant for Shapes combining Pub-Sub and Services (RPC and R/R) -->
-    <domain_participant name="ShapesApp_PS_RPC_RR" domain_id="32" domain_tag="ShapesDomainTag">
+    <domain_participant name="ShapesApp_PS_RPC_RR" domain_id="32">
 
         <register_type name="ShapeType" type_ref="ShapesExample::ShapeType"/>
         <topic name="Square"   register_type_ref="ShapeType"/>
@@ -507,7 +507,7 @@
     <!-- =========================================== -->
 
     <!-- Participant publishing Shapes using Interaction Roles -->
-    <domain_participant name="BasicShapesProducer" domain_id="32" domain_tag="ShapesDomainTag">
+    <domain_participant name="BasicShapesProducer" domain_id="32">
         <register_type name="ShapeType" type_ref="ShapesExample::ShapeType"/>
         <topic name="Square"   register_type_ref="ShapeType"/>
         <topic name="Circle"   register_type_ref="ShapeType"/>
@@ -527,7 +527,7 @@
     </domain_participant>
 
     <!-- Participant publishing Shapes using Interaction Roles and Qos -->
-    <domain_participant name="BasicShapesProducer_QOS" domain_id="32" domain_tag="ShapesDomainTag">
+    <domain_participant name="BasicShapesProducer_QOS" domain_id="32">
         <register_type name="ShapeType" type_ref="ShapesExample::ShapeType"/>
         <topic name="Square"   register_type_ref="ShapeType"/>
         <topic name="Circle"   register_type_ref="ShapeType"/>

@@ -155,7 +155,6 @@
 
         <xs:attribute name="name"       type="elementName" use="required" />
         <xs:attribute name="domain_id"  type="xs:nonNegativeInteger" />
-        <xs:attribute name="domain_tag" type="xs:string" />
         <xs:attribute name="base_name"  type="elementNameReference"/>
     </xs:complexType>
 
